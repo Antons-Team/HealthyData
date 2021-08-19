@@ -3,12 +3,15 @@ import {
   Text,
   View,
 } from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
 
 const App = () => {
   return (
-    <View>
-      <Text>Placeholder</Text>
-    </View>
+    <NavigationContainer>
+      <View>
+        <Text>Placeholder</Text>
+      </View>
+    </NavigationContainer>
   );
 };
 
