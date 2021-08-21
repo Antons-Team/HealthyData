@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../types/RootStackParams';
+import { RootStackParamList } from '../@types/RootStackParams';
 
 type ProfileScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
