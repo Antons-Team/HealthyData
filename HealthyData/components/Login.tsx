@@ -1,12 +1,13 @@
-import React, {useState} from 'react';
-import {Button, TextInput, View} from 'react-native';
-import {AuthContext} from '../App';
+import React from 'react';
+import {useState} from 'react';
+import {View, TextInput, Button} from 'react-native';
+import {useAuth} from '../auth/provider';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const {signIn} = React.useContext(AuthContext);
+  const {handleSignIn} = useAuth();
   return (
     <View>
       <TextInput
@@ -23,11 +24,10 @@ const Login = () => {
       <Button
         title="Sign in"
         onPress={() => {
-          signIn({});
+          handleSignIn({});
         }}
       />
     </View>
   );
 };
-
 export default Login;
