@@ -1,43 +1,63 @@
-import React, {createContext, useContext, useMemo, useReducer} from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+} from 'react';
 import authReducer, {initialState} from './reducer';
-import auth from '@react-native-firebase/auth';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 const AuthContext = createContext({
   state: initialState,
-  handleSignIn: async (_data: any) => {},
+  handleSignIn: async (_user: any) => {},
+  handleSignUp: async (_user: any) => {},
+  handleSignOut: async () => {},
 });
 
 const AuthProvider: React.FC = ({children}) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
+  useEffect(() => {
+    const bootstrapAsync = async () => {
+      let user;
+      try {
+        user = await EncryptedStorage.getItem('user');
+      } catch (e) {
+        console.error(e);
+      }
+      dispatch({type: 'RESTORE_USER', user});
+    };
+    bootstrapAsync();
+  }, []);
+
   const authContext = useMemo(
     () => ({
       state: state,
-      handleSignIn: async data => {
-        console.log('signin');
-
+      //TODO: error handling for email sign in??
+      handleSignIn: async (user: any) => {
         try {
-          const user = await auth().signInAnonymously();
-          console.log(user, 'signed in anonumously');
-        } catch (error) {
-          console.error(error, 'shit the bed');
+          await EncryptedStorage.setItem('user', JSON.stringify(user));
+        } catch (e) {
+          console.error(e);
         }
-        console.log('user token', state.userToken);
-        // In a production app, we need to send some data (usually username, password) to server and get a token
-        // We will also need to handle errors if sign in failed
-        // After getting token, we need to persist the token using `SecureStore`
-        // In the example, we'll use a dummy token
-
-        dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'});
+        dispatch({type: 'SIGN_IN', user});
       },
-      handleSignOut: () => dispatch({type: 'SIGN_OUT'}),
-      handleSignUp: async data => {
-        // In a production app, we need to send user data to server and get a token
-        // We will also need to handle errors if sign up failed
-        // After getting token, we need to persist the token using `SecureStore`
-        // In the example, we'll use a dummy token
-
-        dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'});
+      handleSignOut: async () => {
+        try {
+          await EncryptedStorage.clear();
+        } catch (e) {
+          console.error(e);
+        }
+        dispatch({type: 'SIGN_OUT'});
+      },
+      handleSignUp: async (user: any) => {
+        try {
+          await EncryptedStorage.setItem('user', JSON.stringify(user));
+        } catch (e) {
+          console.error(e);
+        }
+        dispatch({type: 'SIGN_IN', user});
       },
     }),
     [state],

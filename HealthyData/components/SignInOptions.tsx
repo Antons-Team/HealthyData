@@ -17,7 +17,7 @@ const SignInOptions = ({navigation}: Props) => {
       <Button
         title="Log in"
         onPress={() => {
-          navigation.navigate('Login');
+          navigation.navigate('SignIn');
         }}
       />
     </View>

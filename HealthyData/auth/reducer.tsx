@@ -1,22 +1,28 @@
-const authReducer = (prevState, action) => {
+type State = {
+  isLoading: boolean;
+  isSignout: boolean;
+  user: any;
+};
+
+const authReducer = (prevState: any, action: any) => {
   switch (action.type) {
-    case 'RESTORE_TOKEN':
+    case 'RESTORE_USER':
       return {
         ...prevState,
-        userToken: action.token,
+        user: action.user,
         isLoading: false,
       };
     case 'SIGN_IN':
       return {
         ...prevState,
         isSignout: false,
-        userToken: action.token,
+        user: action.user,
       };
     case 'SIGN_OUT':
       return {
         ...prevState,
         isSignout: true,
-        userToken: null,
+        user: null,
       };
   }
 };
@@ -24,7 +30,7 @@ const authReducer = (prevState, action) => {
 export const initialState = {
   isLoading: true,
   isSignout: false,
-  userToken: null,
+  user: null,
 };
 
 export default authReducer;

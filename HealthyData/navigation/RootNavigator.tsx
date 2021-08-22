@@ -9,8 +9,8 @@ const RootNavigator = () => {
   const Stack = createStackNavigator();
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      {state.userToken == null ? (
-        <Stack.Screen name="SignIn" component={AuthNavigator} />
+      {state.user == null ? (
+        <Stack.Screen name="Auth" component={AuthNavigator} />
       ) : (
         <Stack.Screen name="App" component={AppNavigator} />
       )}

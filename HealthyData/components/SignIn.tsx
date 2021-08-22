@@ -2,13 +2,13 @@ import React from 'react';
 import {useState} from 'react';
 import {View, TextInput, Button} from 'react-native';
 import {useAuth} from '../auth/provider';
-import {signUpEmail} from '../services/auth';
+import {signInAnonymous, signInEmail} from '../services/auth';
 
-const SignUp = () => {
+const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const {handleSignUp} = useAuth();
+  const {handleSignIn} = useAuth();
   return (
     <View>
       <TextInput placeholder="Username" value={email} onChangeText={setEmail} />
@@ -19,13 +19,21 @@ const SignUp = () => {
         secureTextEntry
       />
       <Button
-        title="Sign up email"
+        title="Sign in email"
         onPress={async () => {
-          const user = await signUpEmail(email, password);
-          await handleSignUp(user);
+          const user = await signInEmail(email, password);
+          await handleSignIn(user);
+        }}
+      />
+      <Button
+        // added for convenience when testing
+        title="anonymous sign in "
+        onPress={async () => {
+          const user = await signInAnonymous();
+          await handleSignIn(user);
         }}
       />
     </View>
   );
 };
-export default SignUp;
+export default SignIn;

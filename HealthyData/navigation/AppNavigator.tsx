@@ -4,6 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Home from '../components/Home';
 import Example from '../components/Example';
+import Settings from '../components/Settings';
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
@@ -34,7 +35,7 @@ const AppNavigator = () => {
       })}>
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Exahmple" component={Example} />
-      <Tab.Screen name="Settings" component={Example} />
+      <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
   );
 };

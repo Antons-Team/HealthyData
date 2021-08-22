@@ -1,5 +1,5 @@
 export type AuthStackParamsList = {
   SignInOptions: undefined;
-  Login: undefined;
+  SignIn: undefined;
   SignUp: undefined;
 };
