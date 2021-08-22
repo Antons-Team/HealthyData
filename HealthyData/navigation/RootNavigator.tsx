@@ -1,15 +1,17 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
-import {useAuth} from '../auth/provider';
 import AppNavigator from './AppNavigator';
 import AuthNavigator from './AuthNavigator';
 
-const RootNavigator = () => {
-  const {state} = useAuth();
+type RootNavigatorProps = {
+  signedIn: boolean;
+};
+
+const RootNavigator = ({signedIn}: RootNavigatorProps) => {
   const Stack = createStackNavigator();
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      {state.user == null ? (
+      {!signedIn ? (
         <Stack.Screen name="Auth" component={AuthNavigator} />
       ) : (
         <Stack.Screen name="App" component={AppNavigator} />

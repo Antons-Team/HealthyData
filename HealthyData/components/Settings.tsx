@@ -1,17 +1,11 @@
 import React from 'react';
 import {View, Button} from 'react-native';
-import {useAuth} from '../auth/provider';
+import {signOut} from '../services/auth';
 
 const Settings = () => {
-  const {handleSignOut} = useAuth();
   return (
     <View>
-      <Button
-        title="Sign out"
-        onPress={() => {
-          handleSignOut();
-        }}
-      />
+      <Button title="Sign out" onPress={() => signOut()} />
     </View>
   );
 };
