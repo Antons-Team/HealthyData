@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "517643624241",
+    "project_id": "healthydata-af313",
+    "storage_bucket": "healthydata-af313.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:517643624241:android:fb7a2c20d2b6b04b61da10",
+        "android_client_info": {
+          "package_name": "com.healthydata"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "517643624241-8qa4gpf7qt685bvssqrg9ceh4es3l9ur.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgOEzn_HZAQKkeCe4UyZ_D2aPm0icKtvk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "517643624241-8qa4gpf7qt685bvssqrg9ceh4es3l9ur.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

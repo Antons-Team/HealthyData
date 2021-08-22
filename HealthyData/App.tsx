@@ -1,44 +1,35 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import RootNavigator from './navigation/RootNavigator';
+import {useState, useEffect} from 'react';
+import auth from '@react-native-firebase/auth';
+import Loading from './components/Loading';
 
-import Home from './components/Home';
-import Example from './components/Example';
-
-const Tab = createBottomTabNavigator();
-
-const iconName = (routeName: string, focused: boolean) => {
-  switch (routeName) {
-    case 'Settings':
-      return focused ? 'settings' : 'settings-outline';
-    case 'Home':
-      return focused ? 'home' : 'home-outline';
-    default:
-      return 'restaurant-outline';
-  }
-};
+enum State {
+  signedIn,
+  signedOut,
+  loading,
+}
 
 const App = () => {
-  return (
+  const [signedInState, setSignedInState] = useState<State>(State.loading);
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(async user => {
+      if (user) {
+        setSignedInState(State.signedIn);
+      } else {
+        setSignedInState(State.signedOut);
+      }
+    });
+    return subscriber;
+  }, []);
+
+  return signedInState === State.loading ? (
+    <Loading />
+  ) : (
     <NavigationContainer>
-      <Tab.Navigator
-        initialRouteName="Home"
-        screenOptions={({route}) => ({
-          tabBarIcon: ({focused, color, size}) => (
-            <Ionicons
-              name={iconName(route.name, focused)}
-              size={size}
-              color={color}
-            />
-          ),
-          tabBarActiveTintColor: '#616FEC',
-          tabBarInactiveTintColor: 'gray',
-        })}>
-        <Tab.Screen name="Home" component={Home} />
-        <Tab.Screen name="Example" component={Example} />
-        <Tab.Screen name="Settings" component={Example} />
-      </Tab.Navigator>
+      <RootNavigator signedIn={signedInState === State.signedIn} />
     </NavigationContainer>
   );
 };
