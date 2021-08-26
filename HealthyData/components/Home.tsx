@@ -6,9 +6,12 @@ import {
   SafeAreaView, 
   FlatList,
   ListRenderItem,
+  StatusBar,
+  StyleSheet,
 } from 'react-native';
 
 import firestore from '@react-native-firebase/firestore';
+import { firebase } from '@react-native-firebase/auth';
 
 type MedicationItem = {
   name: string;
@@ -22,7 +25,7 @@ type TodoItem = {
 };
 
 const Home = (): JSX.Element => {
-  const [ todos, setTodos ] = useState<Array<TodoItem> | null>(null);
+  const [ todos, setTodos ] = useState<Array<TodoItem>>([]);
   const [ loading, setLoading ] = useState(true);
 
   const ref = firestore().collection('todos');
@@ -32,15 +35,21 @@ const Home = (): JSX.Element => {
       const temp: Array<TodoItem> = [];
       querySnapshot.forEach(doc => {
         const { date, medications } = doc.data();
+        
         temp.push({
           id: doc.id,
-          date,
-          medications,
+          date: date,
+          //medications: getDoc(docRef),
+          // need to fetch medications ref
+          medications: {
+            name: "Ibuprofen",
+            description: "ABCD",
+          }
         });
       });
 
-      setTodos(temp);
 
+      setTodos(temp);
       if (loading) {
         setLoading(false);
       }
@@ -48,14 +57,14 @@ const Home = (): JSX.Element => {
   }, []);
 
   const renderItem: ListRenderItem<TodoItem> = ({ item }) => (
-    <View>
-      <Text>{item.medications.name} {item.date}</Text>
+    <View style={styles.item}>
+      <Text style={styles.title}>{item.medications.name}</Text>
     </View>
   );
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <SafeAreaView>
+      <SafeAreaView style={styles.container}>
         <FlatList
           data={todos}
           renderItem={renderItem}
@@ -65,5 +74,21 @@ const Home = (): JSX.Element => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: StatusBar.currentHeight || 0,
+  },
+  item: {
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  title: {
+    fontSize: 32,
+  },
+});
 
 export default Home;
