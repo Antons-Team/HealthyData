@@ -5,6 +5,7 @@ import {useState, useEffect} from 'react';
 import auth from '@react-native-firebase/auth';
 import Loading from './components/Loading';
 
+
 enum State {
   signedIn,
   signedOut,
@@ -12,7 +13,7 @@ enum State {
 }
 
 const App = () => {
-  const [signedInState, setSignedInState] = useState<State>(State.loading);
+  const [signedInState, setSignedInState] = useState<State>(State.loading) ;
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(async user => {
