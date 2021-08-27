@@ -15,13 +15,14 @@ import { firebase } from '@react-native-firebase/auth';
 
 type MedicationItem = {
   name: string;
+  brand_name: string;
   description: string;
 }
 
 type TodoItem = {
   id: string;
   date: Date;
-  medications: MedicationItem;
+  medication: MedicationItem;
 };
 
 const Home = (): JSX.Element => {
@@ -34,17 +35,16 @@ const Home = (): JSX.Element => {
     return ref.onSnapshot(querySnapshot => {
       const temp: Array<TodoItem> = [];
       querySnapshot.forEach(doc => {
-        const { date, medications } = doc.data();
-        
+        const { date, medication } = doc.data();
+
         temp.push({
           id: doc.id,
           date: date,
-          //medications: getDoc(docRef),
-          // need to fetch medications ref
-          medications: {
-            name: "Ibuprofen",
-            description: "ABCD",
-          }
+          // note: the medication data is duplicated instead of foreign keyed
+          // apparently this is best practise for document based NoSQL dbs so wherever
+          // a new todo item is added you query for the correct medication data
+          // and insert that as well
+          medication: medication,
         });
       });
 
@@ -58,7 +58,7 @@ const Home = (): JSX.Element => {
 
   const renderItem: ListRenderItem<TodoItem> = ({ item }) => (
     <View style={styles.item}>
-      <Text style={styles.title}>{item.medications.name}</Text>
+      <Text style={styles.title}>{item.medication.name} {item.medication.description}</Text>
     </View>
   );
 
