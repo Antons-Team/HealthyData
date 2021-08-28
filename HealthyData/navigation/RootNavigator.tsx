@@ -1,22 +1,77 @@
-import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
-import AppNavigator from './AppNavigator';
+import {useEffect} from 'react';
+import {useAuth} from '../auth/provider';
 import AuthNavigator from './AuthNavigator';
+import auth from '@react-native-firebase/auth';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import {LocalAuthOptions, LocalAuthState, SignedInState} from '../auth/reducer';
+import Loading from '../components/Loading';
+import {NavigationContainer} from '@react-navigation/native';
+import LocalAuth from './LocalAuth';
 
 type RootNavigatorProps = {
   signedIn: boolean;
 };
 
-const RootNavigator = ({signedIn}: RootNavigatorProps) => {
-  const Stack = createStackNavigator();
+const RootNavigator = () => {
+  const {
+    state: authState,
+    handleSignIn,
+    handleSignOut,
+    setLocalAuthOptions,
+    setLocalAuthState,
+  } = useAuth();
+
+  useEffect(() => {
+    getLocalAuthOptions();
+    const subscriber = auth().onAuthStateChanged(async user => {
+      if (user) {
+        handleSignIn();
+      } else {
+        handleSignOut();
+      }
+    });
+    return subscriber;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const getLocalAuthOptions = async () => {
+    try {
+      const localAuth = await EncryptedStorage.getItem('localAuthOptions');
+      if (localAuth !== null) {
+        const localAuthOptions: LocalAuthOptions = JSON.parse(localAuth);
+        setLocalAuthOptions(localAuthOptions);
+        setLocalAuthState(
+          localAuthOptions.fingerprint || localAuthOptions.pin
+            ? LocalAuthState.signedOut
+            : LocalAuthState.signedIn,
+        );
+      } else {
+        setLocalAuthState(LocalAuthState.asking);
+        //maybe dont need this
+      }
+    } catch (e) {
+      console.error(e);
+      setLocalAuthState(LocalAuthState.asking);
+      //maybe dont need this?
+    }
+  };
+
+  if (
+    authState.isSignedIn === SignedInState.loading ||
+    authState.localAuthState === LocalAuthState.loading
+  ) {
+    return <Loading />;
+  }
+
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
-      {!signedIn ? (
-        <Stack.Screen name="Auth" component={AuthNavigator} />
+    <NavigationContainer>
+      {authState.isSignedIn === SignedInState.signedOut ? (
+        <AuthNavigator />
       ) : (
-        <Stack.Screen name="App" component={AppNavigator} />
+        <LocalAuth />
       )}
-    </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 

@@ -1,4 +1,6 @@
 import auth from '@react-native-firebase/auth';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import {LocalAuthOptions} from '../auth/reducer';
 
 export const signInAnonymous = async () => {
   try {
@@ -27,4 +29,12 @@ export const signInEmail = async (email: string, password: string) => {
 
 export const signOut = async () => {
   await auth().signOut();
+};
+
+export const saveLocalAuthOptions = (options: LocalAuthOptions) => {
+  EncryptedStorage.setItem('localAuthOptions', JSON.stringify(options));
+};
+
+export const resetLocalAuth = async () => {
+  EncryptedStorage.removeItem('localAuthOptions');
 };

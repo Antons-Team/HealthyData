@@ -1,0 +1,65 @@
+export type AuthAction =
+  | {type: 'SIGN_IN'}
+  | {type: 'SIGN_OUT'}
+  | {type: 'LOCAL_AUTH_OPTIONS'; options: LocalAuthOptions}
+  | {type: 'LOCAL_AUTH_STATE'; state: LocalAuthState};
+
+export type AuthState = {
+  isSignedIn: SignedInState;
+  localAuthOptions: LocalAuthOptions;
+  localAuthState: LocalAuthState;
+};
+
+export type LocalAuthOptions = {
+  pin: boolean;
+  fingerprint: boolean;
+};
+
+export enum LocalAuthState {
+  asking, // ask to set up local auth
+  loading, // checking for saved local auth options
+  signedIn, // completed local auth OR not enabled OR finished asking
+  signedOut, // need to enter pin / fingerprint
+}
+
+export enum SignedInState {
+  singedIn,
+  signedOut,
+  loading,
+}
+
+export const initialState = {
+  isSignedIn: SignedInState.loading,
+  localAuthState: LocalAuthState.loading,
+  localAuthOptions: {pin: false, fingerprint: false},
+};
+
+const authReducer = (prevState: AuthState, action: AuthAction) => {
+  switch (action.type) {
+    case 'SIGN_IN':
+      return {
+        ...prevState,
+        isSignedIn: SignedInState.singedIn,
+        localAuthState:
+          prevState.isSignedIn === SignedInState.signedOut
+            ? LocalAuthState.asking
+            : prevState.localAuthState,
+      };
+    case 'SIGN_OUT':
+      return {
+        ...prevState,
+        isSignedIn: SignedInState.signedOut,
+        localAuthState: LocalAuthState.asking,
+      };
+
+    case 'LOCAL_AUTH_OPTIONS':
+      return {
+        ...prevState,
+        localAuthOptions: action.options,
+      };
+    case 'LOCAL_AUTH_STATE':
+      return {...prevState, localAuthState: action.state};
+  }
+};
+
+export default authReducer;
