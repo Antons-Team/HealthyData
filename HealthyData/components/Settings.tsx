@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Button} from 'react-native';
-import {signOut} from '../services/auth';
+import {signOut} from '../services/Auth';
 
 import {BLUE} from '../style/Colours';
 import { styles } from '../style/Styles';

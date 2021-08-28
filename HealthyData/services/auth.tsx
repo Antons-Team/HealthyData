@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 export const signInAnonymous = async () => {
   try {
@@ -12,7 +13,16 @@ export const signInAnonymous = async () => {
 export const signUpEmail = async (email: string, password: string) => {
   // TODO: error handling for empty inputs
   try {
-    await auth().createUserWithEmailAndPassword(email, password);
+    await auth().createUserWithEmailAndPassword(email, password).then(cred => {
+      return firestore().collection('users').doc(cred.user.uid).set({
+        firstName: null,
+        lastName: null,
+        phoneNumber: null,
+        country: null,
+        state: null,
+        todos: [],
+      });
+    });
   } catch (error) {
     console.error(error);
   }

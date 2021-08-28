@@ -12,12 +12,10 @@ import { TodoItem } from '../@types/Schema';
 import {styles} from '../style/Styles';
 
 import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 
 const Home = (): JSX.Element => {
   const [ todos, setTodos ] = useState<Array<TodoItem>>([]);
-  const [ loading, setLoading ] = useState(true);
-
-  const ref = firestore().collection('todos');
 
   const isToday = (other: Date) => {
     // TODO: move this helper function into separate file
@@ -28,28 +26,19 @@ const Home = (): JSX.Element => {
   };
 
   useEffect(() => {
-    return ref.onSnapshot(querySnapshot => {
-      const temp: Array<TodoItem> = [];
-      querySnapshot.forEach(doc => {
-        const { amount, date, medication } = doc.data();
-
-        if (isToday(date.toDate())) {
-          temp.push({
-            id: doc.id,
-            amount: amount,
-            date: date,
-            medication: medication,
-          });
-        }
-      });
-
-
-      setTodos(temp);
-      if (loading) {
-        setLoading(false);
+    // fetch the todos for the current user
+    firestore().collection('users').doc(`${auth().currentUser?.uid}`).get().then(doc => {
+      return doc.data();
+    }).then(data => {
+      if (data != undefined) {
+        const todos = data.todos.filter((todo: TodoItem) => isToday(todo.date.toDate()));
+        setTodos(todos);
       }
+    }).catch(() => {
+      return;
     });
   }, []);
+
 
   // TODO: move these helper functions to different file
   // capitalise the first character of a name
