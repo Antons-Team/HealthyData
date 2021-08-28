@@ -37,10 +37,13 @@ const AppNavigator = () => {
         tabBarActiveTintColor: 'black',
         tabBarInactiveTintColor: 'black',
         tabBarActiveBackgroundColor: '#00a18d',
+        headerStyle: styles.headerBar,
+        headerTitleStyle: styles.headerTitle,
+        headerTitleAlign: 'center',
       })}>
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Example" component={Example} />
-      <Tab.Screen name="Settings" component={Settings} />
+      <Tab.Screen name="Settings" component={Settings} /> 
     </Tab.Navigator>
   );
 };

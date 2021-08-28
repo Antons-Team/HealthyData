@@ -19,18 +19,28 @@ const Home = (): JSX.Element => {
 
   const ref = firestore().collection('todos');
 
+  const isToday = (other: Date) => {
+    // TODO: move this helper function into separate file
+    const today = new Date()
+    return other.getDate() == today.getDate() &&
+      other.getMonth() == today.getMonth() &&
+      other.getFullYear() == today.getFullYear()
+  }
+
   useEffect(() => {
     return ref.onSnapshot(querySnapshot => {
       const temp: Array<TodoItem> = [];
       querySnapshot.forEach(doc => {
         const { amount, date, medication } = doc.data();
 
-        temp.push({
-          id: doc.id,
-          amount: amount,
-          date: date,
-          medication: medication,
-        });
+        if (isToday(date.toDate())) {
+          temp.push({
+            id: doc.id,
+            amount: amount,
+            date: date,
+            medication: medication,
+          });
+        }
       });
 
 
@@ -41,10 +51,17 @@ const Home = (): JSX.Element => {
     });
   }, []);
 
+  // TODO: move these helper functions to different file
   let renderName: (name: string) => string = function (
     name: string,
   ): string {
     return name;
+  }
+
+  let renderToday: () => string = function (): string {
+    const today = new Date();
+
+    return `${today.getDay().toString()}/${today.getMonth().toString()}/${today.getFullYear().toString()}`;
   }
 
   const renderItem: ListRenderItem<TodoItem> = ({ item }) => (
@@ -56,6 +73,7 @@ const Home = (): JSX.Element => {
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Today's Medication ({renderToday()})</Text>
       <SafeAreaView style={styles.container}>
         <FlatList
           data={todos}
