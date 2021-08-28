@@ -9,13 +9,25 @@ import { Timestamp } from '@firebase/firestore-types';
 // in the firestore schema, e.g. if the user adds 'panadol' add the panadol
 // MedicationItem to the TodoItem
 
+export type UserDocument = {
+    id: string,
+    firstName: string | null,
+    lastName: string | null,
+    phoneNumber: string | null,
+    country: string | null,
+    state: string | null,
+    todos: Array<TodoItem>,
+}
+
 export type MedicationItem = {
     id: string;
     name: string;
     brand_name: string;
-    description: string;
     dosage_amount: number;
     dosage_units: string;
+    description: string;
+    warnings: string;
+    side_effects: string;
 };
 
 export type TodoItem = {

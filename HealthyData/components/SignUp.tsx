@@ -1,7 +1,7 @@
 import React from 'react';
 import {useState} from 'react';
 import {View, TextInput, Button, Text} from 'react-native';
-import {signUpEmail} from '../services/auth';
+import {signUpEmail} from '../services/Auth';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AuthStackParamsList} from '../@types/AuthStackParams';
 
