@@ -6,24 +6,12 @@ import {
   SafeAreaView, 
   FlatList,
   ListRenderItem,
-  StatusBar,
-  StyleSheet,
 } from 'react-native';
 
+import { TodoItem } from '../@types/Schema';
+import {styles} from '../style/Styles';
+
 import firestore from '@react-native-firebase/firestore';
-import { firebase } from '@react-native-firebase/auth';
-
-type MedicationItem = {
-  name: string;
-  brand_name: string;
-  description: string;
-}
-
-type TodoItem = {
-  id: string;
-  date: Date;
-  medication: MedicationItem;
-};
 
 const Home = (): JSX.Element => {
   const [ todos, setTodos ] = useState<Array<TodoItem>>([]);
@@ -35,15 +23,12 @@ const Home = (): JSX.Element => {
     return ref.onSnapshot(querySnapshot => {
       const temp: Array<TodoItem> = [];
       querySnapshot.forEach(doc => {
-        const { date, medication } = doc.data();
+        const { amount, date, medication } = doc.data();
 
         temp.push({
           id: doc.id,
+          amount: amount,
           date: date,
-          // note: the medication data is duplicated instead of foreign keyed
-          // apparently this is best practise for document based NoSQL dbs so wherever
-          // a new todo item is added you query for the correct medication data
-          // and insert that as well
           medication: medication,
         });
       });
@@ -56,9 +41,16 @@ const Home = (): JSX.Element => {
     });
   }, []);
 
+  let renderName: (name: string) => string = function (
+    name: string,
+  ): string {
+    return name;
+  }
+
   const renderItem: ListRenderItem<TodoItem> = ({ item }) => (
     <View style={styles.item}>
-      <Text style={styles.title}>{item.medication.name} {item.medication.description}</Text>
+      <Text style={styles.date}>{item.date.toDate().toLocaleTimeString()}</Text>
+      <Text style={styles.title}>{renderName(item.medication.name)} {item.amount} {item.medication.dosage_amount} {item.medication.dosage_units}</Text>
     </View>
   );
 
@@ -74,21 +66,5 @@ const Home = (): JSX.Element => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-  },
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  title: {
-    fontSize: 32,
-  },
-});
 
 export default Home;

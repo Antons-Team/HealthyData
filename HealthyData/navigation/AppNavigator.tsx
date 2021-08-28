@@ -5,6 +5,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Home from '../components/Home';
 import Example from '../components/Example';
 import Settings from '../components/Settings';
+
+import {styles} from '../style/Styles';
+
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
@@ -30,11 +33,13 @@ const AppNavigator = () => {
             color={color}
           />
         ),
-        tabBarActiveTintColor: '#616FEC',
-        tabBarInactiveTintColor: 'gray',
+        tabBarStyle: styles.navigationBar,
+        tabBarActiveTintColor: 'black',
+        tabBarInactiveTintColor: 'black',
+        tabBarActiveBackgroundColor: '#00a18d',
       })}>
       <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Exahmple" component={Example} />
+      <Tab.Screen name="Example" component={Example} />
       <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
   );
