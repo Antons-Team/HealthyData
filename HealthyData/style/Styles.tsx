@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         marginRight: 10,
         marginLeft: 10,    
-        marginTop: StatusBar.currentHeight || 0,
+        marginTop: 5,
     },
     item: {
         backgroundColor: "whitesmoke",
@@ -26,5 +26,11 @@ export const styles = StyleSheet.create({
     },
     navigationBar: {
         backgroundColor: '#00ffb9',
+    },
+    headerBar: {
+        backgroundColor: '#00ffb9',
+    },
+    headerTitle: {
+        fontWeight: 'bold',
     }
 });
