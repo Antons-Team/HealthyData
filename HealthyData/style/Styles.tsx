@@ -93,5 +93,15 @@ export const styles = StyleSheet.create({
   },
   settingsContainer: {
     padding: 10,
+  },
+  medicationTop: {
+    fontFamily: 'Roboto-Bold',
+    fontSize: 16,
+    color: DARK,
+  },
+  medicationBottom: {
+    fontFamily: 'Roboto-Regular',
+    fontSize: 16,
+    color: DARK,
   }
 });
