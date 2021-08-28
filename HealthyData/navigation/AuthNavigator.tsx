@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import SignUp from '../components/SignUp';
@@ -8,11 +9,11 @@ import { styles } from '../style/Styles';
 
 const Stack = createStackNavigator();
 
-const AuthNavigator = () => {
+const AuthNavigator = (): JSX.Element => {
   return (
     <Stack.Navigator 
       initialRouteName="SignIn"
-      screenOptions={({route}) => ({
+      screenOptions={() => ({
         headerTitle: () => <Header />,
         headerStyle: styles.headerBar,
         headerTitleAlign: 'center',

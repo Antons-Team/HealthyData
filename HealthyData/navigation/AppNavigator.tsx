@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -14,19 +15,19 @@ import {DARK, BLUE} from '../style/Colours';
 
 const Tab = createBottomTabNavigator();
 
-const AppNavigator = () => {
+const AppNavigator = (): JSX.Element => {
   const iconName = (routeName: string, focused: boolean) => {
     switch (routeName) {
-      case 'Settings':
-        return focused ? 'settings' : 'settings-outline';
-      case 'Home':
-        return focused ? 'home' : 'home-outline';
-      case 'Calendar':
-        return focused ? 'calendar' : 'calendar-outline';
-      case 'Medications':
-        return focused ? 'add' : 'add-outline';
-      default:
-        return ''; // this should never happen but error if we don't
+    case 'Settings':
+      return focused ? 'settings' : 'settings-outline';
+    case 'Home':
+      return focused ? 'home' : 'home-outline';
+    case 'Calendar':
+      return focused ? 'calendar' : 'calendar-outline';
+    case 'Medications':
+      return focused ? 'add' : 'add-outline';
+    default:
+      return ''; // this should never happen but error if we don't
     }
   };
 
@@ -34,7 +35,13 @@ const AppNavigator = () => {
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={({route}) => ({
-        tabBarIcon: ({focused, color, size}) => (
+        tabBarIcon: ({focused, color, size}:
+            {
+              focused: boolean,
+              color: string,
+              size: number,
+            }
+        ) => (
           <Ionicons
             name={iconName(route.name, focused)}
             size={size}

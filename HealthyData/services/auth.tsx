@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import auth from '@react-native-firebase/auth';
 
 export const signInAnonymous = async () => {

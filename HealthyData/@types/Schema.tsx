@@ -3,7 +3,7 @@
 // a new todo item is added you query for the correct medication data
 // and insert that as well
 
-import { Timestamp } from "@firebase/firestore-types";
+import { Timestamp } from '@firebase/firestore-types';
 
 // we'll enforce referential transparency using these types instead of 
 // in the firestore schema, e.g. if the user adds 'panadol' add the panadol

@@ -7,7 +7,7 @@ type RootNavigatorProps = {
   signedIn: boolean;
 };
 
-const RootNavigator = ({signedIn}: RootNavigatorProps) => {
+const RootNavigator = ({signedIn}: RootNavigatorProps): JSX.Element => {
   const Stack = createStackNavigator();
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>

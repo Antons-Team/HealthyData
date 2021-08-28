@@ -21,11 +21,11 @@ const Home = (): JSX.Element => {
 
   const isToday = (other: Date) => {
     // TODO: move this helper function into separate file
-    const today = new Date()
+    const today = new Date();
     return other.getDate() == today.getDate() &&
       other.getMonth() == today.getMonth() &&
-      other.getFullYear() == today.getFullYear()
-  }
+      other.getFullYear() == today.getFullYear();
+  };
 
   useEffect(() => {
     return ref.onSnapshot(querySnapshot => {
@@ -53,11 +53,11 @@ const Home = (): JSX.Element => {
 
   // TODO: move these helper functions to different file
   // capitalise the first character of a name
-  let renderName: (name: string) => string = function (
+  const renderName: (name: string) => string = function (
     name: string,
   ): string {
     return name.charAt(0).toUpperCase() + name.slice(1);
-  }
+  };
 
   const renderItem: ListRenderItem<TodoItem> = ({ item }) => (
     <View style={styles.item}>
@@ -68,7 +68,7 @@ const Home = (): JSX.Element => {
 
   return (
     <View style={styles.homeContainer}>
-      <Text style={styles.title}>Today's Medication</Text>
+      <Text style={styles.title}>Today&apos;s Medication</Text>
       <SafeAreaView style={styles.container}>
         <FlatList
           data={todos}
