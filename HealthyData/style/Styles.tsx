@@ -10,6 +10,11 @@ export const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
   },
+  addContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+  },
   container: {
     flexDirection: 'row',
     marginRight: 10,
@@ -94,14 +99,78 @@ export const styles = StyleSheet.create({
   settingsContainer: {
     padding: 10,
   },
+  medicationItem: {
+    backgroundColor: WHITE,
+    borderWidth: 2,
+    flexDirection: 'row',
+    borderRadius: 6,
+    padding: 10,
+    display: 'flex',
+    borderColor: LIGHT,
+  },
+  medicationText: {
+    flexDirection: 'column',
+    alignSelf: 'flex-start',
+    flexGrow: 1,
+    display: 'flex'
+  },
+  medicationAdd: {
+    alignSelf: 'flex-end',
+  },
   medicationTop: {
     fontFamily: 'Roboto-Bold',
     fontSize: 16,
+    padding: 2,
+    flex: 1,
     color: DARK,
   },
   medicationBottom: {
     fontFamily: 'Roboto-Regular',
     fontSize: 16,
+    padding: 2,
+    flex: 2,
     color: DARK,
+  },
+  searchBar: {
+    borderRadius: 6,
+    borderWidth: 1,
+    padding: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
+    margin: 10,
+    fontFamily: 'Roboto-Regular',
+  },
+  infoContainer: {
+    flexDirection: 'column',
+    flex: 1,
+    //justifyContent: 'center',
+    //alignItems: 'flex-start',
+  },
+  infoHeader: {
+    backgroundColor: RED,
+    flexDirection: 'row',
+    padding: 10,
+  },
+  infoHeaderText: {
+    fontSize: 35,
+    flex: 1,
+    color: LIGHT,
+    fontFamily: 'Roboto-Regular',
+  },
+  infoTitle: {
+    textAlign: 'center',
+    fontFamily: 'Roboto-Bold',
+    fontSize: 24,
+    padding: 10,
+  },
+  infoParagraph: {
+    fontFamily: 'Roboto-Regular',
+    fontSize: 13,
+    padding: 10,
+  },
+  infoButton: {
+    alignSelf: 'center',
+    flex: 2,
+    padding: 10,
   }
 });

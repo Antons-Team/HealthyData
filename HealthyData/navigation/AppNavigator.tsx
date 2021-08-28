@@ -4,7 +4,6 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Home from '../components/Home';
-import Medications from '../components/Medications';
 import Calendar from '../components/Calendar';
 import Settings from '../components/Settings';
 import Header from '../components/Header';
@@ -12,8 +11,10 @@ import Header from '../components/Header';
 import {styles} from '../style/Styles';
 
 import {DARK, BLUE} from '../style/Colours';
+import MedicationsNavigator from './MedicationsNavigator';
+import { RootStackParamList } from '../@types/RootStackParams';
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<RootStackParamList>();
 
 const AppNavigator = (): JSX.Element => {
   const iconName = (routeName: string, focused: boolean) => {
@@ -24,7 +25,7 @@ const AppNavigator = (): JSX.Element => {
       return focused ? 'home' : 'home-outline';
     case 'Calendar':
       return focused ? 'calendar' : 'calendar-outline';
-    case 'Medications':
+    case 'MedicationsNavigator':
       return focused ? 'add' : 'add-outline';
     default:
       return ''; // this should never happen but error if we don't
@@ -58,7 +59,11 @@ const AppNavigator = (): JSX.Element => {
         headerTitleAlign: 'center',
       })}>
       <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Medications" component={Medications} />
+      <Tab.Screen 
+        name="MedicationsNavigator" 
+        component={MedicationsNavigator} 
+        options={{headerShown: false}}
+      />
       <Tab.Screen name="Calendar" component={Calendar} />
       <Tab.Screen name="Settings" component={Settings} /> 
     </Tab.Navigator>
