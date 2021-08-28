@@ -12,7 +12,7 @@ enum State {
   loading,
 }
 
-const App = () => {
+const App = (): JSX.Element => {
   const [signedInState, setSignedInState] = useState<State>(State.loading) ;
 
   useEffect(() => {

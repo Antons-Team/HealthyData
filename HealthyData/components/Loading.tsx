@@ -4,7 +4,7 @@ import {Text, View, ActivityIndicator} from 'react-native';
 import {styles} from '../style/Styles';
 import {LIGHT} from '../style/Colours';
 
-const Loading = () => {
+const Loading = (): JSX.Element => {
   return (
     <View style={styles.splashContainer}>
       <Text style={styles.splashText}>PillX</Text>

@@ -5,7 +5,7 @@ import {signOut} from '../services/auth';
 import {BLUE} from '../style/Colours';
 import { styles } from '../style/Styles';
 
-const Settings = () => {
+const Settings = (): JSX.Element => {
   return (
     <View style={styles.settingsContainer}>
       <Button 

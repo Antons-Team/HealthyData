@@ -10,7 +10,7 @@ import {DARK, BLUE} from '../style/Colours';
 
 type Props = StackScreenProps<AuthStackParamsList, 'SignUp'>;
 
-const SignUp = (props: Props) => {
+const SignUp = (props: Props): JSX.Element => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -42,7 +42,7 @@ const SignUp = (props: Props) => {
         <Text
           style={{padding: 2}}
         >
-          I'm already a member,
+          I&apos;m already a member,
         </Text>
         <Text
           style={styles.switchButton}
