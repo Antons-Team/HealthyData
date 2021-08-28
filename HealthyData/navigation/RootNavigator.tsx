@@ -4,7 +4,11 @@ import {useAuth} from '../auth/provider';
 import AuthNavigator from './AuthNavigator';
 import auth from '@react-native-firebase/auth';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import {LocalAuthOptions, LocalAuthState, SignedInState} from '../auth/reducer';
+import {
+  LocalAuthSettings,
+  LocalAuthState,
+  SignedInState,
+} from '../auth/reducer';
 import Loading from '../components/Loading';
 import {NavigationContainer} from '@react-navigation/native';
 import LocalAuth from './LocalAuth';
@@ -18,12 +22,12 @@ const RootNavigator = () => {
     state: authState,
     handleSignIn,
     handleSignOut,
-    setLocalAuthOptions,
+    setLocalAuthSettings,
     setLocalAuthState,
   } = useAuth();
 
   useEffect(() => {
-    getLocalAuthOptions();
+    getLocalAuthSettings();
     const subscriber = auth().onAuthStateChanged(async user => {
       if (user) {
         handleSignIn();
@@ -35,14 +39,14 @@ const RootNavigator = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const getLocalAuthOptions = async () => {
+  const getLocalAuthSettings = async () => {
     try {
-      const localAuth = await EncryptedStorage.getItem('localAuthOptions');
+      const localAuth = await EncryptedStorage.getItem('localAuthSettings');
       if (localAuth !== null) {
-        const localAuthOptions: LocalAuthOptions = JSON.parse(localAuth);
-        setLocalAuthOptions(localAuthOptions);
+        const localAuthSettings: LocalAuthSettings = JSON.parse(localAuth);
+        setLocalAuthSettings(localAuthSettings);
         setLocalAuthState(
-          localAuthOptions.fingerprint || localAuthOptions.pin
+          localAuthSettings.fingerprint || localAuthSettings.pin
             ? LocalAuthState.signedOut
             : LocalAuthState.signedIn,
         );

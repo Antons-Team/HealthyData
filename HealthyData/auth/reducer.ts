@@ -1,16 +1,16 @@
 export type AuthAction =
   | {type: 'SIGN_IN'}
   | {type: 'SIGN_OUT'}
-  | {type: 'LOCAL_AUTH_OPTIONS'; options: LocalAuthOptions}
+  | {type: 'LOCAL_AUTH_OPTIONS'; options: LocalAuthSettings}
   | {type: 'LOCAL_AUTH_STATE'; state: LocalAuthState};
 
 export type AuthState = {
   isSignedIn: SignedInState;
-  localAuthOptions: LocalAuthOptions;
+  localAuthSettings: LocalAuthSettings;
   localAuthState: LocalAuthState;
 };
 
-export type LocalAuthOptions = {
+export type LocalAuthSettings = {
   pin: boolean;
   fingerprint: boolean;
 };
@@ -31,7 +31,7 @@ export enum SignedInState {
 export const initialState = {
   isSignedIn: SignedInState.loading,
   localAuthState: LocalAuthState.loading,
-  localAuthOptions: {pin: false, fingerprint: false},
+  localAuthSettings: {pin: false, fingerprint: false},
 };
 
 const authReducer = (prevState: AuthState, action: AuthAction) => {
@@ -55,7 +55,7 @@ const authReducer = (prevState: AuthState, action: AuthAction) => {
     case 'LOCAL_AUTH_OPTIONS':
       return {
         ...prevState,
-        localAuthOptions: action.options,
+        localAuthSettings: action.options,
       };
     case 'LOCAL_AUTH_STATE':
       return {...prevState, localAuthState: action.state};
