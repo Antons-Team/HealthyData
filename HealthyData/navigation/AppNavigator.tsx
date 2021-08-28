@@ -3,10 +3,13 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Home from '../components/Home';
-import Example from '../components/Example';
+import Medications from '../components/Medications';
+import Calendar from '../components/Calendar';
 import Settings from '../components/Settings';
 
 import {styles} from '../style/Styles';
+
+import {DARK, LIGHT, RED, BLUE, WHITE} from '../style/Colours';
 
 const Tab = createBottomTabNavigator();
 
@@ -17,8 +20,12 @@ const AppNavigator = () => {
         return focused ? 'settings' : 'settings-outline';
       case 'Home':
         return focused ? 'home' : 'home-outline';
+      case 'Calendar':
+        return focused ? 'calendar' : 'calendar-outline';
+      case 'Medications':
+        return focused ? 'add' : 'add-outline';
       default:
-        return 'restaurant-outline';
+        return ''; // this should never happen but error if we don't
     }
   };
 
@@ -34,15 +41,15 @@ const AppNavigator = () => {
           />
         ),
         tabBarStyle: styles.navigationBar,
-        tabBarActiveTintColor: 'black',
-        tabBarInactiveTintColor: 'black',
-        tabBarActiveBackgroundColor: '#00a18d',
+        tabBarActiveTintColor: BLUE,
+        tabBarInactiveTintColor: DARK,
         headerStyle: styles.headerBar,
         headerTitleStyle: styles.headerTitle,
         headerTitleAlign: 'center',
       })}>
       <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Example" component={Example} />
+      <Tab.Screen name="Medications" component={Medications} />
+      <Tab.Screen name="Calendar" component={Calendar} />
       <Tab.Screen name="Settings" component={Settings} /> 
     </Tab.Navigator>
   );
