@@ -172,5 +172,7 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
     flex: 2,
     padding: 10,
+    position: 'absolute',
+    bottom: 0,
   }
 });
