@@ -6,10 +6,11 @@ import Home from '../components/Home';
 import Medications from '../components/Medications';
 import Calendar from '../components/Calendar';
 import Settings from '../components/Settings';
+import Header from '../components/Header';
 
 import {styles} from '../style/Styles';
 
-import {DARK, LIGHT, RED, BLUE, WHITE} from '../style/Colours';
+import {DARK, BLUE} from '../style/Colours';
 
 const Tab = createBottomTabNavigator();
 
@@ -43,7 +44,9 @@ const AppNavigator = () => {
         tabBarStyle: styles.navigationBar,
         tabBarActiveTintColor: BLUE,
         tabBarInactiveTintColor: DARK,
+        tabBarShowLabel: false, // remove the name from the navigation so just shows an icon
         headerStyle: styles.headerBar,
+        headerTitle: () => <Header />,  
         headerTitleStyle: styles.headerTitle,
         headerTitleAlign: 'center',
       })}>

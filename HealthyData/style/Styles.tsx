@@ -54,6 +54,7 @@ export const styles = StyleSheet.create({
     },
     headerTitle: {
         fontFamily: "Roboto-Bold",
+        fontSize: 24,
         color: DARK,
     },
     splashContainer: {
@@ -71,4 +72,27 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         alignSelf: 'center',
     },
+    loginSignupContainer: {
+        flex: 1,
+        padding: 10,
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    switchLoginSignupContainer: {
+        flexDirection: 'row',
+        alignContent: 'center',
+        alignSelf: 'center',
+        padding: 10,
+    },
+    switchButton: {
+        color: BLUE,
+        padding: 2,
+        backfaceVisibility: 'hidden',
+    },
+    loginSignupTextInput: {
+        height: 60,
+    },
+    settingsContainer: {
+        padding: 10,
+    }
 });
