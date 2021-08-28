@@ -11,6 +11,8 @@ import {
 import { TodoItem } from '../@types/Schema';
 import {styles} from '../style/Styles';
 
+import { renderName } from '../utils/Display';
+
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
@@ -38,15 +40,6 @@ const Home = (): JSX.Element => {
       return;
     });
   }, []);
-
-
-  // TODO: move these helper functions to different file
-  // capitalise the first character of a name
-  const renderName: (name: string) => string = function (
-    name: string,
-  ): string {
-    return name.charAt(0).toUpperCase() + name.slice(1);
-  };
 
   const renderItem: ListRenderItem<TodoItem> = ({ item }) => (
     <View style={styles.item}>
