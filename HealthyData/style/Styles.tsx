@@ -13,6 +13,7 @@ export const styles = StyleSheet.create({
     },
     item: {
         backgroundColor: "whitesmoke",
+        flexDirection: 'row',
         borderWidth: 2,
         borderRadius: 6,
         padding: 5,
@@ -20,9 +21,17 @@ export const styles = StyleSheet.create({
     },
     date: {
         fontWeight: 'bold',
+        padding: 15,
+    },
+    info: {
+        padding: 15,
     },
     title: {
-
+        fontWeight: 'bold',
+        alignSelf: 'flex-start',
+        padding: 10,
+        paddingBottom: 2,
+        fontSize: 18,
     },
     navigationBar: {
         backgroundColor: '#00ffb9',
@@ -32,5 +41,5 @@ export const styles = StyleSheet.create({
     },
     headerTitle: {
         fontWeight: 'bold',
-    }
+    },
 });

@@ -52,12 +52,14 @@ const Home = (): JSX.Element => {
   }, []);
 
   // TODO: move these helper functions to different file
+  // capitalise the first character of a name
   let renderName: (name: string) => string = function (
     name: string,
   ): string {
-    return name;
+    return name.charAt(0).toUpperCase() + name.slice(1);
   }
 
+  // render todays date D/M/Y
   let renderToday: () => string = function (): string {
     const today = new Date();
 
@@ -67,13 +69,13 @@ const Home = (): JSX.Element => {
   const renderItem: ListRenderItem<TodoItem> = ({ item }) => (
     <View style={styles.item}>
       <Text style={styles.date}>{item.date.toDate().toLocaleTimeString()}</Text>
-      <Text style={styles.title}>{renderName(item.medication.name)} {item.amount} {item.medication.dosage_amount} {item.medication.dosage_units}</Text>
+      <Text style={styles.info}>{renderName(item.medication.name)} {item.amount} x {item.medication.dosage_amount}{item.medication.dosage_units}</Text>
     </View>
   );
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Today's Medication ({renderToday()})</Text>
+      <Text style={styles.title}>Today's Medication - {renderToday()}</Text>
       <SafeAreaView style={styles.container}>
         <FlatList
           data={todos}
