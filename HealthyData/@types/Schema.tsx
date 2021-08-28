@@ -10,12 +10,13 @@ import { Timestamp } from "@firebase/firestore-types";
 // MedicationItem to the TodoItem
 
 export type MedicationItem = {
+    id: string;
     name: string;
     brand_name: string;
     description: string;
     dosage_amount: number;
     dosage_units: string;
-}
+};
 
 export type TodoItem = {
     id: string;
