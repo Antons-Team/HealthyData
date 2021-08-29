@@ -33,7 +33,9 @@ export type MedicationItem = {
 export type TodoItem = {
     id: string;
     date: Timestamp;
+    today: Timestamp;
     time: Timestamp;
+    refillDate: Timestamp;
     supply: number;
     doses: number;
     days: Days;
