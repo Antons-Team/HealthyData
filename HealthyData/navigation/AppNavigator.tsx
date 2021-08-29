@@ -13,13 +13,14 @@ import {styles} from '../style/Styles';
 import {DARK, BLUE} from '../style/Colours';
 import MedicationsNavigator from './MedicationsNavigator';
 import { RootStackParamList } from '../@types/RootStackParams';
+import SettingsNavigator from './SettingsNavigator';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
 const AppNavigator = (): JSX.Element => {
   const iconName = (routeName: string, focused: boolean) => {
     switch (routeName) {
-    case 'Settings':
+    case 'SettingsNavigator':
       return focused ? 'settings' : 'settings-outline';
     case 'Home':
       return focused ? 'home' : 'home-outline';
@@ -65,7 +66,11 @@ const AppNavigator = (): JSX.Element => {
         options={{headerShown: false}}
       />
       <Tab.Screen name="Calendar" component={Calendar} />
-      <Tab.Screen name="Settings" component={Settings} /> 
+      <Tab.Screen 
+        name="SettingsNavigator" 
+        component={SettingsNavigator} 
+        options={{headerShown: false}}
+      /> 
     </Tab.Navigator>
   );
 };

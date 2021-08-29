@@ -96,9 +96,6 @@ export const styles = StyleSheet.create({
   loginSignupTextInput: {
     height: 60,
   },
-  settingsContainer: {
-    padding: 10,
-  },
   medicationItem: {
     backgroundColor: WHITE,
     borderWidth: 2,
@@ -139,6 +136,8 @@ export const styles = StyleSheet.create({
     paddingRight: 20,
     margin: 10,
     fontFamily: 'Roboto-Regular',
+    borderColor: '#ddd',
+    backgroundColor: WHITE,
   },
   infoContainer: {
     flexDirection: 'column',
@@ -174,5 +173,30 @@ export const styles = StyleSheet.create({
     padding: 10,
     position: 'absolute',
     bottom: 0,
-  }
+  },
+  settingsContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    padding: 10,
+  },
+  settingsNavigator: {
+    padding: 20,
+    marginBottom: 10,
+    flexDirection: 'row',
+    borderRadius: 6,
+    backgroundColor: WHITE,
+    borderBottomWidth: 1,
+    //borderBottomColor: DARK,
+    borderBottomColor: '#ddd',
+  },
+  settingsArrow: {
+    alignSelf: 'flex-end',
+  },
+  settingsText: {
+    fontFamily: 'Roboto-Regular',
+    flex: 1,
+    color: DARK,
+    fontSize: 20,
+    alignSelf: 'flex-start',
+  },
 });
