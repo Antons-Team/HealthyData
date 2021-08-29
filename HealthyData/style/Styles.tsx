@@ -95,6 +95,8 @@ export const styles = StyleSheet.create({
   },
   loginSignupTextInput: {
     height: 60,
+    fontFamily: 'Roboto-Regular',
+    fontSize: 18,
   },
   medicationItem: {
     backgroundColor: WHITE,
@@ -223,4 +225,36 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingLeft: 18,
   },
+  addMedicationContainer: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  addMedicationEntry: {
+    height: 60,
+    padding: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 10,
+    borderRadius: 6,
+    fontFamily: 'Roboto-Regular',
+    color: DARK,
+    backgroundColor: WHITE,
+    borderBottomColor: '#ddd',
+    borderBottomWidth: 1,
+    paddingLeft: 18,
+  },
+  addMedicationTimeText: {
+    flex: 1,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    fontFamily: 'Roboto-Regular',
+    fontSize: 20,
+    color: DARK,
+    backgroundColor: WHITE,
+  },
+  addMedicationTitle: {
+    fontFamily: 'Roboto-Regular',
+    fontSize: 18,
+    padding: 10,
+  }
 });

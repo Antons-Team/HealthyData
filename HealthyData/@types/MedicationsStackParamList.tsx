@@ -6,5 +6,5 @@ export type MedicationsStackParamList = {
     MedicationsNavigation: NavigatorScreenParams<RootStackParamList>;
     Medications: undefined;
     AddMedication: {medication: MedicationItem};
-    AddMedicationInfo: undefined;
+    AddMedicationInfo: {medication: MedicationItem};
 };

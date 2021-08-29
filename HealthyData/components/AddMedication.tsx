@@ -47,7 +47,9 @@ const AddMedication = ({navigation, route}: Props): JSX.Element => {
         <Button 
           title="Add Medication"
           onPress={() => {
-            navigation.navigate('AddMedicationInfo');
+            navigation.navigate('AddMedicationInfo', {
+              medication: route.params.medication
+            });
           }}
           color={RED}
         />

@@ -21,8 +21,9 @@ const SignIn = (props: Props): JSX.Element => {
       <TextInput
         style={styles.loginSignupTextInput} 
         underlineColorAndroid={DARK}
-        placeholder="Username" 
+        placeholder="Email Address" 
         value={email} 
+        keyboardType='email-address'
         onChangeText={setEmail} 
       />
       <TextInput
