@@ -18,6 +18,7 @@ import auth from '@react-native-firebase/auth';
 
 const Home = (): JSX.Element => {
   const [ todos, setTodos ] = useState<Array<TodoItem>>([]);
+  const [ refills, setRefills ] = useState<Array<TodoItem>>([]);
 
   const isToday = (other: Date) => {
     // TODO: move this helper function into separate file
@@ -52,6 +53,11 @@ const Home = (): JSX.Element => {
     <View style={styles.homeContainer}>
       <Text style={styles.title}>Today&apos;s Medication</Text>
       <SafeAreaView style={styles.container}>
+        <Text>
+          {
+            todos.length == 0 ? 'Nothing to do!' : ''
+          }
+        </Text>
         <FlatList
           data={todos}
           renderItem={renderItem}
@@ -59,6 +65,13 @@ const Home = (): JSX.Element => {
         />
       </SafeAreaView>
       <Text style={styles.title}>Upcoming Refills</Text>
+      <SafeAreaView style={styles.container}>
+        <Text>
+          {
+            refills.length == 0 ? 'Nothing to do!' : ''
+          }
+        </Text>
+      </SafeAreaView>
     </View>
   );
 };
