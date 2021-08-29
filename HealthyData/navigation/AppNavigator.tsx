@@ -5,7 +5,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Home from '../components/Home';
 import Calendar from '../components/Calendar';
-import Settings from '../components/Settings';
 import Header from '../components/Header';
 
 import {styles} from '../style/Styles';

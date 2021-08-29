@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {ReactElement, useEffect, useState} from 'react';
 import {View, Button} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {useAuth} from '../../auth/provider';
@@ -7,7 +7,7 @@ import {signOut, resetLocalAuth} from '../../services/auth';
 import PinLogin, {MAX_PIN_LENGTH} from './PinLogin';
 import TouchID from 'react-native-touch-id';
 
-const LocalAuthLockedScreen = () => {
+const LocalAuthLockedScreen = (): ReactElement => {
   const {
     state: {localAuthSettings},
     setLocalAuthState,
@@ -21,15 +21,11 @@ const LocalAuthLockedScreen = () => {
       return;
     }
     TouchID.authenticate('to demo this react-native component')
-      .then((_success: any) => {
+      .then(() => {
         setLocalAuthState(LocalAuthState.signedIn);
-        // Success code
       })
       .catch((error: any) => {
-        if (
-          error.code === 'AUTHENTICATION_CANCELLED' ||
-          'AUTHENICATION_FAILED'
-        ) {
+        if (error.code === 'AUTHENTICATION_CANCELED') {
           // failed /canecelled by user
         } else {
           console.error(error);
@@ -59,6 +55,7 @@ const LocalAuthLockedScreen = () => {
 
     if (pin.length === MAX_PIN_LENGTH) {
       handleEnterPin();
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       return () => {};
     }
   }, [pin, setLocalAuthState]);

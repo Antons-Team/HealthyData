@@ -2,7 +2,7 @@ import React from 'react';
 import {useState} from 'react';
 import {View, TextInput, Button, Text} from 'react-native';
 // import {useAuth} from '../auth/provider';
-import {signInEmail} from '../services/auth';
+import {signInAnonymous, signInEmail} from '../services/auth';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AuthStackParamsList} from '../@types/AuthStackParams';
 
@@ -39,6 +39,13 @@ const SignIn = (props: Props): JSX.Element => {
         title="Log In"
         onPress={() => {
           signInEmail(email, password);
+        }}
+      />
+      <Button
+        color={BLUE}
+        title="log in anonymous"
+        onPress={() => {
+          signInAnonymous();
         }}
       />
       <View style={styles.switchLoginSignupContainer}>

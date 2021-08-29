@@ -1,6 +1,6 @@
-import React from 'react';
-import {useEffect} from 'react';
-import {useAuth} from '../auth/provider';
+import React, { ReactElement } from 'react';
+import { useEffect } from 'react';
+import { useAuth } from '../auth/provider';
 import AuthNavigator from './AuthNavigator';
 import auth from '@react-native-firebase/auth';
 import EncryptedStorage from 'react-native-encrypted-storage';
@@ -10,15 +10,11 @@ import {
   SignedInState,
 } from '../auth/reducer';
 import Loading from '../components/Loading';
-import {NavigationContainer} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import LocalAuth from './LocalAuth';
 import TouchID from 'react-native-touch-id';
 
-type RootNavigatorProps = {
-  signedIn: boolean;
-};
-
-const RootNavigator = () => {
+const RootNavigator = () : ReactElement => {
   const {
     state: authState,
     handleSignIn,
@@ -39,7 +35,6 @@ const RootNavigator = () => {
       }
     });
     return subscriber;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getLocalAuthSettings = async () => {

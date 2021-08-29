@@ -1,44 +1,44 @@
-import React from 'react';
-import {View, Text, TouchableOpacity, Dimensions} from 'react-native';
+import React, { ReactElement } from 'react';
+import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 type KeyProps = {
   value: string;
-  handleKeyPress: any;
+  handleKeyPress: () => void;
 };
 
 const EMPTY = '';
 const DELETE = 'D';
 export const MAX_PIN_LENGTH = 4;
 
-const Key = ({value, handleKeyPress}: KeyProps) => {
+const Key = ({ value, handleKeyPress }: KeyProps) => {
   switch (value) {
-    case EMPTY:
-      return <Text> </Text>;
-    case DELETE:
-      return (
-        <TouchableOpacity
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          onPress={handleKeyPress}>
-          <Ionicons name={'restaurant'} />
-        </TouchableOpacity>
-      );
-    default:
-      return (
-        <TouchableOpacity
-          onPress={handleKeyPress}
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Text>{value}</Text>
-        </TouchableOpacity>
-      );
+  case EMPTY:
+    return <Text> </Text>;
+  case DELETE:
+    return (
+      <TouchableOpacity
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+        onPress={handleKeyPress}>
+        <Ionicons name={'restaurant'} />
+      </TouchableOpacity>
+    );
+  default:
+    return (
+      <TouchableOpacity
+        onPress={handleKeyPress}
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Text>{value}</Text>
+      </TouchableOpacity>
+    );
   }
 };
 
@@ -47,7 +47,7 @@ type NumPadProps = {
   handleDelete: () => void;
 };
 
-const NumPad = ({handleKeyPress, handleDelete}: NumPadProps) => {
+const NumPad = ({ handleKeyPress, handleDelete }: NumPadProps) => {
   const values = [
     '1',
     '2',
@@ -64,7 +64,7 @@ const NumPad = ({handleKeyPress, handleDelete}: NumPadProps) => {
   ];
 
   return (
-    <View style={{flexDirection: 'row', flexWrap: 'wrap', flex: 1}}>
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap', flex: 1 }}>
       {values.map(value => {
         return (
           <View
@@ -90,9 +90,9 @@ type PinFieldProps = {
   pin: string;
   hidden: boolean;
 };
-const PinField = ({pin, hidden}: PinFieldProps) => {
+const PinField = ({ pin, hidden }: PinFieldProps) => {
   return (
-    <View style={{flexDirection: 'row'}}>
+    <View style={{ flexDirection: 'row' }}>
       {pin.split('').map((digit, i) => {
         return <PinNumber key={i} displayChar={hidden ? '*' : digit} />;
       })}
@@ -103,10 +103,10 @@ const PinField = ({pin, hidden}: PinFieldProps) => {
   );
 };
 
-type PinNumberProps = {displayChar: string};
-const PinNumber = ({displayChar}: PinNumberProps) => {
+type PinNumberProps = { displayChar: string };
+const PinNumber = ({ displayChar }: PinNumberProps) => {
   return (
-    <View style={{borderColor: 'black', width: 50, height: 50, borderWidth: 1}}>
+    <View style={{ borderColor: 'black', width: 50, height: 50, borderWidth: 1 }}>
       <Text>{displayChar}</Text>
     </View>
   );
@@ -118,7 +118,7 @@ type PinLoginProps = {
   loading: boolean;
   message: string;
 };
-const PinLogin = ({pin, setPin, loading, message}: PinLoginProps) => {
+const PinLogin = ({ pin, setPin, loading, message }: PinLoginProps) : ReactElement => {
   const handleKeyPress = (value: string) => {
     if (pin.length < 4) {
       setPin(pin + value);
@@ -132,7 +132,7 @@ const PinLogin = ({pin, setPin, loading, message}: PinLoginProps) => {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <Text>pinlogin</Text>
       <Text>{message}</Text>
       <PinField pin={pin} hidden={true} />

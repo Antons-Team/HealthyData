@@ -19,6 +19,7 @@
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.1.0",
     "@react-navigation/stack": "^6.0.7",
+    "@types/react-native-touch-id": "^4.4.0",
     "@types/react-native-vector-icons": "^6.4.8",
     "@typescript-eslint/eslint-plugin": "^4.29.3",
     "react": "17.0.1",

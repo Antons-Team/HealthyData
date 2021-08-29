@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Button,
   Text,
@@ -25,7 +25,7 @@ type Props = {
   route: RouteProp<{ params: { medication: MedicationItem } }, 'params'>
 }
 
-const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
+const AddMedicationInfo = ({route}: Props): JSX.Element => {
   const [ show, setShow ] = useState<boolean>(false);
   const [ timeOfDay, setTimeOfDay ] = useState<Date>(new Date());
 

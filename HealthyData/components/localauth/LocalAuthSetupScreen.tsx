@@ -1,16 +1,17 @@
-import {createStackNavigator, StackScreenProps} from '@react-navigation/stack';
+import { createStackNavigator, StackScreenProps } from '@react-navigation/stack';
 import React from 'react';
-import {useState} from 'react';
-import {Button, Text, View} from 'react-native';
-import {useAuth} from '../../auth/provider';
-import {LocalAuthState} from '../../auth/reducer';
-import {saveLocalAuthSettings} from '../../services/auth';
+import { ReactElement } from 'react';
+import { useState } from 'react';
+import { Button, Text, View } from 'react-native';
+import { useAuth } from '../../auth/provider';
+import { LocalAuthState } from '../../auth/reducer';
+import { saveLocalAuthSettings } from '../../services/auth';
 import PinLogin from './PinLogin';
 
 type LocalAuthStackParamsList = {
   AskLocalAuth: undefined;
   FirstPin: undefined;
-  ConfirmPin: {pin: string};
+  ConfirmPin: { pin: string };
   AskFingerprint: undefined;
 };
 
@@ -20,7 +21,7 @@ const AskLocalAuth = ({
   const {
     setLocalAuthState,
     setLocalAuthSettings,
-    state: {localAuthSettings},
+    state: { localAuthSettings },
   } = useAuth();
   return (
     <View>
@@ -51,7 +52,7 @@ const AskLocalAuth = ({
   );
 };
 
-const LocalAuthNavigator = () => {
+const LocalAuthNavigator = (): ReactElement => {
   const Stack = createStackNavigator<LocalAuthStackParamsList>();
   return (
     <Stack.Navigator>
@@ -67,13 +68,13 @@ type PinSetupProps = {
   pin: string;
   setPin: (pin: string) => void;
   loading: boolean;
-  handleConfirm: any;
+  handleConfirm: () => void;
   message: string;
 };
 
 const PinSetup = (props: PinSetupProps) => {
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <PinLogin {...props} />
       <Button
         disabled={props.pin.length !== 4}
@@ -90,7 +91,7 @@ const FirstPin = ({
   const [pin, setPin] = useState('');
 
   const handleConfirm = () => {
-    navigation.navigate('ConfirmPin', {pin});
+    navigation.navigate('ConfirmPin', { pin });
     setPin('');
   };
 
@@ -110,7 +111,7 @@ const ConfirmPin = ({
   navigation,
 }: StackScreenProps<LocalAuthStackParamsList, 'ConfirmPin'>) => {
   const {
-    state: {localAuthSettings},
+    state: { localAuthSettings },
     setLocalAuthSettings,
     setLocalAuthState,
   } = useAuth();
@@ -124,7 +125,7 @@ const ConfirmPin = ({
       setPin('');
     } else {
       setLoading(true);
-      const updatedSettings = {...localAuthSettings, pin: true, pincode: pin};
+      const updatedSettings = { ...localAuthSettings, pin: true, pincode: pin };
       setLocalAuthSettings(updatedSettings);
       saveLocalAuthSettings(updatedSettings);
       if (localAuthSettings.fingerprintEnabled) {
@@ -148,13 +149,13 @@ const ConfirmPin = ({
 
 const AskFingerprint = () => {
   const {
-    state: {localAuthSettings},
+    state: { localAuthSettings },
     setLocalAuthSettings,
     setLocalAuthState,
   } = useAuth();
   const handleFingerprintButton = (enabled: boolean) => {
-    setLocalAuthSettings({...localAuthSettings, fingerprint: enabled});
-    saveLocalAuthSettings({...localAuthSettings, fingerprint: enabled});
+    setLocalAuthSettings({ ...localAuthSettings, fingerprint: enabled });
+    saveLocalAuthSettings({ ...localAuthSettings, fingerprint: enabled });
     setLocalAuthState(LocalAuthState.signedIn);
   };
 

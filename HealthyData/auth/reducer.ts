@@ -42,39 +42,39 @@ export const initialState = {
   },
 };
 
-const authReducer = (prevState: AuthState, action: AuthAction) => {
+const authReducer = (prevState: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
-    case 'SIGN_IN':
-      return {
-        ...prevState,
-        isSignedIn: SignedInState.singedIn,
-        localAuthState:
+  case 'SIGN_IN':
+    return {
+      ...prevState,
+      isSignedIn: SignedInState.singedIn,
+      localAuthState:
           prevState.isSignedIn === SignedInState.signedOut
             ? LocalAuthState.asking
             : prevState.localAuthState,
-      };
-    case 'SIGN_OUT':
-      return {
-        ...prevState,
-        isSignedIn: SignedInState.signedOut,
-        localAuthState: LocalAuthState.asking,
-      };
+    };
+  case 'SIGN_OUT':
+    return {
+      ...prevState,
+      isSignedIn: SignedInState.signedOut,
+      localAuthState: LocalAuthState.asking,
+    };
 
-    case 'LOCAL_AUTH_OPTIONS':
-      return {
-        ...prevState,
-        localAuthSettings: action.options,
-      };
-    case 'LOCAL_AUTH_STATE':
-      return {...prevState, localAuthState: action.state};
-    case 'FINGERPRINT_ENABLED':
-      return {
-        ...prevState,
-        localAuthSettings: {
-          ...prevState.localAuthSettings,
-          fingerprintEnabled: action.enabled,
-        },
-      };
+  case 'LOCAL_AUTH_OPTIONS':
+    return {
+      ...prevState,
+      localAuthSettings: action.options,
+    };
+  case 'LOCAL_AUTH_STATE':
+    return {...prevState, localAuthState: action.state};
+  case 'FINGERPRINT_ENABLED':
+    return {
+      ...prevState,
+      localAuthSettings: {
+        ...prevState.localAuthSettings,
+        fingerprintEnabled: action.enabled,
+      },
+    };
   }
 };
 
