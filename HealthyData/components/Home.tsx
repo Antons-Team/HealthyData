@@ -6,64 +6,51 @@ import {
   SafeAreaView, 
   FlatList,
   ListRenderItem,
-  StatusBar,
-  StyleSheet,
 } from 'react-native';
 
+import { TodoItem } from '../@types/Schema';
+import {styles} from '../style/Styles';
+
+import { renderName } from '../utils/Display';
+
 import firestore from '@react-native-firebase/firestore';
-import { firebase } from '@react-native-firebase/auth';
-
-type MedicationItem = {
-  name: string;
-  brand_name: string;
-  description: string;
-}
-
-type TodoItem = {
-  id: string;
-  date: Date;
-  medication: MedicationItem;
-};
+import auth from '@react-native-firebase/auth';
 
 const Home = (): JSX.Element => {
   const [ todos, setTodos ] = useState<Array<TodoItem>>([]);
-  const [ loading, setLoading ] = useState(true);
 
-  const ref = firestore().collection('todos');
+  const isToday = (other: Date) => {
+    // TODO: move this helper function into separate file
+    const today = new Date();
+    return other.getDate() == today.getDate() &&
+      other.getMonth() == today.getMonth() &&
+      other.getFullYear() == today.getFullYear();
+  };
 
   useEffect(() => {
-    return ref.onSnapshot(querySnapshot => {
-      const temp: Array<TodoItem> = [];
-      querySnapshot.forEach(doc => {
-        const { date, medication } = doc.data();
-
-        temp.push({
-          id: doc.id,
-          date: date,
-          // note: the medication data is duplicated instead of foreign keyed
-          // apparently this is best practise for document based NoSQL dbs so wherever
-          // a new todo item is added you query for the correct medication data
-          // and insert that as well
-          medication: medication,
-        });
-      });
-
-
-      setTodos(temp);
-      if (loading) {
-        setLoading(false);
+    // fetch the todos for the current user
+    firestore().collection('users').doc(`${auth().currentUser?.uid}`).get().then(doc => {
+      return doc.data();
+    }).then(data => {
+      if (data != undefined) {
+        const todos = data.todos.filter((todo: TodoItem) => isToday(todo.date.toDate()));
+        setTodos(todos);
       }
+    }).catch(() => {
+      return;
     });
   }, []);
 
   const renderItem: ListRenderItem<TodoItem> = ({ item }) => (
     <View style={styles.item}>
-      <Text style={styles.title}>{item.medication.name} {item.medication.description}</Text>
+      <Text style={styles.time}>{item.date.toDate().toLocaleTimeString()}</Text>
+      <Text style={styles.info}>{renderName(item.medication.name)} {item.amount} x {item.medication.dosage_amount}{item.medication.dosage_units}</Text>
     </View>
   );
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={styles.homeContainer}>
+      <Text style={styles.title}>Today&apos;s Medication</Text>
       <SafeAreaView style={styles.container}>
         <FlatList
           data={todos}
@@ -71,24 +58,9 @@ const Home = (): JSX.Element => {
           keyExtractor={item => item.id}
         />
       </SafeAreaView>
+      <Text style={styles.title}>Upcoming Refills</Text>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-  },
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  title: {
-    fontSize: 32,
-  },
-});
 
 export default Home;

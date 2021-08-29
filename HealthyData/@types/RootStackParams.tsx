@@ -1,4 +1,6 @@
 export type RootStackParamList = {
-    Home: undefined,
-    Example: undefined; 
+    Home: undefined;
+    MedicationsNavigator: undefined;
+    SettingsNavigator: undefined;
+    Calendar: undefined;
 };

@@ -1,51 +1,86 @@
 import React from 'react';
-import {useState} from 'react';
+import { GestureResponderEvent, TouchableOpacity } from 'react-native';
 import {View, Button, Text} from 'react-native';
-import {Switch} from 'react-native-gesture-handler';
-import {useAuth} from '../auth/provider';
-import {LocalAuthSettings} from '../auth/reducer';
-import {resetLocalAuth, saveLocalAuthSettings, signOut} from '../services/auth';
+import {signOut} from '../services/auth';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const Settings = () => {
-  const handleAuthOptions = async (options: LocalAuthSettings) => {
-    await saveLocalAuthSettings(options);
-    setLocalAuthSettings(options);
-  };
+import {BLUE, DARK} from '../style/Colours';
+import { styles } from '../style/Styles';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { SettingsStackParamList } from '../@types/SettingsStackParamList';
 
-  const {state: authState, setLocalAuthSettings} = useAuth();
+type SettingsNavigationProps = StackNavigationProp<
+  SettingsStackParamList,
+  'Settings'
+>;
 
-  const handleTogglePin = () => {
-    handleAuthOptions({
-      ...authState.localAuthSettings,
-      pin: !authState.localAuthSettings.pin,
-    });
-  };
-  const handleToggleFingerprint = () => {
-    handleAuthOptions({
-      ...authState.localAuthSettings,
-      fingerprint: !authState.localAuthSettings.fingerprint,
-    });
-  };
+type Props = {
+  navigation: SettingsNavigationProps
+};
+
+const Settings = (props: Props): JSX.Element => {
   return (
-    <View>
-      <Button
-        title="Sign out"
+    <View style={styles.settingsContainer}>
+      
+      <SettingsButton 
+        name="Profile Details" 
         onPress={() => {
-          signOut();
-          resetLocalAuth();
+          props.navigation.navigate('ProfileDetails');
         }}
       />
-      <Text>Pin</Text>
-      <Switch
-        value={authState.localAuthSettings.pin}
-        onValueChange={() => handleTogglePin()}
+      <SettingsButton 
+        name="Notification Settings" 
+        onPress={() => {
+          return;
+        }}
       />
-      <Text>fingerprint</Text>
-      <Switch
-        value={authState.localAuthSettings.fingerprint}
-        onValueChange={() => handleToggleFingerprint()}
+      <SettingsButton 
+        name="Security Settings" 
+        onPress={() => {
+          return;
+        }}
+      />
+      <SettingsButton 
+        name="Permissions" 
+        onPress={() => {
+          return;
+        }}
+      />
+      <SettingsButton 
+        name="Units of Measurement" 
+        onPress={() => {
+          return;
+        }}
+      />
+      <Button 
+        title="Sign out" 
+        onPress={() => signOut()} 
+        color={BLUE}
       />
     </View>
+  );
+};
+
+type SettingsButtonProps = {
+  name: string,
+  onPress: (event: GestureResponderEvent) => void;
+}
+
+const SettingsButton = (props: SettingsButtonProps): JSX.Element => {
+  return (
+    <TouchableOpacity
+      onPress={props.onPress}
+    >
+      <View style={styles.settingsNavigator}>
+        <Text style={styles.settingsText}>{props.name}</Text>
+        <Ionicons
+          style={styles.settingsArrow}
+          size={28}
+          color='#ddd'
+          name="arrow-forward"
+        />
+      </View>
+    </TouchableOpacity>
   );
 };
 
