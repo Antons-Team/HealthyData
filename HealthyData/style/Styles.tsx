@@ -27,6 +27,7 @@ export const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 6,
     padding: 5,
+    marginTop: 10,
     borderColor: LIGHT,
   },
   time: {

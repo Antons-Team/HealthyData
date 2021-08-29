@@ -20,12 +20,23 @@ const Home = (): JSX.Element => {
   const [ todos, setTodos ] = useState<Array<TodoItem>>([]);
   const [ refills, setRefills ] = useState<Array<TodoItem>>([]);
 
-  const isToday = (other: Date) => {
-    // TODO: move this helper function into separate file
-    const today = new Date();
-    return other.getDate() == today.getDate() &&
-      other.getMonth() == today.getMonth() &&
-      other.getFullYear() == today.getFullYear();
+  const isToday = (todo: TodoItem) => {
+    const today = new Date().getDay();
+    if (today == 0) {
+      return todo.days.sunday;
+    } else if (today == 1) {
+      return todo.days.monday;
+    } else if (today == 2) {
+      return todo.days.tuesday;
+    } else if (today == 3) {
+      return todo.days.wednesday;
+    } else if (today == 4) {
+      return todo.days.thursday;
+    } else if (today == 5) {
+      return todo.days.friday;
+    } else {
+      return todo.days.saturday;
+    }
   };
 
   useEffect(() => {
@@ -34,7 +45,10 @@ const Home = (): JSX.Element => {
       return doc.data();
     }).then(data => {
       if (data != undefined) {
-        const todos = data.todos.filter((todo: TodoItem) => isToday(todo.date.toDate()));
+        const todos = data.todos.filter((todo: TodoItem) => {
+          const today = new Date();
+          return today < todo.date.toDate() && isToday(todo);
+        });
         setTodos(todos);
       }
     }).catch(() => {
@@ -45,7 +59,7 @@ const Home = (): JSX.Element => {
   const renderItem: ListRenderItem<TodoItem> = ({ item }) => (
     <View style={styles.item}>
       <Text style={styles.time}>{item.date.toDate().toLocaleTimeString()}</Text>
-      <Text style={styles.info}>{renderName(item.medication.name)} {item.amount} x {item.medication.dosage_amount}{item.medication.dosage_units}</Text>
+      <Text style={styles.info}>{renderName(item.medication.name)} {item.doses} x {item.medication.dosage_amount}{item.medication.dosage_units}</Text>
     </View>
   );
 

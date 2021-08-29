@@ -19,6 +19,8 @@ import { TextInput } from 'react-native-gesture-handler';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
+import {Days} from '../@types/Types';
+
 type MedicationsNavigationProps = StackNavigationProp<
   MedicationsStackParamList,
   'Medications'
@@ -27,16 +29,6 @@ type MedicationsNavigationProps = StackNavigationProp<
 type Props = {
   navigation: MedicationsNavigationProps,
   route: RouteProp<{ params: { medication: MedicationItem } }, 'params'>
-}
-
-type Days = {
-  monday: boolean,
-  tuesday: boolean,
-  wednesday: boolean,
-  thursday: boolean,
-  friday: boolean,
-  saturday: boolean,
-  sunday: boolean,
 }
 
 const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
@@ -62,11 +54,13 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
     let todo;
     if (supply != '' && doses != '') {
       todo = {
+        id: `${date.toString()}${timeOfDay.toString()}${parseInt(doses)*3}${parseInt(supply)*5}${route.params.medication.name}`,//create a unique hashcode
         days: days,
         date: date,
         time: timeOfDay,
         supply: parseInt(supply),
         doses: parseInt(doses),
+        medication: route.params.medication,
       };
     }
 
