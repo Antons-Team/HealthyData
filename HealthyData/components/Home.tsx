@@ -10,15 +10,23 @@ import {
 
 import { TodoItem } from '../@types/Schema';
 import {styles} from '../style/Styles';
+import {displayTime} from '../utils/Display';
 
 import { renderName } from '../utils/Display';
 
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
+import { useIsFocused } from '@react-navigation/native';
+
+import { displayDate } from '../utils/Display';
+import { addDays } from '../utils/Dates';
+
 const Home = (): JSX.Element => {
   const [ todos, setTodos ] = useState<Array<TodoItem>>([]);
   const [ refills, setRefills ] = useState<Array<TodoItem>>([]);
+
+  const isFocused = useIsFocused();
 
   const isToday = (todo: TodoItem) => {
     const today = new Date().getDay();
@@ -39,7 +47,7 @@ const Home = (): JSX.Element => {
     }
   };
 
-  useEffect(() => {
+  const getTodoData = async () => {
     // fetch the todos for the current user
     firestore().collection('users').doc(`${auth().currentUser?.uid}`).get().then(doc => {
       return doc.data();
@@ -54,12 +62,43 @@ const Home = (): JSX.Element => {
     }).catch(() => {
       return;
     });
-  }, []);
+  };
+
+  const getRefillData = async () => {
+    firestore().collection('users').doc(`${auth().currentUser?.uid}`).get().then(doc => {
+      return doc.data();
+    }).then(data => {
+      if (data != undefined) {
+        const refills = data.todos.filter((todo: TodoItem) => {
+          let date = new Date();
+          date = addDays(30, date);
+          return todo.refillDate.toDate() < date;
+        });
+        setRefills(refills);
+      }
+    }).catch(() => {
+      return;
+    });
+  };
+
+  useEffect(() => {
+    if (isFocused) {
+      getTodoData();
+      getRefillData();
+    }
+  }, [isFocused]);
 
   const renderItem: ListRenderItem<TodoItem> = ({ item }) => (
     <View style={styles.item}>
-      <Text style={styles.time}>{item.date.toDate().toLocaleTimeString()}</Text>
+      <Text style={styles.time}>{displayTime(item.time.toDate())}</Text>
       <Text style={styles.info}>{renderName(item.medication.name)} {item.doses} x {item.medication.dosage_amount}{item.medication.dosage_units}</Text>
+    </View>
+  );
+
+  const renderRefill: ListRenderItem<TodoItem> = ({ item }) => (
+    <View style={styles.item}>
+      <Text style={styles.time}>{displayDate(item.refillDate.toDate())}</Text>
+      <Text style={styles.info}>{renderName(item.medication.name)} {item.medication.dosage_amount}{item.medication.dosage_units}</Text>
     </View>
   );
 
@@ -82,9 +121,14 @@ const Home = (): JSX.Element => {
       <SafeAreaView style={styles.container}>
         <Text>
           {
-            refills.length == 0 ? 'Nothing to do!' : ''
+            todos.length == 0 ? 'Nothing to do!' : ''
           }
         </Text>
+        <FlatList
+          data={refills}
+          renderItem={renderRefill}
+          keyExtractor={item => item.id}
+        />
       </SafeAreaView>
     </View>
   );

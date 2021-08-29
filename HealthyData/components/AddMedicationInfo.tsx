@@ -21,6 +21,9 @@ import firestore from '@react-native-firebase/firestore';
 
 import {Days} from '../@types/Types';
 
+import {displayTime, displayDate} from '../utils/Display';
+import {addDays} from '../utils/Dates';
+
 type MedicationsNavigationProps = StackNavigationProp<
   MedicationsStackParamList,
   'Medications'
@@ -53,11 +56,35 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
   const addTodo = () => {
     let todo;
     if (supply != '' && doses != '') {
+      const daysPerWeek = Object.values(days).filter(Boolean).length;
+      let refillDate = new Date();
+      refillDate = addDays(parseInt(supply) / daysPerWeek, refillDate);
+      let dayOfWeek = 0;
+      let count = parseInt(supply) % daysPerWeek;
+      for (let i = 0; i < 7; ++i) {
+        if (Object.values(days)) {
+          --count;
+        }
+        if (count == 0) {
+          dayOfWeek = i;
+          break;
+        }
+      }
+      refillDate = addDays(dayOfWeek, refillDate);
+
+      switch (parseInt(supply) % daysPerWeek) {
+      case 0:
+        return;
+      }
+      
+
       todo = {
         id: `${date.toString()}${timeOfDay.toString()}${parseInt(doses)*3}${parseInt(supply)*5}${route.params.medication.name}`,//create a unique hashcode
+        today: new Date(),
         days: days,
         date: date,
         time: timeOfDay,
+        refillDate: refillDate,
         supply: parseInt(supply),
         doses: parseInt(doses),
         medication: route.params.medication,
@@ -70,28 +97,6 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
       .update({
         todos: firestore.FieldValue.arrayUnion(todo)
       });
-  };
-
-  const displayTime = (date: Date): string => {
-    let hours = date.getHours();
-    const minutes = date.getMinutes();
-    const am = hours >= 12 ? 'PM' : 'AM';
-    hours %= 12;
-    hours = hours ? hours : 12;
-    const hoursStr = hours < 10 ? '0' + hours : hours;
-    const minutesStr = minutes < 10 ? '0' + minutes : minutes;
-
-    return `${hoursStr}:${minutesStr} ${am}`;
-  };
-
-  const displayDate = (date: Date): string => {
-    const month = date.getMonth();
-    const day = date.getDate();
-    const year = date.getFullYear();
-    const monthStr = month < 10 ? '0' + month : month;
-    const dayStr = day < 10 ? '0' + day : day;
-
-    return `${dayStr}/${monthStr}/${year}`;
   };
 
   return (
