@@ -26,7 +26,6 @@ const RootNavigator = () : ReactElement => {
 
   useEffect(() => {
     getLocalAuthSettings();
-    // getFingerprintEnabled();
     const subscriber = auth().onAuthStateChanged(async user => {
       if (user) {
         handleSignIn();

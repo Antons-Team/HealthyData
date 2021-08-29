@@ -6,6 +6,9 @@ import {LocalAuthSettings, LocalAuthState} from '../../auth/reducer';
 import {signOut, resetLocalAuth} from '../../services/auth';
 import PinLogin, {MAX_PIN_LENGTH} from './PinLogin';
 import TouchID from 'react-native-touch-id';
+import Header from '../Header';
+import { styles } from '../../style/Styles';
+import { WHITE } from '../../style/Colours';
 
 const LocalAuthLockedScreen = (): ReactElement => {
   const {
@@ -20,7 +23,7 @@ const LocalAuthLockedScreen = (): ReactElement => {
     if (!localAuthSettings.fingerprint) {
       return;
     }
-    TouchID.authenticate('to demo this react-native component')
+    TouchID.authenticate('Login with fingerprint')
       .then(() => {
         setLocalAuthState(LocalAuthState.signedIn);
       })
@@ -61,7 +64,11 @@ const LocalAuthLockedScreen = (): ReactElement => {
   }, [pin, setLocalAuthState]);
 
   return (
+    
     <View style={{flex: 1}}>
+      <View style={{height: 60, ...styles.center, backgroundColor: WHITE}}>
+        <Header/>
+      </View>
       <PinLogin pin={pin} setPin={setPin} loading={loading} message={message} />
       <View>
         <Button

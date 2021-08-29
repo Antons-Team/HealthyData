@@ -6,7 +6,10 @@ import { Button, Text, View } from 'react-native';
 import { useAuth } from '../../auth/provider';
 import { LocalAuthState } from '../../auth/reducer';
 import { saveLocalAuthSettings } from '../../services/auth';
-import PinLogin from './PinLogin';
+import { BLUE } from '../../style/Colours';
+import { styles } from '../../style/Styles';
+import Header from '../Header';
+import PinLogin, { MAX_PIN_LENGTH } from './PinLogin';
 
 type LocalAuthStackParamsList = {
   AskLocalAuth: undefined;
@@ -24,15 +27,19 @@ const AskLocalAuth = ({
     state: { localAuthSettings },
   } = useAuth();
   return (
-    <View>
-      <Text>local auth setup</Text>
+    <View style={styles.loginSignupContainer}>
+      <Text style={styles.title}>
+        Use PIN for login?
+      </Text>
       <Button
+        color={BLUE}
         title="yes"
         onPress={() => {
           navigation.navigate('FirstPin');
         }}
       />
       <Button
+        color={BLUE}
         title="no"
         onPress={() => {
           saveLocalAuthSettings({
@@ -55,7 +62,17 @@ const AskLocalAuth = ({
 const LocalAuthNavigator = (): ReactElement => {
   const Stack = createStackNavigator<LocalAuthStackParamsList>();
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      initialRouteName="AskLocalAuth"
+      screenOptions={() => ({
+        tabBarShowLabel: false, // remove the name from the navigation so just shows an icon
+        // eslint-disable-next-line react/display-name
+        headerTitle:  () => <Header/ >,
+        headerStyle: styles.headerBar,
+        headerTitleAlign: 'center',
+        headerTitleStyle: styles.headerTitle,
+      })}
+    >
       <Stack.Screen name="AskLocalAuth" component={AskLocalAuth} />
       <Stack.Screen name="FirstPin" component={FirstPin} />
       <Stack.Screen name="ConfirmPin" component={ConfirmPin} />
@@ -70,17 +87,26 @@ type PinSetupProps = {
   loading: boolean;
   handleConfirm: () => void;
   message: string;
+  title: string;
 };
 
 const PinSetup = (props: PinSetupProps) => {
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{...styles.loginSignupContainer}}>
+      <Text style={styles.title}>
+        {props.title}
+      </Text>
+      
       <PinLogin {...props} />
-      <Button
-        disabled={props.pin.length !== 4}
-        title="confirm"
-        onPress={props.handleConfirm}
-      />
+      <View style={{}}>
+        <Button
+          disabled={props.pin.length !== MAX_PIN_LENGTH}
+          title="confirm"
+          onPress={props.handleConfirm}
+          color={BLUE}
+        />
+
+      </View>
     </View>
   );
 };
@@ -102,6 +128,7 @@ const FirstPin = ({
       loading={false}
       handleConfirm={handleConfirm}
       message={''}
+      title="Enter a PIN"
     />
   );
 };
@@ -143,6 +170,7 @@ const ConfirmPin = ({
       loading={loading}
       handleConfirm={handleConfirm}
       message={message}
+      title="Confirm PIN"
     />
   );
 };
@@ -160,10 +188,10 @@ const AskFingerprint = () => {
   };
 
   return (
-    <View>
-      <Text>use fingerprint?</Text>
-      <Button title="yes" onPress={() => handleFingerprintButton(true)} />
-      <Button title="no" onPress={() => handleFingerprintButton(false)} />
+    <View style={styles.loginSignupContainer}>
+      <Text>Use fingerprint for login?</Text>
+      <Button color={BLUE} title="yes" onPress={() => handleFingerprintButton(true)} />
+      <Button color={BLUE} title="no" onPress={() => handleFingerprintButton(false)} />
     </View>
   );
 };

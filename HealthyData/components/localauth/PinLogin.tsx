@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react';
 import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { styles } from '../../style/Styles';
 
 type KeyProps = {
   value: string;
@@ -24,7 +25,7 @@ const Key = ({ value, handleKeyPress }: KeyProps) => {
           justifyContent: 'center',
         }}
         onPress={handleKeyPress}>
-        <Ionicons name={'restaurant'} />
+        <Ionicons name={'backspace'} />
       </TouchableOpacity>
     );
   default:
@@ -70,8 +71,8 @@ const NumPad = ({ handleKeyPress, handleDelete }: NumPadProps) => {
           <View
             key={value}
             style={{
-              width: Dimensions.get('window').width / 3,
-              height: Dimensions.get('window').height / 20,
+              width: (Dimensions.get('window').width - styles.loginSignupContainer.padding * 4) / 3,
+              height: Dimensions.get('window').height / 15,
             }}>
             <Key
               value={value}
@@ -92,7 +93,7 @@ type PinFieldProps = {
 };
 const PinField = ({ pin, hidden }: PinFieldProps) => {
   return (
-    <View style={{ flexDirection: 'row' }}>
+    <View style={{ flexDirection: 'row', justifyContent:'space-around', padding: 50}}>
       {pin.split('').map((digit, i) => {
         return <PinNumber key={i} displayChar={hidden ? '*' : digit} />;
       })}
@@ -106,7 +107,7 @@ const PinField = ({ pin, hidden }: PinFieldProps) => {
 type PinNumberProps = { displayChar: string };
 const PinNumber = ({ displayChar }: PinNumberProps) => {
   return (
-    <View style={{ borderColor: 'black', width: 50, height: 50, borderWidth: 1 }}>
+    <View style={{ borderColor: 'black', width: 50, height: 50, borderWidth: 1, ...styles.center }}>
       <Text>{displayChar}</Text>
     </View>
   );
@@ -120,7 +121,7 @@ type PinLoginProps = {
 };
 const PinLogin = ({ pin, setPin, loading, message }: PinLoginProps) : ReactElement => {
   const handleKeyPress = (value: string) => {
-    if (pin.length < 4) {
+    if (pin.length < MAX_PIN_LENGTH) {
       setPin(pin + value);
     }
   };
@@ -132,9 +133,9 @@ const PinLogin = ({ pin, setPin, loading, message }: PinLoginProps) : ReactEleme
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      <Text>pinlogin</Text>
-      <Text>{message}</Text>
+    <View style={{...styles.loginSignupContainer}}>
+      <Text 
+        style={{...styles.info, alignSelf:'center'}}>{message}</Text>
       <PinField pin={pin} hidden={true} />
       <NumPad handleKeyPress={handleKeyPress} handleDelete={handleDelete} />
     </View>
