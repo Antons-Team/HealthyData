@@ -5,6 +5,10 @@ import {DARK, LIGHT, RED, BLUE, BLACK, WHITE} from './Colours';
 
 
 export const styles = StyleSheet.create({
+  center: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   homeContainer: {
     flex: 1,
     flexDirection: 'column',

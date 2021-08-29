@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import auth from '@react-native-firebase/auth';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import {LocalAuthSettings} from '../auth/reducer';
 import firestore from '@react-native-firebase/firestore';
 
 export const signInAnonymous = async () => {
@@ -38,4 +40,12 @@ export const signInEmail = async (email: string, password: string) => {
 
 export const signOut = async () => {
   await auth().signOut();
+};
+
+export const saveLocalAuthSettings = async (settings: LocalAuthSettings) => {
+  await EncryptedStorage.setItem('localAuthSettings', JSON.stringify(settings));
+};
+
+export const resetLocalAuth = async () => {
+  await EncryptedStorage.removeItem('localAuthSettings');
 };

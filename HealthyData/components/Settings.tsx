@@ -1,10 +1,10 @@
 import React from 'react';
 import { GestureResponderEvent, TouchableOpacity } from 'react-native';
 import {View, Button, Text} from 'react-native';
-import {signOut} from '../services/Auth';
+import {signOut} from '../services/auth';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import {BLUE, DARK} from '../style/Colours';
+import {BLUE} from '../style/Colours';
 import { styles } from '../style/Styles';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { SettingsStackParamList } from '../@types/SettingsStackParamList';
