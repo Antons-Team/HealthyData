@@ -8,7 +8,7 @@ import PinLogin, {MAX_PIN_LENGTH} from './PinLogin';
 import TouchID from 'react-native-touch-id';
 import Header from '../Header';
 import { styles } from '../../style/Styles';
-import { WHITE } from '../../style/Colours';
+import { BLUE, WHITE } from '../../style/Colours';
 
 const LocalAuthLockedScreen = (): ReactElement => {
   const {
@@ -64,20 +64,22 @@ const LocalAuthLockedScreen = (): ReactElement => {
   }, [pin, setLocalAuthState]);
 
   return (
-    
     <View style={{flex: 1}}>
       <View style={{height: 60, ...styles.center, backgroundColor: WHITE}}>
         <Header/>
       </View>
-      <PinLogin pin={pin} setPin={setPin} loading={loading} message={message} />
-      <View>
-        <Button
-          title="i forgot"
-          onPress={() => {
-            signOut();
-            resetLocalAuth();
-          }}
-        />
+      <View style={styles.loginSignupContainer}>
+        <PinLogin pin={pin} setPin={setPin} loading={loading} message={message} />
+        <View>
+          <Button
+            color={BLUE}
+            title="i forgot"
+            onPress={() => {
+              signOut();
+              resetLocalAuth();
+            }}
+          />
+        </View>
       </View>
     </View>
   );

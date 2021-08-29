@@ -92,7 +92,7 @@ type PinSetupProps = {
 
 const PinSetup = (props: PinSetupProps) => {
   return (
-    <View style={{...styles.loginSignupContainer}}>
+    <View style={styles.loginSignupContainer}>
       <Text style={styles.title}>
         {props.title}
       </Text>

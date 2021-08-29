@@ -4,7 +4,7 @@
 // and insert that as well
 
 import { Timestamp } from '@firebase/firestore-types';
-
+import {Days} from './Types';
 // we'll enforce referential transparency using these types instead of 
 // in the firestore schema, e.g. if the user adds 'panadol' add the panadol
 // MedicationItem to the TodoItem
@@ -33,6 +33,11 @@ export type MedicationItem = {
 export type TodoItem = {
     id: string;
     date: Timestamp;
-    amount: number;
+    today: Timestamp;
+    time: Timestamp;
+    refillDate: Timestamp;
+    supply: number;
+    doses: number;
+    days: Days;
     medication: MedicationItem;
 };

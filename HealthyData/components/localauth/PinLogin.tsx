@@ -8,6 +8,8 @@ type KeyProps = {
   handleKeyPress: () => void;
 };
 
+// TODO: fix style for some of these
+
 const EMPTY = '';
 const DELETE = 'D';
 export const MAX_PIN_LENGTH = 4;
@@ -71,7 +73,7 @@ const NumPad = ({ handleKeyPress, handleDelete }: NumPadProps) => {
           <View
             key={value}
             style={{
-              width: (Dimensions.get('window').width - styles.loginSignupContainer.padding * 4) / 3,
+              width: (Dimensions.get('window').width - styles.loginSignupContainer.padding * 2) / 3,
               height: Dimensions.get('window').height / 15,
             }}>
             <Key
@@ -133,7 +135,7 @@ const PinLogin = ({ pin, setPin, loading, message }: PinLoginProps) : ReactEleme
   };
 
   return (
-    <View style={{...styles.loginSignupContainer}}>
+    <View style={{flex:1}}>
       <Text 
         style={{...styles.info, alignSelf:'center'}}>{message}</Text>
       <PinField pin={pin} hidden={true} />

@@ -3,4 +3,5 @@ export type RootStackParamList = {
     MedicationsNavigator: undefined;
     SettingsNavigator: undefined;
     Calendar: undefined;
+    Data: undefined;
 };

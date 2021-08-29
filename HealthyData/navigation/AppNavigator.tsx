@@ -13,6 +13,7 @@ import {DARK, BLUE} from '../style/Colours';
 import MedicationsNavigator from './MedicationsNavigator';
 import { RootStackParamList } from '../@types/RootStackParams';
 import SettingsNavigator from './SettingsNavigator';
+import Data from '../components/Data';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -27,6 +28,8 @@ const AppNavigator = (): JSX.Element => {
       return focused ? 'calendar' : 'calendar-outline';
     case 'MedicationsNavigator':
       return focused ? 'add' : 'add-outline';
+    case 'Data':
+      return focused ? 'analytics' : 'analytics-outline';
     default:
       return ''; // this should never happen but error if we don't
     }
@@ -64,6 +67,7 @@ const AppNavigator = (): JSX.Element => {
         component={MedicationsNavigator} 
         options={{headerShown: false}}
       />
+      <Tab.Screen name="Data" component={Data} />
       <Tab.Screen name="Calendar" component={Calendar} />
       <Tab.Screen 
         name="SettingsNavigator" 
