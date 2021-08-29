@@ -199,4 +199,28 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     alignSelf: 'flex-start',
   },
+  profileDetailsContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    padding: 10,
+  },
+  profileDetailsTitle: {
+    fontFamily: 'Roboto-Medium',
+    color: DARK,
+    fontSize: 9,
+    paddingLeft: 18,
+    paddingTop: 10,
+    backgroundColor: WHITE,
+  },
+  profileDetailsEntry: {
+    height: 40,
+    marginBottom: 10,
+    fontSize: 20,
+    fontFamily: 'Roboto-Regular',
+    color: DARK,
+    backgroundColor: WHITE,
+    borderBottomColor: '#ddd',
+    borderBottomWidth: 1,
+    paddingLeft: 18,
+  },
 });
