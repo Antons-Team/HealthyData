@@ -31,8 +31,8 @@ export const signOut = async () => {
   await auth().signOut();
 };
 
-export const saveLocalAuthSettings = async (options: LocalAuthSettings) => {
-  await EncryptedStorage.setItem('localAuthSettings', JSON.stringify(options));
+export const saveLocalAuthSettings = async (settings: LocalAuthSettings) => {
+  await EncryptedStorage.setItem('localAuthSettings', JSON.stringify(settings));
 };
 
 export const resetLocalAuth = async () => {
