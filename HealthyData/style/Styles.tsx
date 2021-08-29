@@ -104,6 +104,7 @@ export const styles = StyleSheet.create({
     borderWidth: 2,
     flexDirection: 'row',
     borderRadius: 6,
+    marginBottom: 10,
     padding: 10,
     display: 'flex',
     borderColor: LIGHT,
