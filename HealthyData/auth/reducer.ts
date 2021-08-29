@@ -2,7 +2,8 @@ export type AuthAction =
   | {type: 'SIGN_IN'}
   | {type: 'SIGN_OUT'}
   | {type: 'LOCAL_AUTH_OPTIONS'; options: LocalAuthSettings}
-  | {type: 'LOCAL_AUTH_STATE'; state: LocalAuthState};
+  | {type: 'LOCAL_AUTH_STATE'; state: LocalAuthState}
+  | {type: 'FINGERPRINT_ENABLED'; enabled: boolean};
 // | {type: 'SET_PIN'; pincode: string};
 
 export type AuthState = {
@@ -15,6 +16,7 @@ export type LocalAuthSettings = {
   pin: boolean;
   fingerprint: boolean;
   pincode?: string;
+  fingerprintEnabled: boolean;
 };
 
 export enum LocalAuthState {
@@ -33,7 +35,11 @@ export enum SignedInState {
 export const initialState = {
   isSignedIn: SignedInState.loading,
   localAuthState: LocalAuthState.loading,
-  localAuthSettings: {pin: false, fingerprint: false},
+  localAuthSettings: {
+    pin: false,
+    fingerprint: false,
+    fingerprintEnabled: false,
+  },
 };
 
 const authReducer = (prevState: AuthState, action: AuthAction) => {
@@ -61,15 +67,14 @@ const authReducer = (prevState: AuthState, action: AuthAction) => {
       };
     case 'LOCAL_AUTH_STATE':
       return {...prevState, localAuthState: action.state};
-    // case 'SET_PIN':
-    //   return {
-    //     ...prevState,
-    //     localAuthSettings: {
-    //       ...prevState.localAuthSettings,
-    //       pin: true,
-    //       pincode: action.pincode,
-    //     },
-    //   };
+    case 'FINGERPRINT_ENABLED':
+      return {
+        ...prevState,
+        localAuthSettings: {
+          ...prevState.localAuthSettings,
+          fingerprintEnabled: action.enabled,
+        },
+      };
   }
 };
 

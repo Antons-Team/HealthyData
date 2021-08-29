@@ -11,12 +11,17 @@ type LocalAuthStackParamsList = {
   AskLocalAuth: undefined;
   FirstPin: undefined;
   ConfirmPin: {pin: string};
+  AskFingerprint: undefined;
 };
 
 const AskLocalAuth = ({
   navigation,
 }: StackScreenProps<LocalAuthStackParamsList, 'AskLocalAuth'>) => {
-  const {setLocalAuthState, setLocalAuthSettings} = useAuth();
+  const {
+    setLocalAuthState,
+    setLocalAuthSettings,
+    state: {localAuthSettings},
+  } = useAuth();
   return (
     <View>
       <Text>local auth setup</Text>
@@ -29,8 +34,16 @@ const AskLocalAuth = ({
       <Button
         title="no"
         onPress={() => {
-          saveLocalAuthSettings({pin: false, fingerprint: false});
-          setLocalAuthSettings({pin: false, fingerprint: false});
+          saveLocalAuthSettings({
+            ...localAuthSettings,
+            pin: false,
+            fingerprint: false,
+          });
+          setLocalAuthSettings({
+            ...localAuthSettings,
+            pin: false,
+            fingerprint: false,
+          });
           setLocalAuthState(LocalAuthState.signedIn);
         }}
       />
@@ -45,6 +58,7 @@ const LocalAuthNavigator = () => {
       <Stack.Screen name="AskLocalAuth" component={AskLocalAuth} />
       <Stack.Screen name="FirstPin" component={FirstPin} />
       <Stack.Screen name="ConfirmPin" component={ConfirmPin} />
+      <Stack.Screen name="AskFingerprint" component={AskFingerprint} />
     </Stack.Navigator>
   );
 };
@@ -93,6 +107,7 @@ const FirstPin = ({
 
 const ConfirmPin = ({
   route,
+  navigation,
 }: StackScreenProps<LocalAuthStackParamsList, 'ConfirmPin'>) => {
   const {
     state: {localAuthSettings},
@@ -104,7 +119,6 @@ const ConfirmPin = ({
   const [message, setMessage] = useState('');
 
   const handleConfirm = () => {
-    console.log(route.params.pin);
     if (route.params.pin !== pin) {
       setMessage('pins dont match');
       setPin('');
@@ -113,7 +127,11 @@ const ConfirmPin = ({
       const updatedSettings = {...localAuthSettings, pin: true, pincode: pin};
       setLocalAuthSettings(updatedSettings);
       saveLocalAuthSettings(updatedSettings);
-      setLocalAuthState(LocalAuthState.signedIn);
+      if (localAuthSettings.fingerprintEnabled) {
+        navigation.navigate('AskFingerprint');
+      } else {
+        setLocalAuthState(LocalAuthState.signedIn);
+      }
     }
   };
 
@@ -125,6 +143,27 @@ const ConfirmPin = ({
       handleConfirm={handleConfirm}
       message={message}
     />
+  );
+};
+
+const AskFingerprint = () => {
+  const {
+    state: {localAuthSettings},
+    setLocalAuthSettings,
+    setLocalAuthState,
+  } = useAuth();
+  const handleFingerprintButton = (enabled: boolean) => {
+    setLocalAuthSettings({...localAuthSettings, fingerprint: enabled});
+    saveLocalAuthSettings({...localAuthSettings, fingerprint: enabled});
+    setLocalAuthState(LocalAuthState.signedIn);
+  };
+
+  return (
+    <View>
+      <Text>use fingerprint?</Text>
+      <Button title="yes" onPress={() => handleFingerprintButton(true)} />
+      <Button title="no" onPress={() => handleFingerprintButton(false)} />
+    </View>
   );
 };
 

@@ -12,6 +12,7 @@ const AuthContext = createContext({
   handleSignOut: () => {},
   setLocalAuthSettings: (_options: LocalAuthSettings) => {},
   setLocalAuthState: (_state: LocalAuthState) => {},
+  setFingerprintEnabled: (_enabled: boolean) => {},
 });
 
 const AuthProvider: React.FC = ({children}) => {
@@ -35,6 +36,9 @@ const AuthProvider: React.FC = ({children}) => {
       },
       setLocalAuthState: (localAuthState: LocalAuthState) => {
         dispatch({type: 'LOCAL_AUTH_STATE', state: localAuthState});
+      },
+      setFingerprintEnabled: (enabled: boolean) => {
+        dispatch({type: 'FINGERPRINT_ENABLED', enabled});
       },
     }),
     [state],

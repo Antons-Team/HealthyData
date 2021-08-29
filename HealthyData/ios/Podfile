@@ -16,6 +16,8 @@ target 'HealthyData' do
 
   pod 'react-native-encrypted-storage', :path => '../node_modules/react-native-encrypted-storage'
 
+  pod 'TouchID', :path => '../node_modules/react-native-touch-id'
+
   target 'HealthyDataTests' do
     inherit! :complete
     # Pods for testing

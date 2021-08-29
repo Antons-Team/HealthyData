@@ -12,6 +12,7 @@ import {
 import Loading from '../components/Loading';
 import {NavigationContainer} from '@react-navigation/native';
 import LocalAuth from './LocalAuth';
+import TouchID from 'react-native-touch-id';
 
 type RootNavigatorProps = {
   signedIn: boolean;
@@ -24,10 +25,12 @@ const RootNavigator = () => {
     handleSignOut,
     setLocalAuthSettings,
     setLocalAuthState,
+    setFingerprintEnabled,
   } = useAuth();
 
   useEffect(() => {
     getLocalAuthSettings();
+    // getFingerprintEnabled();
     const subscriber = auth().onAuthStateChanged(async user => {
       if (user) {
         handleSignIn();
@@ -40,9 +43,11 @@ const RootNavigator = () => {
   }, []);
 
   const getLocalAuthSettings = async () => {
+    await getFingerprintEnabled();
     try {
       const localAuth = await EncryptedStorage.getItem('localAuthSettings');
       if (localAuth !== null) {
+        // local auth already set
         const localAuthSettings: LocalAuthSettings = JSON.parse(localAuth);
         setLocalAuthSettings(localAuthSettings);
         setLocalAuthState(
@@ -58,6 +63,15 @@ const RootNavigator = () => {
       console.error(e);
       setLocalAuthState(LocalAuthState.asking);
       //maybe dont need this?
+    }
+  };
+
+  const getFingerprintEnabled = async () => {
+    try {
+      await TouchID.isSupported();
+      setFingerprintEnabled(true);
+    } catch (e) {
+      setFingerprintEnabled(false);
     }
   };
 
