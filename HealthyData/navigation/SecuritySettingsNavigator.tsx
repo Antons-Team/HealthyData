@@ -28,7 +28,10 @@ const SecuritySettingsNavigator = () : ReactElement => {
 
   const Stack = createStackNavigator<SecuritySettingsStackParamsList>();
   return ( 
-    <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Navigator 
+      screenOptions={{headerShown: false}} 
+      initialRouteName={localAuthSettings.pin? 'SettingsLocked' : 'SecuritySettingsScreen'}
+    >
       <Stack.Screen name="SettingsLocked" component={LockSecurityScreen}/>
       <Stack.Screen name="SecuritySettingsScreen" component={SecuritySettingsScreen}/>
       <Stack.Screen name="PinSetup">

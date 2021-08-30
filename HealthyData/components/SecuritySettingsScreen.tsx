@@ -1,7 +1,7 @@
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { ReactElement } from 'react';
 import { useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Settings } from 'react-native';
 import { Switch } from 'react-native-gesture-handler';
 import { useAuth } from '../auth/provider';
 import { SecuritySettingsStackParamsList } from '../navigation/SecuritySettingsNavigator';
@@ -22,6 +22,12 @@ const SecuritySettingsScreen = ({navigation}
     setLoading(false);
   };  
 
+  const handleRemovePin = async () => {
+    const updatedSettings = {...localAuthSettings, pin: false, fingerprint:false};
+    setLocalAuthSettings(updatedSettings);
+    await saveLocalAuthSettings(updatedSettings);
+  };
+
   return (
     <View style={styles.settingsContainer}>
       <Text style={styles.title}>
@@ -32,7 +38,14 @@ const SecuritySettingsScreen = ({navigation}
         onPress={() => {navigation.navigate('PinSetup');}}/>
 
       {
-        localAuthSettings.fingerprintEnabled && (
+        localAuthSettings.pin && (
+          <SettingsButton name="Remove PIN"
+            onPress={() => handleRemovePin()}
+          />
+        )
+      }
+      {
+        localAuthSettings.fingerprintEnabled && localAuthSettings.pin && (
           <View>
             <Text> Enable fingerprint 
             </Text>
