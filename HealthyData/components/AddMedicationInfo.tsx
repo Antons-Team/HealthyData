@@ -60,42 +60,49 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
   const [intervalStartDate, setIntervalStartDate] = useState(new Date());
 
   const addTodo = () => {
-    let todo;
-    if (supply != '' && doses != '') {
-      const daysPerWeek = Object.values(days).filter(Boolean).length;
-      let refillDate = new Date();
-      refillDate = addDays(parseInt(supply) / daysPerWeek, refillDate);
-      let dayOfWeek = 0;
-      let count = parseInt(supply) % daysPerWeek;
-      for (let i = 0; i < 7; ++i) {
-        if (Object.values(days)) {
-          --count;
-        }
-        if (count == 0) {
-          dayOfWeek = i;
-          break;
-        }
-      }
-      refillDate = addDays(dayOfWeek, refillDate);
+    let refillDate;
 
-      switch (parseInt(supply) % daysPerWeek) {
-      case 0:
-        return;
-      }
+    if (!isInterval) {
+      if (supply != '' && doses != '') {
+        const daysPerWeek = Object.values(days).filter(Boolean).length;
+        refillDate = new Date();
+        refillDate = addDays(parseInt(supply) / daysPerWeek, refillDate);
+        let dayOfWeek = 0;
+        let count = parseInt(supply) % daysPerWeek;
+        for (let i = 0; i < 7; ++i) {
+          if (Object.values(days)) {
+            --count;
+          }
+          if (count == 0) {
+            dayOfWeek = i;
+            break;
+          }
+        }
+        refillDate = addDays(dayOfWeek, refillDate);
 
-      todo = {
-        id: `${date.toString()}${timeOfDay.toString()}${parseInt(doses)*3}${parseInt(supply)*5}${route.params.medication.name}`,//create a unique hashcode
-        today: new Date(),
-        days: isInterval ? null: days,
-        intervalDays: isInterval ? {interval: intervalDays, startingDate: intervalStartDate} : null,
-        date: date,
-        time: timeOfDay,
-        refillDate: refillDate,
-        supply: parseInt(supply),
-        doses: parseInt(doses),
-        medication: route.params.medication,
-      };
+        switch (parseInt(supply) % daysPerWeek) {
+        case 0:
+          return;
+        }
+      } 
+    } else {
+      const startDate = new Date(intervalStartDate);
+      startDate.setHours(intervalStartDate.getHours(), intervalStartDate.getMinutes());
+      refillDate = addDays(parseInt(intervalDays) * parseInt(supply), startDate);
     }
+
+    const todo = {
+      id: `${date.toString()}${timeOfDay.toString()}${parseInt(doses)*3}${parseInt(supply)*5}${route.params.medication.name}`,//create a unique hashcode
+      today: new Date(),
+      days: isInterval ? null: days,
+      intervalDays: isInterval ? {interval: intervalDays, startingDate: intervalStartDate} : null,
+      date: date,
+      time: timeOfDay,
+      refillDate: refillDate,
+      supply: parseInt(supply),
+      doses: parseInt(doses),
+      medication: route.params.medication,
+    };
 
     firestore()
       .collection('users')
