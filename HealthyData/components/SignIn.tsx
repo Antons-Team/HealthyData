@@ -1,7 +1,6 @@
 import React from 'react';
 import {useState} from 'react';
 import {View, TextInput, Button, Text} from 'react-native';
-// import {useAuth} from '../auth/provider';
 import {signInAnonymous, signInEmail} from '../services/auth';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AuthStackParamsList} from '../@types/AuthStackParams';
@@ -15,7 +14,6 @@ const SignIn = (props: Props): JSX.Element => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  // const {handleSignIn} = useAuth();
   return (
     <View style={styles.loginSignupContainer}>
       <TextInput

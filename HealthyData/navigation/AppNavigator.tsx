@@ -72,7 +72,7 @@ const AppNavigator = (): JSX.Element => {
       <Tab.Screen 
         name="SettingsNavigator" 
         component={SettingsNavigator} 
-        options={{headerShown: false}}
+        options={{headerShown: false, unmountOnBlur: true}}
       /> 
     </Tab.Navigator>
   );

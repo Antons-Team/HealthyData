@@ -37,7 +37,7 @@ const Settings = (props: Props): JSX.Element => {
       <SettingsButton 
         name="Security Settings" 
         onPress={() => {
-          return;
+          props.navigation.navigate('SecuritySettings');
         }}
       />
       <SettingsButton 
@@ -66,7 +66,7 @@ type SettingsButtonProps = {
   onPress: (event: GestureResponderEvent) => void;
 }
 
-const SettingsButton = (props: SettingsButtonProps): JSX.Element => {
+export const SettingsButton = (props: SettingsButtonProps): JSX.Element => {
   return (
     <TouchableOpacity
       onPress={props.onPress}

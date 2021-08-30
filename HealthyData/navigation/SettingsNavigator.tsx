@@ -8,6 +8,7 @@ import { SettingsStackParamList } from '../@types/SettingsStackParamList';
 
 import Settings from '../components/Settings';
 import ProfileDetails from '../components/ProfileDetails';
+import SecuritySettingsNavigator from './SecuritySettingsNavigator';
 
 const Stack = createStackNavigator<SettingsStackParamList>();
 
@@ -21,8 +22,9 @@ const SettingsNavigator = (): JSX.Element => {
         headerTitleStyle: styles.headerTitle,
       })}
     >
-      <Stack.Screen name="Settings" component={Settings} />
+      <Stack.Screen name="Settings" component={Settings}/>
       <Stack.Screen name="ProfileDetails" component={ProfileDetails} />
+      <Stack.Screen name="SecuritySettings" component={SecuritySettingsNavigator} />
     </Stack.Navigator>
   );
 };

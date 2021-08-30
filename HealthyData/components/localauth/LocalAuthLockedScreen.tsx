@@ -1,5 +1,5 @@
 import React, {ReactElement, useEffect, useState} from 'react';
-import {View, Button} from 'react-native';
+import {View, Button, Text} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {useAuth} from '../../auth/provider';
 import {LocalAuthSettings, LocalAuthState} from '../../auth/reducer';
@@ -9,8 +9,14 @@ import TouchID from 'react-native-touch-id';
 import Header from '../Header';
 import { styles } from '../../style/Styles';
 import { BLUE, WHITE } from '../../style/Colours';
+import { StackScreenProps } from '@react-navigation/stack';
+import { SecuritySettingsStackParamsList } from '../../navigation/SecuritySettingsNavigator';
 
-const LocalAuthLockedScreen = (): ReactElement => {
+type LocalAuthLockedProps = {
+  onSuccess: () => void 
+}
+
+const LocalAuthLocked = ({onSuccess}: LocalAuthLockedProps) :ReactElement => {
   const {
     state: {localAuthSettings},
     setLocalAuthState,
@@ -25,7 +31,7 @@ const LocalAuthLockedScreen = (): ReactElement => {
     }
     TouchID.authenticate('Login with fingerprint')
       .then(() => {
-        setLocalAuthState(LocalAuthState.signedIn);
+        onSuccess();
       })
       .catch((error: any) => {
         if (error.code === 'AUTHENTICATION_CANCELED') {
@@ -35,7 +41,7 @@ const LocalAuthLockedScreen = (): ReactElement => {
           //somethign went wrong
         }
       });
-  }, [localAuthSettings.fingerprint, setLocalAuthState]);
+  }, []);
 
   useEffect(() => {
     const handleEnterPin = async () => {
@@ -45,7 +51,7 @@ const LocalAuthLockedScreen = (): ReactElement => {
         const settings: LocalAuthSettings = JSON.parse(storedAuth);
 
         if (pin === settings.pincode) {
-          setLocalAuthState(LocalAuthState.signedIn);
+          onSuccess();
         } else {
           setPin('');
           setMessage('incorrect');
@@ -62,25 +68,46 @@ const LocalAuthLockedScreen = (): ReactElement => {
       return () => {};
     }
   }, [pin, setLocalAuthState]);
+  return (
+    <View style={styles.loginSignupContainer}>
+      <PinLogin pin={pin} setPin={setPin} loading={loading} message={message} />
+    </View>
+  );
+};
 
+const LocalAuthLockedScreen = (): ReactElement => {
+
+  const {setLocalAuthState} = useAuth();
   return (
     <View style={{flex: 1}}>
       <View style={{height: 60, ...styles.center, backgroundColor: WHITE}}>
         <Header/>
       </View>
-      <View style={styles.loginSignupContainer}>
-        <PinLogin pin={pin} setPin={setPin} loading={loading} message={message} />
-        <View>
-          <Button
-            color={BLUE}
-            title="i forgot"
-            onPress={() => {
-              signOut();
-              resetLocalAuth();
-            }}
-          />
-        </View>
+      <Text style={styles.title}>Enter PIN to login</Text>
+      <LocalAuthLocked onSuccess={() => {
+        setLocalAuthState(LocalAuthState.signedIn);
+      }}/>
+      <View>
+        <Button
+          color={BLUE}
+          title="i forgot"
+          onPress={() => {
+            signOut();
+            resetLocalAuth();
+          }}
+        />
       </View>
+    </View>
+  );
+};
+
+export const LockSecurityScreen = ({navigation}: 
+  StackScreenProps<SecuritySettingsStackParamsList, 'SettingsLocked'>
+) :ReactElement => {
+  return (
+    <View style={{flex:1}}>
+      <Text style={styles.title}>Enter PIN</Text>
+      <LocalAuthLocked onSuccess={() => {navigation.navigate('SecuritySettingsScreen');}}/>
     </View>
   );
 };
