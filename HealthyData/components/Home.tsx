@@ -29,6 +29,19 @@ const Home = (): JSX.Element => {
   const isFocused = useIsFocused();
 
   const isToday = (todo: TodoItem) => {
+    if (todo.days == null) {
+      const interval = todo.intervalDays?.interval;
+      const startDate = todo.intervalDays?.startingDate.toDate();
+      if (startDate && interval) {
+
+        const oneDay = 1000 * 60 * 60 * 24; // in ms
+        const daysInbetween = (Math.floor(startDate?.getTime() / oneDay) 
+          - Math.floor((new Date()).getTime() / oneDay));
+                
+        return (daysInbetween % interval) == 0; 
+      }
+      return false;
+    }
     const today = new Date().getDay();
     if (today == 0) {
       return todo.days.sunday;
@@ -48,6 +61,7 @@ const Home = (): JSX.Element => {
   };
 
   const getTodoData = async () => {
+
     // fetch the todos for the current user
     firestore().collection('users').doc(`${auth().currentUser?.uid}`).get().then(doc => {
       return doc.data();
@@ -60,6 +74,7 @@ const Home = (): JSX.Element => {
         setTodos(todos);
       }
     }).catch(() => {
+      console.log('something wrong');
       return;
     });
   };

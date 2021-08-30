@@ -38,6 +38,7 @@ export type TodoItem = {
     refillDate: Timestamp;
     supply: number;
     doses: number;
-    days: Days;
+    days: Days | null;
+    intervalDays: {interval: number, startingDate: Timestamp} | null;
     medication: MedicationItem;
 };

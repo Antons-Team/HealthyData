@@ -1,7 +1,9 @@
 import React, {useState} from 'react';
 import {
   Button,
+  StyleProp,
   Text,
+  TextStyle,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -53,6 +55,10 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
     sunday: false,
   });
 
+  const [isInterval, setIsInterval] = useState(false);
+  const [intervalDays, setIntervalDays] = useState('');
+  const [intervalStartDate, setIntervalStartDate] = useState(new Date());
+
   const addTodo = () => {
     let todo;
     if (supply != '' && doses != '') {
@@ -76,12 +82,12 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
       case 0:
         return;
       }
-      
 
       todo = {
         id: `${date.toString()}${timeOfDay.toString()}${parseInt(doses)*3}${parseInt(supply)*5}${route.params.medication.name}`,//create a unique hashcode
         today: new Date(),
-        days: days,
+        days: isInterval ? null: days,
+        intervalDays: isInterval ? {interval: intervalDays, startingDate: intervalStartDate} : null,
         date: date,
         time: timeOfDay,
         refillDate: refillDate,
@@ -99,68 +105,129 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
       });
   };
 
+  const brandName = renderName(route.params.medication.brand_name);
+
   return (
     <View style={styles.addMedicationContainer}>
       <ScrollView>
         <View style={styles.infoHeader}>
           <Text style={styles.infoHeaderText}>{renderName(route.params.medication.name)} - {route.params.medication.dosage_amount}{route.params.medication.dosage_units}</Text>
         </View>
-        
-        <Text style={styles.addMedicationTitle}>On which days are you to take {renderName(route.params.medication.brand_name)}?</Text>
-
+        <Text style={styles.addMedicationTitle}>Do you take {brandName} on the same days every week?</Text>
         <View style={styles.radioButtonsContainer}>
-          <RadioButton 
-            text='M' 
-            selected={days.monday} 
-            onPress={() => {
-              setDays({...days, monday: !days.monday});
-            }}
-          />
-          <RadioButton 
-            text='T' 
-            selected={days.tuesday} 
-            onPress={() => {
-              setDays({...days, tuesday: !days.tuesday});
-            }}
-          />
-          <RadioButton 
-            text='W' 
-            selected={days.wednesday} 
-            onPress={() => {
-              setDays({...days, wednesday: !days.wednesday});
-            }}
-          />
-          <RadioButton 
-            text='T' 
-            selected={days.thursday} 
-            onPress={() => {
-              setDays({...days, thursday: !days.thursday});
-            }}
-          />
-          <RadioButton 
-            text='F' 
-            selected={days.friday} 
-            onPress={() => {
-              setDays({...days, friday: !days.friday});
-            }}
-          />
-          <RadioButton 
-            text='S' 
-            selected={days.saturday} 
-            onPress={() => {
-              setDays({...days, saturday: !days.saturday});
-            }}
-          />
-          <RadioButton 
-            text='S' 
-            selected={days.sunday} 
-            onPress={() => {
-              setDays({...days, sunday: !days.sunday});
-            }}
-          />
-        </View>
+          <RadioButton
+            text="YES"
+            selected={!isInterval}
+            selectedStyle={[styles.toggleIntervalButton, styles.buttonSelectedColor]}
+            unselectedStyle={[styles.toggleIntervalButton, styles.buttonUnselectedColor]}
+            onPress={() => {setIsInterval(false);}}/>
 
-        <Text style={styles.addMedicationTitle}>What time of day are you to take {renderName(route.params.medication.brand_name)}?</Text>
+          <RadioButton
+            text="NO"
+            selected={isInterval}
+            selectedStyle={[styles.toggleIntervalButton, styles.buttonSelectedColor]}
+            unselectedStyle={[styles.toggleIntervalButton, styles.buttonUnselectedColor]}
+            onPress={() => {setIsInterval(true);}}/>
+        </View>
+        { !isInterval &&
+        <><Text style={styles.addMedicationTitle}>On which days are you to take {brandName}?</Text><View style={styles.radioButtonsContainer}>
+          <RadioButton
+            text='M'
+            selected={days.monday}
+            onPress={() => {
+              setDays({ ...days, monday: !days.monday });
+            } } />
+          <RadioButton
+            text='T'
+            selected={days.tuesday}
+            onPress={() => {
+              setDays({ ...days, tuesday: !days.tuesday });
+            } } />
+          <RadioButton
+            text='W'
+            selected={days.wednesday}
+            onPress={() => {
+              setDays({ ...days, wednesday: !days.wednesday });
+            } } />
+          <RadioButton
+            text='T'
+            selected={days.thursday}
+            onPress={() => {
+              setDays({ ...days, thursday: !days.thursday });
+            } } />
+          <RadioButton
+            text='F'
+            selected={days.friday}
+            onPress={() => {
+              setDays({ ...days, friday: !days.friday });
+            } } />
+          <RadioButton
+            text='S'
+            selected={days.saturday}
+            onPress={() => {
+              setDays({ ...days, saturday: !days.saturday });
+            } } />
+          <RadioButton
+            text='S'
+            selected={days.sunday}
+            onPress={() => {
+              setDays({ ...days, sunday: !days.sunday });
+            } } />
+        </View></>
+        }
+
+        { 
+          isInterval && 
+        <>
+          <Text style={styles.addMedicationTitle}>
+            How often do you take {brandName}?
+          </Text>
+          <View style={styles.row}>
+            <Text style={styles.addMedicationTitle}>
+            Once every
+            </Text>
+            <TextInput
+              style={styles.intervalTextEntry}
+              keyboardType='numeric'
+              value={intervalDays}
+              onChangeText={setIntervalDays}
+            />
+            <Text style={styles.addMedicationTitle}>
+              days
+            </Text>
+          </View>
+
+          <Text style={styles.addMedicationTitle}>When will you start taking {brandName}?</Text>
+
+          <TouchableOpacity
+            onPress={() => {setShowDate(true);}}
+            style={styles.addMedicationEntry}
+          >
+            <Text style={styles.addMedicationTimeText}>{displayDate(date)}</Text>
+          </TouchableOpacity>
+
+          { (showDate &&
+          <RNDateTimePicker
+            testID="dateTimePicker"
+            value={date}
+            mode='date'
+            is24Hour={false}
+            display='calendar'
+            onChange={
+              (_, selectedDate) => {
+                if (selectedDate) {
+                  setIntervalStartDate(selectedDate);
+                }
+                setShowDate(false);
+              }
+            }
+          />)
+          }
+
+        </>
+
+        }
+        <Text style={styles.addMedicationTitle}>What time of day are you to take {brandName}?</Text>
 
         <TouchableOpacity
           onPress={() => {setShowTime(true);}}
@@ -187,7 +254,7 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
           />)
         }
 
-        <Text style={styles.addMedicationTitle}>When will you stop taking {renderName(route.params.medication.brand_name)}?</Text>
+        <Text style={styles.addMedicationTitle}>When will you stop taking {brandName}?</Text>
 
         <TouchableOpacity
           onPress={() => {setShowDate(true);}}
@@ -214,7 +281,7 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
           />)
         }
 
-        <Text style={styles.addMedicationTitle}>How many doses of {renderName(route.params.medication.brand_name)} will you take?</Text>
+        <Text style={styles.addMedicationTitle}>How many doses of {brandName} will you take?</Text>
 
         <TextInput
           style={styles.addMedicationEntry}
@@ -223,7 +290,7 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
           onChangeText={setDoses}
         />
 
-        <Text style={styles.addMedicationTitle}>What is your current supply of {renderName(route.params.medication.brand_name)}?</Text>
+        <Text style={styles.addMedicationTitle}>What is your current supply of {brandName}?</Text>
 
         <TextInput
           style={styles.addMedicationEntry}
@@ -236,6 +303,7 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
       <View style={styles.infoButton}>
         <Button 
           title="Add Medication"
+          disabled={doses === '' || supply === '' || (isInterval && intervalDays === '')}
           onPress={() => {
             addTodo();
             navigation.navigate('Medications');
@@ -251,14 +319,19 @@ type RadioProps = {
   text: string,
   selected: boolean,
   onPress: () => void,
+  selectedStyle?: StyleProp<TextStyle>,
+  unselectedStyle?: StyleProp<TextStyle>,
 }
 
-const RadioButton = (props: RadioProps): JSX.Element => {
+const RadioButton = ({ 
+  selectedStyle=[styles.radioButtonDay, styles.buttonSelectedColor],
+  unselectedStyle=[styles.radioButtonDay, styles.buttonUnselectedColor], 
+  ...props}: RadioProps): JSX.Element => {
   return (
     <View>
       {props.selected &&
         <Text 
-          style={styles.radioButtonDaySelected}
+          style={selectedStyle}
           onPress={props.onPress}
         >
           {props.text}
@@ -266,7 +339,7 @@ const RadioButton = (props: RadioProps): JSX.Element => {
       }
       {!props.selected &&
         <Text 
-          style={styles.radioButtonDay}
+          style={unselectedStyle}
           onPress={props.onPress}  
         >
           {props.text}

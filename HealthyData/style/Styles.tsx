@@ -1,9 +1,11 @@
+import { Dimensions } from 'react-native';
 import {
   StyleSheet,
 } from 'react-native';
 import {DARK, LIGHT, RED, BLUE, BLACK, WHITE} from './Colours';
 
-
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 export const styles = StyleSheet.create({
   center: {
     justifyContent: 'center',
@@ -274,7 +276,6 @@ export const styles = StyleSheet.create({
   },
   radioButtonDay: {
     borderRadius: 50,
-    backgroundColor: WHITE,
     flex: 0,
     height: 40,
     marginLeft: 5,
@@ -288,20 +289,45 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
   },
-  radioButtonDaySelected: {
-    borderRadius: 50,
-    backgroundColor: BLUE,
+  buttonSelectedColor: {
+    backgroundColor: BLUE
+  },
+  buttonUnselectedColor: {
+    backgroundColor: WHITE
+  },
+  toggleIntervalButton: {
     flex: 0,
     height: 40,
+    borderRadius: 10,
+    width: (SCREEN_WIDTH - 40)/ 2,
     marginLeft: 5,
     marginRight: 5,
-    width: 40,
     textAlignVertical: 'center',
     textAlign: 'center',
     fontFamily: 'Roboto-Regular',
-    color: DARK,
     fontSize: 20,
-    borderWidth: 0,
+    color: DARK,
+    borderWidth: 1,
     borderColor: '#ddd',
   },
+  intervalTextEntry: {
+    width: 60,
+    height: 50,
+    padding: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 10,
+    borderRadius: 6,
+    fontSize: 20,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    fontFamily: 'Roboto-Regular',
+    color: DARK,
+    backgroundColor: WHITE,
+    borderBottomColor: '#ddd',
+    borderBottomWidth: 1,
+  },
+  row: {
+    flexDirection: 'row'
+  }
 });
