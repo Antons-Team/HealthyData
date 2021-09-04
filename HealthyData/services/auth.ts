@@ -41,10 +41,16 @@ export const signInEmail = async (email: string, password: string) => {
 };
 
 export const signOut = async () => {
+  let google = false;
+  auth().currentUser?.providerData.map((user) => {
+    // there should only be one user at a time
+    google = user.providerId === 'google.com';});
   await auth().signOut();
   LoginManager.logOut();
-  await GoogleSignin.revokeAccess();
-  await GoogleSignin.signOut();
+  if (google) {
+    await GoogleSignin.revokeAccess();
+    await GoogleSignin.signOut();
+  }
 };
 
 export const saveLocalAuthSettings = async (settings: LocalAuthSettings) => {
