@@ -3,6 +3,8 @@ import auth from '@react-native-firebase/auth';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {LocalAuthSettings} from '../auth/reducer';
 import firestore from '@react-native-firebase/firestore';
+import { LoginManager } from 'react-native-fbsdk-next';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 export const signInAnonymous = async () => {
   try {
@@ -40,6 +42,9 @@ export const signInEmail = async (email: string, password: string) => {
 
 export const signOut = async () => {
   await auth().signOut();
+  LoginManager.logOut();
+  await GoogleSignin.revokeAccess();
+  await GoogleSignin.signOut();
 };
 
 export const saveLocalAuthSettings = async (settings: LocalAuthSettings) => {

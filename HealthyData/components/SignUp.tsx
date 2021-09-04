@@ -4,13 +4,35 @@ import {View, TextInput, Button, Text} from 'react-native';
 import {signUpEmail} from '../services/auth';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AuthStackParamsList} from '../@types/AuthStackParams';
-import { AccessToken, LoginButton, LoginManager } from 'react-native-fbsdk-next';
+import { AccessToken, LoginManager } from 'react-native-fbsdk-next';
 import auth from '@react-native-firebase/auth';
 
 import {styles} from '../style/Styles';
 import {DARK, BLUE, FABCEBOOK_BLUE} from '../style/Colours';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
-type Props = StackScreenProps<AuthStackParamsList, 'SignUp'>;
+
+export const GoogleButton = () : ReactElement => {
+
+  const signInGoogle = async () => {
+    
+    await GoogleSignin.hasPlayServices();
+    const { idToken } = await GoogleSignin.signIn();
+    // Create a Google credential with the token
+    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+    // Sign-in the user with the credential
+    return auth().signInWithCredential(googleCredential);
+
+  };
+
+  return  (
+    <Button
+      title="Google Sign-In"
+      onPress={() => signInGoogle()}
+    />
+  );
+  
+};
 
 export const FacebookButton = () : ReactElement => {
   const signInFacebook = async () => {
@@ -42,7 +64,7 @@ export const FacebookButton = () : ReactElement => {
       return auth().signInWithCredential(facebookCredential);
     
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -51,6 +73,8 @@ export const FacebookButton = () : ReactElement => {
     <Button title="facebook" onPress={signInFacebook} color={FABCEBOOK_BLUE}/>
   );
 };
+
+type Props = StackScreenProps<AuthStackParamsList, 'SignUp'>;
 
 const SignUp = (props: Props): JSX.Element => {
   const [email, setEmail] = useState('');
@@ -82,6 +106,7 @@ const SignUp = (props: Props): JSX.Element => {
         }}
       />
       <FacebookButton/>
+      <GoogleButton/>
       <View style={styles.switchLoginSignupContainer}>
         <Text
           style={{padding: 2}}
