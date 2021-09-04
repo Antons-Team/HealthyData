@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "517643624241-neokcc1h1afva5akk0frbssqimmo8sot.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.healthydata",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
           "client_id": "517643624241-8qa4gpf7qt685bvssqrg9ceh4es3l9ur.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,6 +37,13 @@
             {
               "client_id": "517643624241-8qa4gpf7qt685bvssqrg9ceh4es3l9ur.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "517643624241-udqogl682nknecfs2kgr2jpa62gspgqh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.healthydata"
+              }
             }
           ]
         }

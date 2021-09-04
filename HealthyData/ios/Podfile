@@ -18,6 +18,8 @@ target 'HealthyData' do
 
   pod 'TouchID', :path => '../node_modules/react-native-touch-id'
 
+  pod 'react-native-fbsdk-next', :path => '../node_modules/react-native-fbsdk-next'
+
   target 'HealthyDataTests' do
     inherit! :complete
     # Pods for testing

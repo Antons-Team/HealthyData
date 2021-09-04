@@ -13,6 +13,7 @@ import Loading from '../components/Loading';
 import { NavigationContainer } from '@react-navigation/native';
 import LocalAuth from './LocalAuth';
 import TouchID from 'react-native-touch-id';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 const RootNavigator = () : ReactElement => {
   const {
@@ -25,6 +26,10 @@ const RootNavigator = () : ReactElement => {
   } = useAuth();
 
   useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: '517643624241-iv7hii7n7nju0mokp420eng8lbvkv6f8.apps.googleusercontent.com',
+    });
+
     getLocalAuthSettings();
     const subscriber = auth().onAuthStateChanged(async user => {
       if (user) {

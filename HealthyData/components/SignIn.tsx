@@ -7,6 +7,8 @@ import {AuthStackParamsList} from '../@types/AuthStackParams';
 
 import {styles} from '../style/Styles';
 import {DARK, BLUE} from '../style/Colours';
+import FacebookButton from './socialmediasignin/FacebookButton';
+import GoogleButton from './socialmediasignin/GoogleButton';
 
 type Props = StackScreenProps<AuthStackParamsList, 'SignIn'>;
 
@@ -39,6 +41,8 @@ const SignIn = (props: Props): JSX.Element => {
           signInEmail(email, password);
         }}
       />
+      <FacebookButton/>
+      <GoogleButton/>
       <Button
         color={BLUE}
         title="log in anonymous"
