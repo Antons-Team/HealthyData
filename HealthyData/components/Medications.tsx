@@ -14,10 +14,10 @@ import {RED} from '../style/Colours';
 import { renderName } from '../utils/Display';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import firestore from '@react-native-firebase/firestore';
 import { TextInput } from 'react-native-gesture-handler';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MedicationsStackParamList } from '../@types/MedicationsStackParamList';
+import { searchDrugs } from '../services/search';
 
 type MedicationsNavigationProps = StackNavigationProp<
   MedicationsStackParamList,
@@ -28,51 +28,74 @@ type Props = {
   navigation: MedicationsNavigationProps
 };
 
+type MedicationSearchItem =  {
+  matchingName: string,
+  drug: MedicationItem,
+}
+
 const Medications = (props: Props): JSX.Element => {
-  const [ medications, setMedications ] = useState<Array<MedicationItem>>([]);
   const [ filter, setFilter ] = useState<string>('');
 
-  const ref = firestore().collection('medications');
+  const [drugs, setDrugs ] = useState<Array<MedicationSearchItem>>([]);
+
+  const matchingLowercase = (name: string) => {
+    return name.toLowerCase().startsWith(filter.toLowerCase());
+  };
+  const handleSearch = () => {
+    if (filter == '') {
+      return;
+    }
+
+    searchDrugs(filter).then(drugs => {
+      const searchItems = new Array<MedicationSearchItem> ();  
+
+      for (const drug of drugs) {
+
+        if (matchingLowercase(drug.genericName)) {
+          searchItems.push({matchingName: drug.genericName, drug});
+        }
+
+        for (const name of drug.brandNames) {
+          if (matchingLowercase(name)) {
+            searchItems.push({matchingName: name, drug});
+          }
+        }
+      }
+      setDrugs(searchItems);
+    });
+  };
 
   useEffect(() => {
-    return ref.onSnapshot(querySnapshot => {
-      const temp: Array<MedicationItem> = [];
-      querySnapshot.forEach(doc => {
-        const data = doc.data() as MedicationItem;
-
-        if (data.name.includes(filter.toLowerCase()) || 
-              data.brand_name.includes(filter.toLowerCase())) {
-          temp.push(data);
-        }
-      });
-      setMedications(temp);
-    });
+    handleSearch();
   }, [filter]);
 
-  const renderItem: ListRenderItem<MedicationItem> = ({ item }) => (
-    <View style={styles.medicationItem}>
-      <View style={styles.medicationText}>
-        <Text 
-          style={styles.medicationTop}
-        >
-          {renderName(item.brand_name)} - {item.dosage_amount}{item.dosage_units}
-        </Text>
-        <Text style={styles.medicationBottom}>{renderName(item.name)}</Text>
+  const renderItem: ListRenderItem<MedicationSearchItem> = ({ item }) => {
+
+
+    return (
+      <View style={styles.medicationItem}>
+        <View style={styles.medicationText}>
+          <Text
+            style={styles.medicationTop}
+          >
+            {renderName(item.matchingName || '')}
+          </Text>
+          <Text style={styles.medicationBottom}>{renderName(item.drug.genericName)}</Text>
+        </View>
+        <View style={styles.medicationAdd}>
+          <Ionicons
+            name='add'
+            size={50}
+            onPress={() => {
+              props.navigation.navigate('AddMedication', {
+                medication: item.drug
+              });
+            } }
+            color={RED} />
+        </View>
       </View>
-      <View style={styles.medicationAdd}>
-        <Ionicons 
-          name='add'
-          size={50}
-          onPress={() => {
-            props.navigation.navigate('AddMedication', {
-              medication: item
-            });
-          }}
-          color={RED}
-        />
-      </View>
-    </View>
-  );
+    );
+  };
 
   return (
     <View style={styles.addContainer}>
@@ -84,9 +107,9 @@ const Medications = (props: Props): JSX.Element => {
       />
       <SafeAreaView style={styles.container}>
         <FlatList
-          data={medications}
+          data={drugs}
           renderItem={renderItem}
-          keyExtractor={item => item.id}
+          keyExtractor={(item, i) => (item.matchingName + i)}
         />
       </SafeAreaView>
     </View>

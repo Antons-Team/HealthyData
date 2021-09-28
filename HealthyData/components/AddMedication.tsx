@@ -26,21 +26,47 @@ type Props = {
 }
 
 const AddMedication = ({navigation, route}: Props): JSX.Element => {
+  const medication  = route.params.medication;
+  const sideEffectNames = medication.sideEffects.map(sideEffect => sideEffect.name);
+  // TODO present in a better way
   return (
     <View style={styles.infoContainer}>
       <ScrollView>
         <View style={styles.infoHeader}>
-          <Text style={styles.infoHeaderText}>{renderName(route.params.medication.name)} - {route.params.medication.dosage_amount}{route.params.medication.dosage_units}</Text>
+          <Text style={styles.infoHeaderText}>{renderName(route.params.medication.genericName)}</Text>
         </View>
 
         <Text style={styles.infoTitle}>Summary</Text>
-        <Text style={styles.infoParagraph}>{route.params.medication.description}</Text>
-
-        <Text style={styles.infoTitle}>Warnings</Text>
-        <Text style={styles.infoParagraph}>{route.params.medication.warnings == null ? 'No warnings.' : route.params.medication.warnings}</Text>
+        {
+          medication.description.map(description => {
+            return <Text key={description} style={styles.infoParagraph}>{description}</Text>;
+          })
+        }
+        <Text style={styles.infoTitle}>Brand Names</Text>
+        { medication.brandNames.length == 0 ? 
+          <Text style={styles.infoParagraph}>No brand names</Text> 
+          :
+          medication.brandNames.map(brandName => (
+            <Text key={brandName} style={styles.infoParagraph}>{brandName}</Text>
+          )) 
+        }
 
         <Text style={styles.infoTitle}>Side Effects</Text>
-        <Text style={styles.infoParagraph}>{route.params.medication.side_effects == null ? 'No side effects.' : route.params.medication.side_effects}</Text>
+        { sideEffectNames.length == 0 ? 
+          <Text style={styles.infoParagraph}>No side effects</Text> 
+          :
+          sideEffectNames.map(sideEffectName => (
+            <Text key={sideEffectName} style={styles.infoParagraph}>{sideEffectName}</Text>
+          )) 
+        }
+        <Text style={styles.infoTitle}>Indications</Text>
+        { medication.indications.length == 0 ? 
+          <Text style={styles.infoParagraph}>No indications </Text> 
+          :
+          medication.indications.map(indication => (
+            <Text key={indication} style={styles.infoParagraph}>{indication}</Text>
+          )) 
+        }
       </ScrollView>
 
       <View style={styles.infoButton}>
