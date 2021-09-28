@@ -92,7 +92,7 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
     }
 
     const todo = {
-      id: `${date.toString()}${timeOfDay.toString()}${parseInt(doses)*3}${parseInt(supply)*5}${route.params.medication.name}`,//create a unique hashcode
+      id: `${date.toString()}${timeOfDay.toString()}${parseInt(doses)*3}${parseInt(supply)*5}${genericName}`,//create a unique hashcode
       today: new Date(),
       days: isInterval ? null: days,
       intervalDays: isInterval ? {interval: intervalDays, startingDate: intervalStartDate} : null,
@@ -107,20 +107,22 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
     firestore()
       .collection('users')
       .doc(auth().currentUser?.uid)
-      .update({
-        todos: firestore.FieldValue.arrayUnion(todo)
-      });
+      .collection('todos')
+      .add(todo);
+    // .update({
+    //   todos: firestore.FieldValue.arrayUnion(todo)
+    // });
   };
 
-  const brandName = renderName(route.params.medication.brand_name);
+  const genericName = renderName(route.params.medication.genericName);
 
   return (
     <View style={styles.addMedicationContainer}>
       <ScrollView>
         <View style={styles.infoHeader}>
-          <Text style={styles.infoHeaderText}>{renderName(route.params.medication.name)} - {route.params.medication.dosage_amount}{route.params.medication.dosage_units}</Text>
+          <Text style={styles.infoHeaderText}>{genericName}</Text>
         </View>
-        <Text style={styles.addMedicationTitle}>Do you take {brandName} on the same days every week?</Text>
+        <Text style={styles.addMedicationTitle}>Do you take {genericName} on the same days every week?</Text>
         <View style={styles.radioButtonsContainer}>
           <RadioButton
             text="YES"
@@ -137,7 +139,7 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
             onPress={() => {setIsInterval(true);}}/>
         </View>
         { !isInterval &&
-        <><Text style={styles.addMedicationTitle}>On which days are you to take {brandName}?</Text><View style={styles.radioButtonsContainer}>
+        <><Text style={styles.addMedicationTitle}>On which days are you to take {genericName}?</Text><View style={styles.radioButtonsContainer}>
           <RadioButton
             text='M'
             selected={days.monday}
@@ -187,7 +189,7 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
           isInterval && 
         <>
           <Text style={styles.addMedicationTitle}>
-            How often do you take {brandName}?
+            How often do you take {genericName}?
           </Text>
           <View style={styles.row}>
             <Text style={styles.addMedicationTitle}>
@@ -204,7 +206,7 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
             </Text>
           </View>
 
-          <Text style={styles.addMedicationTitle}>When will you start taking {brandName}?</Text>
+          <Text style={styles.addMedicationTitle}>When will you start taking {genericName}?</Text>
 
           <TouchableOpacity
             onPress={() => {setShowDate(true);}}
@@ -234,7 +236,7 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
         </>
 
         }
-        <Text style={styles.addMedicationTitle}>What time of day are you to take {brandName}?</Text>
+        <Text style={styles.addMedicationTitle}>What time of day are you to take {genericName}?</Text>
 
         <TouchableOpacity
           onPress={() => {setShowTime(true);}}
@@ -261,7 +263,7 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
           />)
         }
 
-        <Text style={styles.addMedicationTitle}>When will you stop taking {brandName}?</Text>
+        <Text style={styles.addMedicationTitle}>When will you stop taking {genericName}?</Text>
 
         <TouchableOpacity
           onPress={() => {setShowDate(true);}}
@@ -288,7 +290,7 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
           />)
         }
 
-        <Text style={styles.addMedicationTitle}>How many doses of {brandName} will you take?</Text>
+        <Text style={styles.addMedicationTitle}>How many doses of {genericName} will you take?</Text>
 
         <TextInput
           style={styles.addMedicationEntry}
@@ -297,7 +299,7 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
           onChangeText={setDoses}
         />
 
-        <Text style={styles.addMedicationTitle}>What is your current supply of {brandName}?</Text>
+        <Text style={styles.addMedicationTitle}>What is your current supply of {genericName}?</Text>
 
         <TextInput
           style={styles.addMedicationEntry}

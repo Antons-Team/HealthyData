@@ -19,16 +19,19 @@ export type UserDocument = {
     todos: Array<TodoItem>,
 }
 
+export type SideEffect = {
+    name: string;
+    freq: string;
+}
+
 export type MedicationItem = {
     id: string;
-    name: string;
-    brand_name: string;
-    dosage_amount: number;
-    dosage_units: string;
-    description: string;
-    warnings: string;
-    side_effects: string;
-};
+    genericName: string;
+    brandNames: string[];
+    description: string[];
+    indications: string[];
+    sideEffects: SideEffect[];
+}
 
 export type TodoItem = {
     id: string;
