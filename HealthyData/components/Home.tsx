@@ -30,7 +30,7 @@ const Home = (): JSX.Element => {
   const isFocused = useIsFocused();
 
   const getTodoData = async () => {
-
+    // Retrieve the todo data from firestore doc
     firestore().collection(`users/${auth().currentUser?.uid}/todos`).get().then(snapshot => {
       const docs = snapshot.docs;
 

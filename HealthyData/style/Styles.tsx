@@ -115,6 +115,17 @@ export const styles = StyleSheet.create({
     display: 'flex',
     borderColor: LIGHT,
   },
+  dropDown: {
+    backgroundColor: WHITE,
+    borderWidth: 2,
+    flexDirection: 'row',
+    borderRadius: 6,
+    marginBottom: 10,
+    padding: 10,
+    display: 'flex',
+    alignSelf: 'center',
+    borderColor: LIGHT,
+  },
   medicationText: {
     flexDirection: 'column',
     alignSelf: 'flex-start',

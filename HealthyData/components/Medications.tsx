@@ -5,6 +5,7 @@ import {
   FlatList,
   SafeAreaView,
   ListRenderItem,
+  TouchableOpacity
 } from 'react-native';
 import { MedicationItem } from '../@types/Schema';
 
@@ -73,7 +74,14 @@ const Medications = (props: Props): JSX.Element => {
 
 
     return (
-      <View style={styles.medicationItem}>
+      <TouchableOpacity 
+        style={styles.medicationItem}
+        onPress={() => {
+          props.navigation.navigate('AddMedication', {
+            medication: item.drug
+          });
+        } }
+      >
         <View style={styles.medicationText}>
           <Text
             style={styles.medicationTop}
@@ -86,14 +94,9 @@ const Medications = (props: Props): JSX.Element => {
           <Ionicons
             name='add'
             size={50}
-            onPress={() => {
-              props.navigation.navigate('AddMedication', {
-                medication: item.drug
-              });
-            } }
             color={RED} />
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
