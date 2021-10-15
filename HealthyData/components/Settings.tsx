@@ -46,12 +46,6 @@ const Settings = (props: Props): JSX.Element => {
           return;
         }}
       />
-      <SettingsButton 
-        name="Units of Measurement" 
-        onPress={() => {
-          return;
-        }}
-      />
       <Button 
         title="Sign out" 
         onPress={() => signOut()} 

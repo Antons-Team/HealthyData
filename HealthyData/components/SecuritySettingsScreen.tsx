@@ -30,9 +30,6 @@ const SecuritySettingsScreen = ({navigation}
 
   return (
     <View style={styles.settingsContainer}>
-      <Text style={styles.title}>
-              Security settings
-      </Text>
       <SettingsButton 
         name={(localAuthSettings.pin ? 'Change PIN' : 'Set PIN')} 
         onPress={() => {navigation.navigate('PinSetup');}}/>
