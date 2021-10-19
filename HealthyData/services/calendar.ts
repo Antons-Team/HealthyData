@@ -4,7 +4,7 @@ import { TodoItem } from '../@types/Schema';
 import { DateData } from 'react-native-calendars/src/types';
 
 
-const isToday = (todo: TodoItem, date: Date) => {
+export const isToday = (todo: TodoItem, date: Date) => {
   if (todo.days == null) {
     const interval = todo.intervalDays?.interval;
     const startDate = todo.intervalDays?.startingDate.toDate();
@@ -13,14 +13,10 @@ const isToday = (todo: TodoItem, date: Date) => {
       const oneDay = 1000 * 60 * 60 * 24; // in ms
       const daysInbetween = (Math.floor(startDate?.getTime() / oneDay) 
           - Math.floor(date.getTime() / oneDay));
-
-      console.log(daysInbetween, interval, daysInbetween % interval,  'days');
-                
       return (daysInbetween % interval) == 0; 
     }
     return false;
   }
-
 
   const today = date.getDay();
   if (today == 0) {
@@ -70,11 +66,6 @@ export const getTodosMonth = async (month: DateData) => {
       const allDays = {};
       let loop = new Date(monthStart);
       while(loop <= monthEnd){
-        // const dateString = `${loop.getFullYear()}-${
-        //   loop.getMonth().toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false})
-        // }-${
-        //   loop.getDate().toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false})
-        // }`;  
         const dateString = loop.toISOString().split('T')[0];
         const todaysTodos: { todo: TodoItem; name: string }[] = [];
         data.forEach(todo => {
@@ -93,25 +84,4 @@ export const getTodosMonth = async (month: DateData) => {
       return allDays;
     });
 
-  //   const data = docs.map(doc => {
-  //     return (doc.data()) as TodoItem;
-  //   });
-
-  //   const todos = data.filter(todo => {
-  //     const today = new Date();
-  //     return today < todo.date.toDate() && isToday(todo);
-  //   });
-  //   setTodos(todos);
-
-  //   // get refill data
-  //   const refills = data.filter(todo => {
-  //     let date = new Date();
-  //     date = addDays(30, date);
-  //     return todo.refillDate.toDate() < date;
-  //   });
-  //   setRefills(refills);
-
-  // }).catch(e => {
-  //   console.error(e);
-  // });
 };
