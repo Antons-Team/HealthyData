@@ -21,44 +21,13 @@ import { useIsFocused } from '@react-navigation/native';
 
 import { displayDate } from '../utils/Display';
 import { addDays } from '../utils/Dates';
+import { isToday } from '../services/calendar';
 
 const Home = (): JSX.Element => {
   const [ todos, setTodos ] = useState<Array<TodoItem>>([]);
   const [ refills, setRefills ] = useState<Array<TodoItem>>([]);
 
   const isFocused = useIsFocused();
-
-  const isToday = (todo: TodoItem) => {
-    if (todo.days == null) {
-      const interval = todo.intervalDays?.interval;
-      const startDate = todo.intervalDays?.startingDate.toDate();
-      if (startDate && interval) {
-
-        const oneDay = 1000 * 60 * 60 * 24; // in ms
-        const daysInbetween = (Math.floor(startDate?.getTime() / oneDay) 
-          - Math.floor((new Date()).getTime() / oneDay));
-                
-        return (daysInbetween % interval) == 0; 
-      }
-      return false;
-    }
-    const today = new Date().getDay();
-    if (today == 0) {
-      return todo.days.sunday;
-    } else if (today == 1) {
-      return todo.days.monday;
-    } else if (today == 2) {
-      return todo.days.tuesday;
-    } else if (today == 3) {
-      return todo.days.wednesday;
-    } else if (today == 4) {
-      return todo.days.thursday;
-    } else if (today == 5) {
-      return todo.days.friday;
-    } else {
-      return todo.days.saturday;
-    }
-  };
 
   const getTodoData = async () => {
 
@@ -71,7 +40,7 @@ const Home = (): JSX.Element => {
 
       const todos = data.filter(todo => {
         const today = new Date();
-        return today < todo.date.toDate() && isToday(todo);
+        return today < todo.date.toDate() && isToday(todo, new Date());
       });
       setTodos(todos);
 

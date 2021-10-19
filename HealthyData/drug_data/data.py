@@ -20,7 +20,7 @@ drug_names_df = pd.read_csv("drug_names.tsv",
 freq_df = (freq_df
            .sort_values(["freq"], ascending=False)
            .drop_duplicates(subset=["name", "id"], keep="first")
-           .groupby(["id"]).head(7)
+           .groupby(["id"]).head(3)
            )
 # filter out zero frequency
 freq_df = freq_df[freq_df["freq"] != 0]
@@ -79,5 +79,5 @@ for drug_id, drug in drug_data.items():
     if "indications" not in drug:
         drug["indications"] = []
 
-with open("drug_data_web_sider.json", "w") as fd:
-    json.dump({"drugs": drug_data}, fd)
+# with open("drug_data_web_sider.json", "w") as fd:
+#     json.dump({"drugs": drug_data}, fd)
