@@ -71,6 +71,7 @@ const Home = (): JSX.Element => {
 
       const todos = data.filter(todo => {
         const today = new Date();
+        console.log(todo, "todo");
         return today < todo.date.toDate() && isToday(todo);
       });
       setTodos(todos);

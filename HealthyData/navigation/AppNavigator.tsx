@@ -4,7 +4,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Home from '../components/Home';
-import Calendar from '../components/Calendar';
+import CalendarScreen from '../components/Calendar';
 import Header from '../components/Header';
 
 import {styles} from '../style/Styles';
@@ -68,7 +68,7 @@ const AppNavigator = (): JSX.Element => {
         options={{headerShown: false}}
       />
       <Tab.Screen name="Data" component={Data} />
-      <Tab.Screen name="Calendar" component={Calendar} />
+      <Tab.Screen name="Calendar" component={CalendarScreen} />
       <Tab.Screen 
         name="SettingsNavigator" 
         component={SettingsNavigator} 
