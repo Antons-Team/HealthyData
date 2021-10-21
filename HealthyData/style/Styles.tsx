@@ -168,11 +168,17 @@ export const styles = StyleSheet.create({
   },
   infoHeader: {
     backgroundColor: RED,
-    flexDirection: 'row',
+    flexDirection: 'column',
     padding: 10,
   },
   infoHeaderText: {
     fontSize: 35,
+    flex: 1,
+    color: LIGHT,
+    fontFamily: 'Roboto-Regular',
+  },
+  infoHeaderSubtitle: {
+    fontSize: 15,
     flex: 1,
     color: LIGHT,
     fontFamily: 'Roboto-Regular',

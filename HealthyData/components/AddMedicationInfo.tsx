@@ -91,9 +91,15 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
       refillDate = addDays(parseInt(intervalDays) * parseInt(supply), startDate);
     }
 
+
+    const today = new Date();
+    today.setSeconds(0, 0 );
+    timeOfDay.setSeconds(0, 0);
+    refillDate?.setSeconds(0, 0);
+
     const todo = {
-      id: `${date.toString()}${timeOfDay.toString()}${parseInt(doses)*3}${parseInt(supply)*5}${genericName}`,//create a unique hashcode
-      today: new Date(),
+      // id: `${date.toString()}${timeOfDay.toString()}${parseInt(doses)*3}${parseInt(supply)*5}${genericName}`,//create a unique hashcode
+      today: today,
       days: isInterval ? null: days,
       intervalDays: isInterval ? {interval: intervalDays, startingDate: intervalStartDate} : null,
       date: date,
@@ -102,6 +108,7 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
       supply: parseInt(supply),
       doses: parseInt(doses),
       medication: route.params.medication,
+      medicationId: route.params.medication.id
     };
 
     firestore()

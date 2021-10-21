@@ -13,90 +13,90 @@ import {
   LineChart,
 } from 'react-native-chart-kit';
 
-import { Dimensions } from "react-native";
+import { Dimensions } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
-import { Dataset, ChartData } from 'react-native-chart-kit/dist/HelperTypes'
+import { Dataset, ChartData } from 'react-native-chart-kit/dist/HelperTypes';
 import { AbstractChartConfig } from 'react-native-chart-kit/dist/AbstractChart';
 
+
+const getChartData = async( setData) => {
+  firestore().collection(`users/${auth().currentUser?.uid}/todos`).get().then(snapshot => {
+    const docs = snapshot.docs;
+
+    const data = docs.map(doc => {
+      return (doc.data()) as TodoItem;
+    });
+
+    const result = [0, 0, 0, 0, 0, 0, 0];
+
+    data.map(todo => {
+      if (todo.days?.sunday) {
+        result[0] += todo.doses;
+      }
+      if (todo.days?.monday) {
+        result[1] += todo.doses;
+      }
+      if (todo.days?.tuesday) {
+        result[2] += todo.doses;
+      }
+      if (todo.days?.wednesday) {
+        result[3] += todo.doses;
+      }
+      if (todo.days?.thursday) {
+        result[4] += todo.doses;
+      }
+      if (todo.days?.friday) {
+        result[5] += todo.doses;
+      }
+      if (todo.days?.saturday) {
+        result[6] += todo.doses;
+      }
+
+      setData(result);
+    });
+
+  }).catch(e => {
+    console.error(e);
+  });
+};
 
 const Data = (): JSX.Element => {
   // TODO filter by medication
   const [medications, setMedications] = useState<Array<string>>([]);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-  const [items, setItems] = useState([{label: "Apple", value: "apple"}]);
+  const [items, setItems] = useState([{label: 'Apple', value: 'apple'}]);
   // Bar chart data retreived from firestore
-  const [data, setData] = useState<Array<number>>([0, 0, 0, 0, 0, 0, 0])
+  const [data, setData] = useState<Array<number>>([0, 0, 0, 0, 0, 0, 0]);
   const [average, setAverage] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
 
-  const screenWidth = Dimensions.get("window").width;
-  let barChartData: Dataset = {
+  const screenWidth = Dimensions.get('window').width;
+  const barChartData: Dataset = {
     data: data
-  }
+  };
 
   useEffect(() => {
-    getChartData()
+    getChartData(setData);
     barChartData.data = data;
-  })
+  }, []);
 
   useEffect(() => {
     computeStatistics();
-  })
+  }, []);
 
   const computeStatistics = async() => {
-    const total = data.reduce((a, b) => a + b, 0)
+    const total = data.reduce((a, b) => a + b, 0);
     setTotal(total);
     setAverage(total / data.length || 0);
-  }
-
-  const getChartData = async() => {
-    firestore().collection(`users/${auth().currentUser?.uid}/todos`).get().then(snapshot => {
-      const docs = snapshot.docs;
-
-      const data = docs.map(doc => {
-        return (doc.data()) as TodoItem;
-      });
-
-      const result = [0, 0, 0, 0, 0, 0, 0];
-
-      data.map(todo => {
-        if (todo.days?.sunday) {
-          result[0] += todo.doses
-        }
-        if (todo.days?.monday) {
-          result[1] += todo.doses
-        }
-        if (todo.days?.tuesday) {
-          result[2] += todo.doses
-        }
-        if (todo.days?.wednesday) {
-          result[3] += todo.doses
-        }
-        if (todo.days?.thursday) {
-          result[4] += todo.doses
-        }
-        if (todo.days?.friday) {
-          result[5] += todo.doses
-        }
-        if (todo.days?.saturday) {
-          result[6] += todo.doses
-        }
-
-        setData(result);
-      });
-
-    }).catch(e => {
-      console.error(e);
-    });
-  }
+  };
 
   
   // Data to be passed to the line chart
   const chartData: ChartData = {
-    labels: ["S", "M", "T", "W", "T", "F", "S"],
+    labels: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
     datasets: [
       barChartData
     ]
