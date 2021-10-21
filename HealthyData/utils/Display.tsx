@@ -17,7 +17,7 @@ export const displayTime = (date: Date): string => {
 };
 
 export const displayDate = (date: Date): string => {
-  const month = date.getMonth();
+  const month = date.getMonth() + 1;
   const day = date.getDate();
   const year = date.getFullYear();
   const monthStr = month < 10 ? '0' + month : month;

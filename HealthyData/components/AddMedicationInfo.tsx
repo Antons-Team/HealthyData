@@ -309,7 +309,7 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
         <Text style={styles.addMedicationTitle}>What is your current supply of {genericName}?</Text>
 
         <TextInput
-          style={styles.addMedicationEntry}
+          style={styles.addMedicationEntryPadded}
           keyboardType='numeric'
           value={supply}
           onChangeText={setSupply}
@@ -327,6 +327,7 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
           color={RED}
         />
       </View>
+      
     </View>
   );
 };
