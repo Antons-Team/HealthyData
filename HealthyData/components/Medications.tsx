@@ -5,20 +5,20 @@ import {
   FlatList,
   SafeAreaView,
   ListRenderItem,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
-import { MedicationItem } from '../@types/Schema';
+import {MedicationItem} from '../@types/Schema';
 
 import {styles} from '../style/Styles';
 import {RED} from '../style/Colours';
 
-import { renderName } from '../utils/Display';
+import {renderName} from '../utils/Display';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import { TextInput } from 'react-native-gesture-handler';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { MedicationsStackParamList } from '../@types/MedicationsStackParamList';
-import { searchDrugs } from '../services/search';
+import {TextInput} from 'react-native-gesture-handler';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {MedicationsStackParamList} from '../@types/MedicationsStackParamList';
+import {searchDrugs} from '../services/search';
 
 type MedicationsNavigationProps = StackNavigationProp<
   MedicationsStackParamList,
@@ -26,18 +26,18 @@ type MedicationsNavigationProps = StackNavigationProp<
 >;
 
 type Props = {
-  navigation: MedicationsNavigationProps
+  navigation: MedicationsNavigationProps;
 };
 
-type MedicationSearchItem =  {
-  matchingName: string,
-  drug: MedicationItem,
-}
+type MedicationSearchItem = {
+  matchingName: string;
+  drug: MedicationItem;
+};
 
 const Medications = (props: Props): JSX.Element => {
-  const [ filter, setFilter ] = useState<string>('');
+  const [filter, setFilter] = useState<string>('');
 
-  const [drugs, setDrugs ] = useState<Array<MedicationSearchItem>>([]);
+  const [drugs, setDrugs] = useState<Array<MedicationSearchItem>>([]);
 
   const matchingLowercase = (name: string) => {
     return name.toLowerCase().startsWith(filter.toLowerCase());
@@ -48,10 +48,9 @@ const Medications = (props: Props): JSX.Element => {
     }
 
     searchDrugs(filter).then(drugs => {
-      const searchItems = new Array<MedicationSearchItem> ();  
+      const searchItems = new Array<MedicationSearchItem>();
 
       for (const drug of drugs) {
-
         if (matchingLowercase(drug.genericName)) {
           searchItems.push({matchingName: drug.genericName, drug});
         }
@@ -70,31 +69,25 @@ const Medications = (props: Props): JSX.Element => {
     handleSearch();
   }, [filter]);
 
-  const renderItem: ListRenderItem<MedicationSearchItem> = ({ item }) => {
-
-
+  const renderItem: ListRenderItem<MedicationSearchItem> = ({item}) => {
     return (
-      <TouchableOpacity 
+      <TouchableOpacity
         style={styles.medicationItem}
         onPress={() => {
           props.navigation.navigate('AddMedication', {
-            medication: item.drug
+            medication: item.drug,
           });
-        } }
-      >
+        }}>
         <View style={styles.medicationText}>
-          <Text
-            style={styles.medicationTop}
-          >
+          <Text style={styles.medicationTop}>
             {renderName(item.matchingName || '')}
           </Text>
-          <Text style={styles.medicationBottom}>{renderName(item.drug.genericName)}</Text>
+          <Text style={styles.medicationBottom}>
+            {renderName(item.drug.genericName)}
+          </Text>
         </View>
         <View style={styles.medicationAdd}>
-          <Ionicons
-            name='add'
-            size={50}
-            color={RED} />
+          <Ionicons name="add" size={50} color={RED} />
         </View>
       </TouchableOpacity>
     );
@@ -112,7 +105,7 @@ const Medications = (props: Props): JSX.Element => {
         <FlatList
           data={drugs}
           renderItem={renderItem}
-          keyExtractor={(item, i) => (item.matchingName + i)}
+          keyExtractor={(item, i) => item.matchingName + i}
         />
       </SafeAreaView>
     </View>

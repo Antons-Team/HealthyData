@@ -1,20 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Button,
-  ScrollView,
-  Text,
-  View,
-} from 'react-native';
-import { RouteProp } from '@react-navigation/native';
-import { MedicationItem } from '../@types/Schema';
+import React, {useEffect, useState} from 'react';
+import {Button, ScrollView, Text, View} from 'react-native';
+import {RouteProp} from '@react-navigation/native';
+import {MedicationItem} from '../@types/Schema';
 
 import {styles} from '../style/Styles';
 import {RED} from '../style/Colours';
 
 import {renderName} from '../utils/Display';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { MedicationsStackParamList } from '../@types/MedicationsStackParamList';
-import { getIsTaking } from '../services/calendar';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {MedicationsStackParamList} from '../@types/MedicationsStackParamList';
+import {getIsTaking} from '../services/calendar';
 
 type MedicationsNavigationProps = StackNavigationProp<
   MedicationsStackParamList,
@@ -22,33 +17,38 @@ type MedicationsNavigationProps = StackNavigationProp<
 >;
 
 type Props = {
-  navigation: MedicationsNavigationProps,
-  route: RouteProp<{ params: { medication: MedicationItem } }, 'params'>
-}
+  navigation: MedicationsNavigationProps;
+  route: RouteProp<{params: {medication: MedicationItem}}, 'params'>;
+};
 
 const AddMedication = ({navigation, route}: Props): JSX.Element => {
-
-  const medication  = route.params.medication;
-  const sideEffectNames = medication.sideEffects.map(sideEffect => sideEffect.name);
+  const medication = route.params.medication;
+  const sideEffectNames = medication.sideEffects.map(
+    sideEffect => sideEffect.name,
+  );
 
   const [isTaking, setIsTaking] = useState(false);
 
   useEffect(() => {
-    getIsTaking(medication).then(res => 
-    {
+    getIsTaking(medication).then(res => {
       return setIsTaking(res);
-    } );
+    });
   }, []);
-
 
   // TODO present in a better way
   return (
     <View style={styles.infoContainer}>
       <ScrollView>
         <View style={styles.infoHeader}>
-          <Text style={styles.infoHeaderText}>{renderName(route.params.medication.genericName)}</Text>
-          {isTaking &&  <Text style={styles.infoHeaderSubtitle}> You are currently taking this medication </Text>
-          }
+          <Text style={styles.infoHeaderText}>
+            {renderName(route.params.medication.genericName)}
+          </Text>
+          {isTaking && (
+            <Text style={styles.infoHeaderSubtitle}>
+              {' '}
+              You are currently taking this medication{' '}
+            </Text>
+          )}
         </View>
 
         <Text style={styles.infoTitle}>Summary</Text>
@@ -59,12 +59,11 @@ const AddMedication = ({navigation, route}: Props): JSX.Element => {
             return <Text key={description} style={styles.infoParagraph}>{description}</Text>;
           })
         } */}
-        { isTaking && (
-          <View> 
-            <Text> You are currently taking this medication </Text> 
-          </View>  
-        )
-        }
+        {isTaking && (
+          <View>
+            <Text> You are currently taking this medication </Text>
+          </View>
+        )}
         {/* <Text style={styles.infoTitle}>Brand Names</Text>
         { medication.brandNames.length == 0 ? 
           <Text style={styles.infoParagraph}>No brand names</Text> 
@@ -75,13 +74,15 @@ const AddMedication = ({navigation, route}: Props): JSX.Element => {
         } */}
 
         <Text style={styles.infoTitle}>Side Effects</Text>
-        { sideEffectNames.length == 0 ? 
-          <Text style={styles.infoParagraph}>No side effects</Text> 
-          :
+        {sideEffectNames.length == 0 ? (
+          <Text style={styles.infoParagraph}>No side effects</Text>
+        ) : (
           sideEffectNames.map(sideEffectName => (
-            <Text key={sideEffectName} style={styles.infoParagraph}>{sideEffectName}</Text>
-          )) 
-        }
+            <Text key={sideEffectName} style={styles.infoParagraph}>
+              {sideEffectName}
+            </Text>
+          ))
+        )}
         {/* <Text style={styles.infoTitle}>Indications</Text>
         { medication.indications.length == 0 ? 
           <Text style={styles.infoParagraph}>No indications </Text> 
@@ -91,21 +92,19 @@ const AddMedication = ({navigation, route}: Props): JSX.Element => {
           )) 
         } */}
       </ScrollView>
-      {
-        !isTaking &&  (
-          <View style={styles.infoButton}>
-            <Button 
-              title="Add Medication"
-              onPress={() => {
-                navigation.navigate('AddMedicationInfo', {
-                  medication: route.params.medication
-                });
-              }}
-              color={RED}
-            />
-          </View>
-        )
-      }
+      {!isTaking && (
+        <View style={styles.infoButton}>
+          <Button
+            title="Add Medication"
+            onPress={() => {
+              navigation.navigate('AddMedicationInfo', {
+                medication: route.params.medication,
+              });
+            }}
+            color={RED}
+          />
+        </View>
+      )}
     </View>
   );
 };

@@ -1,15 +1,14 @@
 import firestore from '@react-native-firebase/firestore';
-import {MedicationItem, SideEffect } from '../@types/Schema';
+import {MedicationItem, SideEffect} from '../@types/Schema';
 
-
-export const searchDrugs = async (name: string) : Promise<MedicationItem[]> => {
-
-  const drugSearchQuery = firestore().collection('drugs')
+export const searchDrugs = async (name: string): Promise<MedicationItem[]> => {
+  const drugSearchQuery = firestore()
+    .collection('drugs')
     .where('keywords', 'array-contains', name.toLowerCase())
     .limit(5); // limit number of db reads
 
   // read from cache first to avoid extra db reads
-  let  snapshot = await drugSearchQuery.get({source: 'cache'});
+  let snapshot = await drugSearchQuery.get({source: 'cache'});
   if (snapshot.empty) {
     snapshot = await drugSearchQuery.get({source: 'server'});
   }
@@ -24,10 +23,9 @@ export const searchDrugs = async (name: string) : Promise<MedicationItem[]> => {
       brandNames: data['brand_names'] as string[],
       description: data['description'] as string[],
       indications: data['indications'] as string[],
-      sideEffects: data['side_effects'] as SideEffect[] 
+      sideEffects: data['side_effects'] as SideEffect[],
     };
-  }); 
+  });
 
   return res;
-
 };

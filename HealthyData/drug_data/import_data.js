@@ -6,7 +6,6 @@ const serviceAccount = require('../serviceAccount.json');
 // eslint-disable-next-line no-undef
 const firebaseConfig = require('./firebaseconfig.json');
 
-
 // // emulator options
 // const options = {
 //   firestore: {
@@ -15,18 +14,20 @@ const firebaseConfig = require('./firebaseconfig.json');
 //   },
 // };
 
-// JSON To Firestore    
+// JSON To Firestore
 
 const jsonToFirestore = async () => {
   try {
     console.log('Initialzing Firebase');
-    await firestoreService.initializeApp(serviceAccount, firebaseConfig.databaseURL);
+    await firestoreService.initializeApp(
+      serviceAccount,
+      firebaseConfig.databaseURL,
+    );
     console.log('Firebase Initialized');
 
     await firestoreService.restore('./drug_data/drug_data_web_sider.json');
     console.log('Upload Success');
-  }
-  catch (error) {
+  } catch (error) {
     console.log(error);
   }
 };

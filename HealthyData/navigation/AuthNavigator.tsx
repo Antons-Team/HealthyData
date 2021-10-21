@@ -5,13 +5,13 @@ import SignUp from '../components/SignUp';
 import SignIn from '../components/SignIn';
 
 import Header from '../components/Header';
-import { styles } from '../style/Styles';
+import {styles} from '../style/Styles';
 
 const Stack = createStackNavigator();
 
 const AuthNavigator = (): JSX.Element => {
   return (
-    <Stack.Navigator 
+    <Stack.Navigator
       initialRouteName="SignIn"
       screenOptions={() => ({
         headerTitle: () => <Header />,
@@ -19,8 +19,7 @@ const AuthNavigator = (): JSX.Element => {
         headerTitleAlign: 'center',
         headerTitleStyle: styles.headerTitle,
         headerLeft: () => null,
-      })}
-    >
+      })}>
       <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="SignIn" component={SignIn} />
     </Stack.Navigator>

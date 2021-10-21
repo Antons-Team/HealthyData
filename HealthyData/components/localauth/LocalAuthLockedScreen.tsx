@@ -7,16 +7,16 @@ import {signOut, resetLocalAuth} from '../../services/auth';
 import PinLogin, {MAX_PIN_LENGTH} from './PinLogin';
 import TouchID from 'react-native-touch-id';
 import Header from '../Header';
-import { styles } from '../../style/Styles';
-import { BLUE, WHITE } from '../../style/Colours';
-import { StackScreenProps } from '@react-navigation/stack';
-import { SecuritySettingsStackParamsList } from '../../navigation/SecuritySettingsNavigator';
+import {styles} from '../../style/Styles';
+import {BLUE, WHITE} from '../../style/Colours';
+import {StackScreenProps} from '@react-navigation/stack';
+import {SecuritySettingsStackParamsList} from '../../navigation/SecuritySettingsNavigator';
 
 type LocalAuthLockedProps = {
-  onSuccess: () => void 
-}
+  onSuccess: () => void;
+};
 
-const LocalAuthLocked = ({onSuccess}: LocalAuthLockedProps) :ReactElement => {
+const LocalAuthLocked = ({onSuccess}: LocalAuthLockedProps): ReactElement => {
   const {
     state: {localAuthSettings},
     setLocalAuthState,
@@ -76,17 +76,18 @@ const LocalAuthLocked = ({onSuccess}: LocalAuthLockedProps) :ReactElement => {
 };
 
 const LocalAuthLockedScreen = (): ReactElement => {
-
   const {setLocalAuthState} = useAuth();
   return (
     <View style={{flex: 1}}>
       <View style={{height: 60, ...styles.center, backgroundColor: WHITE}}>
-        <Header/>
+        <Header />
       </View>
       <Text style={styles.title}>Enter PIN to login</Text>
-      <LocalAuthLocked onSuccess={() => {
-        setLocalAuthState(LocalAuthState.signedIn);
-      }}/>
+      <LocalAuthLocked
+        onSuccess={() => {
+          setLocalAuthState(LocalAuthState.signedIn);
+        }}
+      />
       <View>
         <Button
           color={BLUE}
@@ -101,13 +102,20 @@ const LocalAuthLockedScreen = (): ReactElement => {
   );
 };
 
-export const LockSecurityScreen = ({navigation}: 
-  StackScreenProps<SecuritySettingsStackParamsList, 'SettingsLocked'>
-) :ReactElement => {
+export const LockSecurityScreen = ({
+  navigation,
+}: StackScreenProps<
+  SecuritySettingsStackParamsList,
+  'SettingsLocked'
+>): ReactElement => {
   return (
-    <View style={{flex:1}}>
+    <View style={{flex: 1}}>
       <Text style={styles.title}>Enter PIN</Text>
-      <LocalAuthLocked onSuccess={() => {navigation.navigate('SecuritySettingsScreen');}}/>
+      <LocalAuthLocked
+        onSuccess={() => {
+          navigation.navigate('SecuritySettingsScreen');
+        }}
+      />
     </View>
   );
 };

@@ -1,7 +1,5 @@
-import { Dimensions } from 'react-native';
-import {
-  StyleSheet,
-} from 'react-native';
+import {Dimensions} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {DARK, LIGHT, RED, BLUE, BLACK, WHITE} from './Colours';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -9,7 +7,7 @@ const SCREEN_HEIGHT = Dimensions.get('window').height;
 export const styles = StyleSheet.create({
   center: {
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   homeContainer: {
     flex: 1,
@@ -24,7 +22,7 @@ export const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     marginRight: 10,
-    marginLeft: 10,    
+    marginLeft: 10,
     marginTop: 5,
   },
   item: {
@@ -130,7 +128,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'column',
     alignSelf: 'flex-start',
     flexGrow: 1,
-    display: 'flex'
+    display: 'flex',
   },
   medicationAdd: {
     alignSelf: 'flex-end',
@@ -324,16 +322,16 @@ export const styles = StyleSheet.create({
     borderColor: '#ddd',
   },
   buttonSelectedColor: {
-    backgroundColor: BLUE
+    backgroundColor: BLUE,
   },
   buttonUnselectedColor: {
-    backgroundColor: WHITE
+    backgroundColor: WHITE,
   },
   toggleIntervalButton: {
     flex: 0,
     height: 40,
     borderRadius: 10,
-    width: (SCREEN_WIDTH - 40)/ 2,
+    width: (SCREEN_WIDTH - 40) / 2,
     marginLeft: 5,
     marginRight: 5,
     textAlignVertical: 'center',
@@ -362,6 +360,6 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   row: {
-    flexDirection: 'row'
-  }
+    flexDirection: 'row',
+  },
 });

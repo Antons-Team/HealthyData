@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, {ReactElement} from 'react';
 import RootNavigator from './navigation/RootNavigator';
 import AuthProvider from './auth/provider';
 
