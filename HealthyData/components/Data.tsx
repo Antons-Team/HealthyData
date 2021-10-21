@@ -80,7 +80,6 @@ const getDropdownOptions = async (
       const docs = snapshot.docs;
 
       const data = docs.map(doc => {
-        // console.log(doc.data().genericName);
         return doc.data() as TodoItem;
       });
 
@@ -110,8 +109,6 @@ const getDropdownOptions = async (
         }
       });
 
-      console.log(items, "items 2");
-
       setMedications(medications);
       setItems(items);
     })
@@ -138,7 +135,6 @@ const Data = (): JSX.Element => {
 
   useEffect(() => {
     getDropdownOptions(medications, setMedications, items, setItems);
-    console.log(items, 'items');
   }, []);
 
   useEffect(() => {
