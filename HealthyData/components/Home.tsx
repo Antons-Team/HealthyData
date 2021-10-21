@@ -26,7 +26,7 @@ import { getHasTaken, isToday, takeMedication, untakeMedication } from '../servi
 import { LIGHT, RED, WHITE } from '../style/Colours';
 import { ScrollView } from 'react-native-gesture-handler';
 
-export const RenderTodoItem = ({ item, today}: {item, today: Date}) => {
+export const RenderTodoItem = ({ item, today}: {item: TodoItem, today: Date}) => {
 
   const [taken, setTaken] = useState(false);
 
