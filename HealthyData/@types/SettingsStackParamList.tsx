@@ -1,5 +1,5 @@
 export type SettingsStackParamList = {
-    Settings: undefined;
-    ProfileDetails: undefined;
-    SecuritySettings: undefined;
+  Settings: undefined;
+  ProfileDetails: undefined;
+  SecuritySettings: undefined;
 };

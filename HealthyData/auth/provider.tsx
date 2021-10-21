@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, {createContext, ReactChild, ReactChildren, ReactElement, useMemo, useReducer} from 'react';
+import React, {
+  createContext,
+  ReactChild,
+  ReactChildren,
+  ReactElement,
+  useMemo,
+  useReducer,
+} from 'react';
 import {useContext} from 'react';
 import authReducer, {
   AuthState,
@@ -26,14 +33,14 @@ type AuthContextType = {
   handleSignOut: () => void;
   setLocalAuthSettings: (settings: LocalAuthSettings) => void;
   setLocalAuthState: (state: LocalAuthState) => void;
-  setFingerprintEnabled: (enabled: boolean) => void
-}
+  setFingerprintEnabled: (enabled: boolean) => void;
+};
 
 interface AuxProps {
   children: ReactChild | ReactChildren;
 }
 
-const AuthProvider = ({children}: AuxProps) : ReactElement => {
+const AuthProvider = ({children}: AuxProps): ReactElement => {
   const [state, dispatch] = useReducer(
     authReducer,
     initialState,

@@ -1,6 +1,6 @@
-import React, { ReactElement } from 'react';
-import { useEffect } from 'react';
-import { useAuth } from '../auth/provider';
+import React, {ReactElement} from 'react';
+import {useEffect} from 'react';
+import {useAuth} from '../auth/provider';
 import AuthNavigator from './AuthNavigator';
 import auth from '@react-native-firebase/auth';
 import EncryptedStorage from 'react-native-encrypted-storage';
@@ -10,12 +10,12 @@ import {
   SignedInState,
 } from '../auth/reducer';
 import Loading from '../components/Loading';
-import { NavigationContainer } from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import LocalAuth from './LocalAuth';
 import TouchID from 'react-native-touch-id';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
-const RootNavigator = () : ReactElement => {
+const RootNavigator = (): ReactElement => {
   const {
     state: authState,
     handleSignIn,
@@ -27,7 +27,8 @@ const RootNavigator = () : ReactElement => {
 
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId: '517643624241-iv7hii7n7nju0mokp420eng8lbvkv6f8.apps.googleusercontent.com',
+      webClientId:
+        '517643624241-iv7hii7n7nju0mokp420eng8lbvkv6f8.apps.googleusercontent.com',
     });
 
     getLocalAuthSettings();

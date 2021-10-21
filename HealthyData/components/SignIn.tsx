@@ -19,12 +19,12 @@ const SignIn = (props: Props): JSX.Element => {
   return (
     <View style={styles.loginSignupContainer}>
       <TextInput
-        style={styles.loginSignupTextInput} 
+        style={styles.loginSignupTextInput}
         underlineColorAndroid={DARK}
-        placeholder="Email Address" 
-        value={email} 
-        keyboardType='email-address'
-        onChangeText={setEmail} 
+        placeholder="Email Address"
+        value={email}
+        keyboardType="email-address"
+        onChangeText={setEmail}
       />
       <TextInput
         style={styles.loginSignupTextInput}
@@ -41,8 +41,8 @@ const SignIn = (props: Props): JSX.Element => {
           signInEmail(email, password);
         }}
       />
-      <FacebookButton/>
-      <GoogleButton/>
+      <FacebookButton />
+      <GoogleButton />
       <Button
         color={BLUE}
         title="log in anonymous"
@@ -51,17 +51,12 @@ const SignIn = (props: Props): JSX.Element => {
         }}
       />
       <View style={styles.switchLoginSignupContainer}>
-        <Text
-          style={{padding: 2}}
-        >
-          I&apos;m a new member,
-        </Text>
+        <Text style={{padding: 2}}>I&apos;m a new member,</Text>
         <Text
           style={styles.switchButton}
           onPress={() => {
             props.navigation.navigate('SignUp');
-          }}
-        >
+          }}>
           Sign Up Now
         </Text>
       </View>

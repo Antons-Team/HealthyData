@@ -1,13 +1,13 @@
 import React from 'react';
-import { GestureResponderEvent, TouchableOpacity } from 'react-native';
+import {GestureResponderEvent, TouchableOpacity} from 'react-native';
 import {View, Button, Text} from 'react-native';
 import {signOut} from '../services/auth';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {BLUE} from '../style/Colours';
-import { styles } from '../style/Styles';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { SettingsStackParamList } from '../@types/SettingsStackParamList';
+import {styles} from '../style/Styles';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {SettingsStackParamList} from '../@types/SettingsStackParamList';
 
 type SettingsNavigationProps = StackNavigationProp<
   SettingsStackParamList,
@@ -15,62 +15,55 @@ type SettingsNavigationProps = StackNavigationProp<
 >;
 
 type Props = {
-  navigation: SettingsNavigationProps
+  navigation: SettingsNavigationProps;
 };
 
 const Settings = (props: Props): JSX.Element => {
   return (
     <View style={styles.settingsContainer}>
-      
-      <SettingsButton 
-        name="Profile Details" 
+      <SettingsButton
+        name="Profile Details"
         onPress={() => {
           props.navigation.navigate('ProfileDetails');
         }}
       />
-      <SettingsButton 
-        name="Notification Settings" 
+      <SettingsButton
+        name="Notification Settings"
         onPress={() => {
           return;
         }}
       />
-      <SettingsButton 
-        name="Security Settings" 
+      <SettingsButton
+        name="Security Settings"
         onPress={() => {
           props.navigation.navigate('SecuritySettings');
         }}
       />
-      <SettingsButton 
-        name="Permissions" 
+      <SettingsButton
+        name="Permissions"
         onPress={() => {
           return;
         }}
       />
-      <Button 
-        title="Sign out" 
-        onPress={() => signOut()} 
-        color={BLUE}
-      />
+      <Button title="Sign out" onPress={() => signOut()} color={BLUE} />
     </View>
   );
 };
 
 type SettingsButtonProps = {
-  name: string,
+  name: string;
   onPress: (event: GestureResponderEvent) => void;
-}
+};
 
 export const SettingsButton = (props: SettingsButtonProps): JSX.Element => {
   return (
-    <TouchableOpacity
-      onPress={props.onPress}
-    >
+    <TouchableOpacity onPress={props.onPress}>
       <View style={styles.settingsNavigator}>
         <Text style={styles.settingsText}>{props.name}</Text>
         <Ionicons
           style={styles.settingsArrow}
           size={28}
-          color='#ddd'
+          color="#ddd"
           name="arrow-forward"
         />
       </View>

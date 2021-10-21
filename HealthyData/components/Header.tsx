@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import {View, Text} from 'react-native';
 
 import {styles} from '../style/Styles';
 
@@ -8,9 +8,7 @@ import {styles} from '../style/Styles';
 const Header = (): JSX.Element => {
   return (
     <View style={styles.headerBar}>
-      <Text style={styles.headerTitle}>
-            PillX
-      </Text>
+      <Text style={styles.headerTitle}>PillX</Text>
     </View>
   );
 };
