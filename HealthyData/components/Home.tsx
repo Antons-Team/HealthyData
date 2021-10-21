@@ -31,13 +31,7 @@ import {
 import {LIGHT, RED, WHITE} from '../style/Colours';
 import {ScrollView} from 'react-native-gesture-handler';
 
-export const RenderTodoItem = ({
-  item,
-  today,
-}: {
-  item: TodoItem;
-  today: Date;
-}) => {
+export const RenderTodoItem = ({item, today}: {item; today: Date}) => {
   const [taken, setTaken] = useState(false);
 
   // const today = new Date();
