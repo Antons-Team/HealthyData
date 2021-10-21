@@ -15,6 +15,7 @@ import auth from '@react-native-firebase/auth';
 
 import {Dataset, ChartData} from 'react-native-chart-kit/dist/HelperTypes';
 import {AbstractChartConfig} from 'react-native-chart-kit/dist/AbstractChart';
+import { convertCompilerOptionsFromJson } from 'typescript';
 
 const getChartData = async (
   value: string | null,
@@ -82,18 +83,34 @@ const getDropdownOptions = async (
         return doc.data() as TodoItem;
       });
 
+
+      let medications : Array<string> = [];
+      let items : Array<any> = [];
+
       data.map(todo => {
         if (!medications.includes(todo.medication?.genericName)) {
-          setMedications([...medications, todo.medication.genericName]);
-          setItems([
-            ...items,
-            {
-              label: renderName(todo.medication.genericName),
-              value: todo.medication.genericName,
-            },
-          ]);
+
+          medications = [... medications, todo.medication.genericName];
+
+          items = [... items, {
+            label: renderName(todo.medication.genericName),
+            value: todo.medication.genericName,
+          }];
+
+
+          // setMedications([...medications, todo.medication.genericName]);
+          // setItems([
+          //   ...items,
+          //   {
+          //     label: renderName(todo.medication.genericName),
+          //     value: todo.medication.genericName,
+          //   },
+          // ]);
         }
       });
+
+      setMedications(medications);
+      setItems(items);
     })
     .catch(e => {
       console.error(e);
@@ -118,7 +135,7 @@ const Data = (): JSX.Element => {
 
   useEffect(() => {
     getDropdownOptions(medications, setMedications, items, setItems);
-  }, [medications, setMedications, setData]);
+  }, []);
 
   useEffect(() => {
     getChartData(value, setData);
@@ -151,6 +168,7 @@ const Data = (): JSX.Element => {
     useShadowColorFromDataset: false,
   };
 
+
   return (
     <View
       style={{
@@ -160,6 +178,7 @@ const Data = (): JSX.Element => {
         margin: 8,
       }}>
       <DropDownPicker
+        itemKey={'label'}
         open={open}
         value={value}
         items={items}
