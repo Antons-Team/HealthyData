@@ -189,7 +189,7 @@ export const styles = StyleSheet.create({
   },
   infoParagraph: {
     fontFamily: 'Roboto-Regular',
-    fontSize: 13,
+    fontSize: 15,
     padding: 10,
   },
   infoButton: {

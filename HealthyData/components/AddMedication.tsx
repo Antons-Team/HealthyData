@@ -23,9 +23,12 @@ type Props = {
 
 const AddMedication = ({navigation, route}: Props): JSX.Element => {
   const medication = route.params.medication;
-  const sideEffectNames = medication.sideEffects.map(
-    sideEffect => sideEffect.name,
-  );
+  const sideEffectNames =
+    medication.sideEffects !== undefined
+      ? medication.sideEffects.map(sideEffect => sideEffect.name)
+      : [];
+
+  console.log(sideEffectNames);
 
   const [isTaking, setIsTaking] = useState(false);
 
@@ -35,10 +38,37 @@ const AddMedication = ({navigation, route}: Props): JSX.Element => {
     });
   }, []);
 
+  const Frequency = ({freq}) => {
+    let name = 'Frequent';
+    let color = 'orange';
+
+    if (freq < 0.01) {
+      name = 'Rare';
+      color = 'green';
+    } else if (freq < 0.1) {
+      name = 'Infrequent';
+      color = 'yellow';
+    }
+    return (
+      <Text
+        style={{
+          backgroundColor: color,
+          borderRadius: 16,
+          fontFamily: 'Roboto-Regular',
+          padding: 5,
+          paddingHorizontal: 10,
+        }}>
+        {name}
+      </Text>
+    );
+  };
+
   // TODO present in a better way
   return (
     <View style={styles.infoContainer}>
-      <ScrollView>
+      <ScrollView
+        stickyHeaderIndices={[0]}
+        contentContainerStyle={{paddingBottom: 60}}>
         <View style={styles.infoHeader}>
           <Text style={styles.infoHeaderText}>
             {renderName(route.params.medication.genericName)}
@@ -53,17 +83,14 @@ const AddMedication = ({navigation, route}: Props): JSX.Element => {
 
         <Text style={styles.infoTitle}>Summary</Text>
         {/* <Text style={styles.infoTitle}>Summary</Text> */}
-        <Text style={styles.infoParagraph}>{medication.description[0]}</Text>
+        <Text style={[styles.infoParagraph, {paddingHorizontal: 15}]}>
+          {medication.description[0]}
+        </Text>
         {/* {
           medication.description.map(description => {
             return <Text key={description} style={styles.infoParagraph}>{description}</Text>;
           })
         } */}
-        {isTaking && (
-          <View>
-            <Text> You are currently taking this medication </Text>
-          </View>
-        )}
         {/* <Text style={styles.infoTitle}>Brand Names</Text>
         { medication.brandNames.length == 0 ? 
           <Text style={styles.infoParagraph}>No brand names</Text> 
@@ -74,15 +101,38 @@ const AddMedication = ({navigation, route}: Props): JSX.Element => {
         } */}
 
         <Text style={styles.infoTitle}>Side Effects</Text>
-        {sideEffectNames.length == 0 ? (
-          <Text style={styles.infoParagraph}>No side effects</Text>
-        ) : (
-          sideEffectNames.map(sideEffectName => (
-            <Text key={sideEffectName} style={styles.infoParagraph}>
-              {sideEffectName}
-            </Text>
-          ))
-        )}
+        {
+          sideEffectNames.length == 0 ? (
+            <Text style={styles.infoParagraph}>No side effects</Text>
+          ) : (
+            medication.sideEffects.map(sideEffect => {
+              return (
+                <View
+                  key={sideEffect.name}
+                  style={{
+                    flexDirection: 'row',
+                    padding: 10,
+                    paddingHorizontal: 20,
+                    justifyContent: 'space-between',
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: 'Roboto-Regular',
+                      fontSize: 16,
+                      fontWeight: 'bold',
+                    }}>
+                    {sideEffect.name}{' '}
+                  </Text>
+                  <Frequency freq={sideEffect.freq} />
+                  {/* <Text key={sideEffect.name} style={styles.infoParagraph}>{sideEffect.name} {sideEffect.freq}</Text> */}
+                </View>
+              );
+            })
+          )
+          // sideEffectNames.map(sideEffectName => (
+          //   <Text key={sideEffectName} style={styles.infoParagraph}>{sideEffectName}</Text>
+          // ))
+        }
         {/* <Text style={styles.infoTitle}>Indications</Text>
         { medication.indications.length == 0 ? 
           <Text style={styles.infoParagraph}>No indications </Text> 
