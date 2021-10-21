@@ -10,6 +10,8 @@ import { DateData } from 'react-native-calendars/src/types';
 import { getTodosMonth } from '../services/calendar';
 import { styles } from '../style/Styles';
 import { BLUE, LIGHT } from '../style/Colours';
+import { RenderTodoItem } from './Home';
+import { isTemplateMiddle } from 'typescript';
 
 
 const AgendaItem = ({item}) => {
@@ -20,11 +22,12 @@ const AgendaItem = ({item}) => {
         <Text style={styles.time}>{item.name}</Text>
       </View>
       :
-      <View style={styles.item}>
-        <Text style={styles.info}>{displayTime(item.todo.time.toDate())}</Text>
-        <Text style={styles.time}>{item.name}</Text>
-        <Text style={styles.info}>{item.todo.doses} doses</Text>
-      </View>
+      <RenderTodoItem item={item.todo} today={item.day}/>
+      // <View style={styles.item}>
+      //   <Text style={styles.info}>{displayTime(item.todo.time.toDate())}</Text>
+      //   <Text style={styles.time}>{item.name}</Text>
+      //   <Text style={styles.info}>{item.todo.doses} doses</Text>
+      // </View>
   );
 };
 

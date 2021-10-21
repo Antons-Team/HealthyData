@@ -1,7 +1,102 @@
 import firestore from '@react-native-firebase/firestore';
 import auth, { firebase } from '@react-native-firebase/auth';
-import { TodoItem } from '../@types/Schema';
+import { MedicationItem, MedicationsTakenItem, TodoItem } from '../@types/Schema';
 import { DateData } from 'react-native-calendars/src/types';
+import { useScrollToTop } from '@react-navigation/native';
+import { addDays, compareByTime } from '../utils/Dates';
+import Medications from '../components/Medications';
+
+
+const calculateRefillDate = (todo: TodoItem) : Date => {
+
+  let refillDate = new Date();
+
+  if (todo.intervalDays === null && todo.days !== null) {
+    const daysPerWeek = Object.values(todo.days).filter(Boolean).length;
+    refillDate = addDays(todo.supply / daysPerWeek, refillDate);
+    let dayOfWeek = 0;
+    let count = todo.supply % daysPerWeek;
+    for (let i = 0; i < 7; ++i) {
+      if (Object.values(todo.days)) {
+        --count;
+      }
+      if (count == 0) {
+        dayOfWeek = i;
+        break;
+      }
+    }
+    refillDate = addDays(dayOfWeek, refillDate);
+
+  } else if (todo.intervalDays?.startingDate !== undefined){
+
+    const intervalStartDate = todo.intervalDays.startingDate.toDate();
+    refillDate = addDays(todo.intervalDays.interval * todo.supply, intervalStartDate);
+  }
+  refillDate.setSeconds(0, 0);
+
+  return refillDate;
+};
+
+const generateMedicationsTakenId = (todo: TodoItem, time: Date) => {
+  time.setSeconds(0, 0);
+  return `${auth().currentUser?.uid}${time.toISOString()}${todo.medication.id}`;
+};
+
+export const takeMedication = async (todo: TodoItem, time: Date) => {
+  time.setSeconds(0, 0);
+  const takenMedication = {
+    medication: todo.medication, 
+    time: firestore.Timestamp.fromDate(time), 
+    medicationId: todo.medication.id
+  };
+
+  const id = generateMedicationsTakenId(todo, time);
+
+  firestore().doc(`users/${auth().currentUser?.uid}`)
+    .collection('medicationsTaken')
+    .doc(id)
+    .set(takenMedication);
+
+
+  todo.supply = Math.min( todo.supply - todo.doses, 0);
+
+  firestore().doc(`users/${auth().currentUser?.uid}/todos/${todo.id}`)
+    .update({
+      supply: todo.supply,
+      refillDate: firestore.Timestamp.fromDate(calculateRefillDate(todo))
+
+    });
+};
+
+export const untakeMedication = async (todo: TodoItem, time: Date) => {
+  const id = generateMedicationsTakenId(todo, time);
+
+  firestore().doc(`users/${auth().currentUser?.uid}/medicationsTaken/${id}`).delete();
+};
+
+export const getHasTaken = async (medication: MedicationItem, time : Date) => {
+
+  time.setSeconds(0, 0);
+  return firestore().collection(`users/${auth().currentUser?.uid}/medicationsTaken`)
+    .where('medicationId', '==', medication.id)
+    .where('time', '==', firestore.Timestamp.fromDate(time))
+    .limit(1)
+    .get()
+    .then(snapshot => {
+      return !snapshot.empty;
+    });
+};
+
+
+export const getIsTaking = async (medication: MedicationItem) => {
+
+  return firestore().collection(`users/${auth().currentUser?.uid}/todos`)
+    .where( 'medicationId' , '==', medication.id)
+    .get()
+    .then( snapshot => {
+      return snapshot.docs.length !== 0; 
+    });
+};
 
 
 export const isToday = (todo: TodoItem, date: Date) => {
@@ -39,8 +134,6 @@ export const isToday = (todo: TodoItem, date: Date) => {
 
 export const getTodosMonth = async (month: DateData) => {
 
-
-  // const monthStart = firestore.Timestamp.fromDate(new Date(month.dateString));
   const monthStart = new Date(month.dateString);
   monthStart.setDate(1);  
   const monthEnd = new Date(monthStart);
@@ -56,7 +149,7 @@ export const getTodosMonth = async (month: DateData) => {
     
       const data = docs
         .map(doc => {
-          return (doc.data()) as TodoItem;
+          return ({id: doc.id, ...doc.data()}) as TodoItem;
         })
       // first day to take medication is before end of month
         .filter(todo => {
@@ -67,15 +160,20 @@ export const getTodosMonth = async (month: DateData) => {
       let loop = new Date(monthStart);
       while(loop <= monthEnd){
         const dateString = loop.toISOString().split('T')[0];
+
         const todaysTodos: { todo: TodoItem; name: string }[] = [];
         data.forEach(todo => {
           if (isToday(todo, loop)) {
-            todaysTodos.push({todo, 'name': todo.medication.genericName, type: 'todo' });
+            todaysTodos.push({todo, 'name': todo.medication.genericName, type: 'todo', day: new Date(dateString) });
           }
           if (todo.refillDate.toDate().toDateString() === loop.toDateString()) {
-            todaysTodos.push({todo, 'name': todo.medication.genericName, type: 'refill'});
+            todaysTodos.push({todo, 'name': todo.medication.genericName, type: 'refill', day: new Date(dateString) });
           }
         });
+
+        todaysTodos.sort((item1, item2) =>
+          compareByTime(item1.todo.time.toDate(), item2.todo.time.toDate()));
+
         allDays[dateString]= todaysTodos;
 
         const newDate = loop.setDate(loop.getDate() + 1);

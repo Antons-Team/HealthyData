@@ -33,6 +33,13 @@ export type MedicationItem = {
     sideEffects: SideEffect[];
 }
 
+export type MedicationsTakenItem = {
+    id: string;
+    time: Timestamp;
+    medicationId: string;
+    medication: MedicationItem;
+}
+
 export type TodoItem = {
     id: string;
     date: Timestamp;
@@ -44,4 +51,5 @@ export type TodoItem = {
     days: Days | null;
     intervalDays: {interval: number, startingDate: Timestamp} | null;
     medication: MedicationItem;
+    medicationId: string;
 };
