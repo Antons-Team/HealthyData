@@ -99,6 +99,10 @@ export const getIsTaking = async (medication: MedicationItem) => {
 };
 
 export const isToday = (todo: TodoItem, date: Date) => {
+  if (todo.date.toDate() < date) {
+    return false;
+  }
+
   if (todo.days == null) {
     const interval = todo.intervalDays?.interval;
     const startDate = todo.intervalDays?.startingDate.toDate();
