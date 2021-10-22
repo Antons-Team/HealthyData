@@ -96,16 +96,6 @@ const getDropdownOptions = async (
             label: renderName(todo.medication.genericName),
             value: todo.medication.genericName,
           }];
-
-
-          // setMedications([...medications, todo.medication.genericName]);
-          // setItems([
-          //   ...items,
-          //   {
-          //     label: renderName(todo.medication.genericName),
-          //     value: todo.medication.genericName,
-          //   },
-          // ]);
         }
       });
 

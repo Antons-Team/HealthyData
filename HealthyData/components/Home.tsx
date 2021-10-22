@@ -4,12 +4,10 @@ import {
   Text,
   View,
   SafeAreaView,
-  FlatList,
-  ListRenderItem,
   TouchableOpacity,
 } from 'react-native';
 
-import {MedicationItem, TodoItem} from '../@types/Schema';
+import {TodoItem} from '../@types/Schema';
 import {styles} from '../style/Styles';
 import {displayTime} from '../utils/Display';
 
@@ -21,7 +19,7 @@ import auth from '@react-native-firebase/auth';
 import {useIsFocused} from '@react-navigation/native';
 
 import {displayDate} from '../utils/Display';
-import {addDays, compareByTime} from '../utils/Dates';
+import {addDays, compareByDate, compareByTime} from '../utils/Dates';
 import {
   getHasTaken,
   isToday,
@@ -31,12 +29,35 @@ import {
 import {LIGHT, RED, WHITE} from '../style/Colours';
 import {ScrollView} from 'react-native-gesture-handler';
 
-export const RenderTodoItem = ({item, today}: {item; today: Date}) => {
+const hasMissed = (calendarDate: Date, medicationTime: Date) => {
+  const today = new Date();
+  console.log(calendarDate, today);
+
+  if (compareByDate(calendarDate, today) < 0) {
+    return true;
+  }
+
+  if (compareByDate(calendarDate, today) == 0) {
+    return compareByTime(today, medicationTime) > 0;
+  }
+  return false;
+};
+
+export const RenderTodoItem = ({
+  item,
+  calendarDate,
+}: {
+  item: TodoItem;
+  calendarDate: Date;
+}) => {
   const [taken, setTaken] = useState(false);
 
-  // const today = new Date();
   const time = item.time.toDate();
-  time.setFullYear(today.getFullYear(), today.getMonth(), today.getDate());
+  time.setFullYear(
+    calendarDate.getFullYear(),
+    calendarDate.getMonth(),
+    calendarDate.getDate(),
+  );
   time.setSeconds(0, 0);
 
   useEffect(() => {
@@ -56,10 +77,6 @@ export const RenderTodoItem = ({item, today}: {item; today: Date}) => {
           setTaken(false);
         }
       }}>
-      {/* <View style={styles.item}>
-                <Text style={styles.time}>{displayTime(item.time.toDate())}</Text>
-                <Text style={styles.info}>{renderName(item.medication.genericName)} {item.doses}</Text>
-              </View> */}
       <View
         style={{
           flexDirection: 'column',
@@ -70,7 +87,7 @@ export const RenderTodoItem = ({item, today}: {item; today: Date}) => {
           marginTop: 10,
           borderColor: taken
             ? 'gray'
-            : today.toTimeString() > item.time.toDate().toTimeString()
+            : hasMissed(calendarDate, item.time.toDate())
             ? RED
             : LIGHT,
         }}>
@@ -79,7 +96,7 @@ export const RenderTodoItem = ({item, today}: {item; today: Date}) => {
           <Text style={styles.time}>
             {taken
               ? 'Taken'
-              : today.toTimeString() > item.time.toDate().toTimeString()
+              : hasMissed(calendarDate, item.time.toDate())
               ? 'Not Taken'
               : 'Upcoming'}
           </Text>
@@ -98,12 +115,57 @@ export const RenderTodoItem = ({item, today}: {item; today: Date}) => {
   );
 };
 
-const RenderRefill = ({item}) => (
+const RenderRefill = ({item}: {item: TodoItem}) => (
   <View style={styles.item}>
     <Text style={styles.time}>{displayDate(item.refillDate.toDate())}</Text>
     <Text style={styles.info}>{renderName(item.medication.genericName)}</Text>
   </View>
 );
+
+const getTodoData = async (
+  setRefills: {
+    (value: React.SetStateAction<TodoItem[]>): void;
+    (arg0: TodoItem[]): void;
+  },
+  setTodos: {
+    (value: React.SetStateAction<TodoItem[]>): void;
+    (arg0: TodoItem[]): void;
+  },
+) => {
+  // Retrieve the todo data from firestore doc
+  firestore()
+    .collection(`users/${auth().currentUser?.uid}/todos`)
+    .get()
+    .then(snapshot => {
+      const docs = snapshot.docs;
+
+      const data = docs.map(doc => {
+        return {...doc.data(), id: doc.id} as TodoItem;
+      });
+
+      const todos = data.filter(todo => {
+        const today = new Date();
+        return today < todo.date.toDate() && isToday(todo, new Date());
+      });
+
+      setTodos(
+        todos.sort((todo1, todo2) => {
+          return compareByTime(todo1.time.toDate(), todo2.time.toDate());
+        }),
+      );
+
+      // get refill data
+      const refills = data.filter(todo => {
+        let date = new Date();
+        date = addDays(30, date);
+        return todo.refillDate.toDate() < date;
+      });
+      setRefills(refills);
+    })
+    .catch(e => {
+      console.error(e);
+    });
+};
 
 const Home = (): JSX.Element => {
   const [todos, setTodos] = useState<Array<TodoItem>>([]);
@@ -111,45 +173,9 @@ const Home = (): JSX.Element => {
 
   const isFocused = useIsFocused();
 
-  const getTodoData = async () => {
-    // Retrieve the todo data from firestore doc
-    firestore()
-      .collection(`users/${auth().currentUser?.uid}/todos`)
-      .get()
-      .then(snapshot => {
-        const docs = snapshot.docs;
-
-        const data = docs.map(doc => {
-          return {...doc.data(), id: doc.id} as TodoItem;
-        });
-
-        const todos = data.filter(todo => {
-          const today = new Date();
-          return today < todo.date.toDate() && isToday(todo, new Date());
-        });
-
-        setTodos(
-          todos.sort((todo1, todo2) => {
-            return compareByTime(todo1.time.toDate(), todo2.time.toDate());
-          }),
-        );
-
-        // get refill data
-        const refills = data.filter(todo => {
-          let date = new Date();
-          date = addDays(30, date);
-          return todo.refillDate.toDate() < date;
-        });
-        setRefills(refills);
-      })
-      .catch(e => {
-        console.error(e);
-      });
-  };
-
   useEffect(() => {
     if (isFocused) {
-      getTodoData();
+      getTodoData(setRefills, setTodos);
     }
   }, [isFocused]);
 
@@ -160,25 +186,17 @@ const Home = (): JSX.Element => {
 
         <SafeAreaView style={[styles.container, {flexDirection: 'column'}]}>
           <Text>{todos.length == 0 ? 'Nothing to do!' : ''}</Text>
-          {/* <FlatList
-          data={todos}
-          renderItem={item => (<RenderItem item={item.item}/>)}
-          keyExtractor={item => item.id}
-        /> */}
-
           {todos.map(item => (
-            <RenderTodoItem key={item.id} item={item} today={new Date()} />
+            <RenderTodoItem
+              key={item.id}
+              item={item}
+              calendarDate={new Date()}
+            />
           ))}
         </SafeAreaView>
         <Text style={styles.title}>Upcoming Refills</Text>
         <SafeAreaView style={[styles.container, {flexDirection: 'column'}]}>
           <Text>{refills.length == 0 ? 'Nothing to do!' : ''}</Text>
-          {/* <FlatList
-          data={refills}
-          renderItem={renderRefill}
-          keyExtractor={item => item.id}
-        /> */}
-
           {refills.map(item => (
             <RenderRefill key={item.id} item={item} />
           ))}
