@@ -1,12 +1,13 @@
 import {Dimensions} from 'react-native';
 import {StyleSheet} from 'react-native';
-import {DARK, LIGHT, RED, BLUE, BLACK, WHITE} from './Colours';
+import {DARK, LIGHT, RED, BLUE, BLACK, WHITE, DARK_GRAY} from './Colours';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 export const styles = StyleSheet.create({
   text: {
     fontFamily: 'Roboto-Regular',
+    color: DARK_GRAY,
   },
   textBold: {
     fontFamily: 'Roboto-Regular',
@@ -15,6 +16,15 @@ export const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
   },
+  circleTextHighlight: {
+    color: WHITE,
+    paddingHorizontal: 20,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    height: 30,
+    borderRadius: 15,
+  },
+
   tileContainer: {
     borderWidth: 1,
     borderRadius: 10,
@@ -28,6 +38,7 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
     paddingVertical: 5,
+    color: DARK_GRAY,
   },
   center: {
     justifyContent: 'center',
@@ -183,21 +194,27 @@ export const styles = StyleSheet.create({
     backgroundColor: WHITE,
   },
   infoContainer: {
+    backgroundColor: RED,
     flexDirection: 'column',
     flex: 1,
     //justifyContent: 'center',
     //alignItems: 'flex-start',
   },
   infoHeader: {
-    backgroundColor: RED,
     flexDirection: 'column',
-    padding: 10,
+    paddingTop: 20,
+    height: 80,
   },
   infoHeaderText: {
-    fontSize: 35,
+    fontSize: 45,
+    width: SCREEN_WIDTH,
+    height: 60,
     flex: 1,
-    color: LIGHT,
+    color: WHITE,
     fontFamily: 'Roboto-Regular',
+    // fontWeight: "bold",
+    textAlign: 'center',
+    // letterSpacing: 2
   },
   infoHeaderSubtitle: {
     fontSize: 15,
@@ -206,19 +223,24 @@ export const styles = StyleSheet.create({
     fontFamily: 'Roboto-Regular',
   },
   infoTitle: {
-    textAlign: 'center',
+    // textAlign: 'center',
     fontFamily: 'Roboto-Bold',
+    color: DARK_GRAY,
     fontSize: 24,
-    padding: 10,
+    backgroundColor: WHITE,
+    paddingHorizontal: 15,
+    paddingBottom: 10,
   },
   infoParagraph: {
     fontFamily: 'Roboto-Regular',
-    fontSize: 15,
-    padding: 10,
+    fontSize: 16,
+    paddingHorizontal: 15,
+    textAlign: 'center',
+    color: WHITE,
   },
   infoButton: {
     alignSelf: 'center',
-    flex: 2,
+    // flex: 1,
     padding: 10,
     position: 'absolute',
     bottom: 0,

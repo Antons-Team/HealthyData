@@ -13,7 +13,7 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {TodoItem} from '../@types/Schema';
 import {Days} from '../@types/Types';
 import {daysOfTheWeek} from '../utils/Dates';
-import {BLACK, BLUE, WHITE} from '../style/Colours';
+import {BLACK, BLUE, DARK, DARK_GRAY, ORANGE, WHITE} from '../style/Colours';
 import {renderName} from '../utils/Display';
 import {Icon} from 'react-native-vector-icons/Icon';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -73,15 +73,9 @@ const TakingItem = ({todo}: {todo: TodoItem}) => {
           },
         ]}>
         <Text
-          style={{
-            backgroundColor: todo.supply > 10 ? 'grey' : 'orange',
-            color: WHITE,
-            width: 110,
-            textAlign: 'center',
-            textAlignVertical: 'center',
-            height: 30,
-            borderRadius: 15,
-          }}>
+          style={[{
+            backgroundColor: todo.supply > 10 ? 'grey' : ORANGE,
+          }, styles.circleTextHighlight]}>
           {todo.supply} doses left
         </Text>
         <Text>
@@ -118,7 +112,7 @@ const TakenItem = ({todo}: {todo: TodoItem}) => {
       <Text style={styles.tileHeading}>
         {renderName(todo.medication.genericName)}
       </Text>
-      <Text style={[styles.textBold, {paddingVertical: 10}]}>
+      <Text style={[styles.textBold, {paddingVertical: 10, color: DARK_GRAY}]}>
         Taken from
         <Text style={[styles.textBold, {color: BLUE}]}>
           {' '}
@@ -161,8 +155,8 @@ const MedicationsTaking = (props: Props) => {
             props.navigation.navigate('Medications');
           }}>
           <View style={[styles.row, {alignItems: "center"}]}>
-            <Ionicons style={{margin:0, padding:0}} name="search" size={20} color={BLACK} />
-            <Text style={{color: 'black', padding: 4}}>Add medication</Text>
+            <Ionicons style={{margin:0, padding:0}} name="search" size={20} color={DARK_GRAY} />
+            <Text style={{color: DARK_GRAY, padding: 4}}>Add medication</Text>
           </View>
         </TouchableOpacity>
       </View>
