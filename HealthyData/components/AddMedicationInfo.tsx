@@ -43,6 +43,7 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
   const [supply, setSupply] = useState<string>('');
 
   const [showDate, setShowDate] = useState<boolean>(false);
+  const [showIntervalDate, setShowIntervalDate] = useState<boolean>(false);
   const [date, setDate] = useState<Date>(new Date());
 
   const [days, setDays] = useState<Days>({
@@ -253,18 +254,18 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
 
             <TouchableOpacity
               onPress={() => {
-                setShowDate(true);
+                setShowIntervalDate(true);
               }}
               style={styles.addMedicationEntry}>
               <Text style={styles.addMedicationTimeText}>
-                {displayDate(date)}
+                {displayDate(intervalStartDate)}
               </Text>
             </TouchableOpacity>
 
-            {showDate && (
+            {showIntervalDate && (
               <RNDateTimePicker
                 testID="dateTimePicker"
-                value={date}
+                value={intervalStartDate}
                 mode="date"
                 is24Hour={false}
                 display="calendar"
@@ -272,7 +273,7 @@ const AddMedicationInfo = ({navigation, route}: Props): JSX.Element => {
                   if (selectedDate) {
                     setIntervalStartDate(selectedDate);
                   }
-                  setShowDate(false);
+                  setShowIntervalDate(false);
                 }}
               />
             )}
