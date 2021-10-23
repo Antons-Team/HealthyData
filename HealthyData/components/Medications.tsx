@@ -100,6 +100,7 @@ const Medications = (props: Props): JSX.Element => {
         value={filter}
         onChangeText={setFilter}
         style={styles.searchBar}
+        autoFocus={true}
       />
       <SafeAreaView style={styles.container}>
         <FlatList

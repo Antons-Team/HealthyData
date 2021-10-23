@@ -7,4 +7,5 @@ export type MedicationsStackParamList = {
   Medications: undefined;
   AddMedication: {medication: MedicationItem};
   AddMedicationInfo: {medication: MedicationItem};
+  MedicationsTaking: {};
 };

@@ -1,11 +1,6 @@
 import React from 'react';
 import {useState, useEffect} from 'react';
-import {
-  Text,
-  View,
-  SafeAreaView,
-  TouchableOpacity,
-} from 'react-native';
+import {Text, View, SafeAreaView, TouchableOpacity} from 'react-native';
 
 import {TodoItem} from '../@types/Schema';
 import {styles} from '../style/Styles';
@@ -31,7 +26,6 @@ import {ScrollView} from 'react-native-gesture-handler';
 
 const hasMissed = (calendarDate: Date, medicationTime: Date) => {
   const today = new Date();
-  console.log(calendarDate, today);
 
   if (compareByDate(calendarDate, today) < 0) {
     return true;

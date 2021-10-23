@@ -3,8 +3,10 @@ import auth, {firebase} from '@react-native-firebase/auth';
 import {MedicationItem, MedicationsTakenItem, TodoItem} from '../@types/Schema';
 import {DateData} from 'react-native-calendars/src/types';
 import {useScrollToTop} from '@react-navigation/native';
-import {addDays, compareByTime} from '../utils/Dates';
+import {addDays, compareByTime, daysOfTheWeek} from '../utils/Dates';
 import Medications from '../components/Medications';
+import DropDownPicker from 'react-native-dropdown-picker';
+import {decorator} from '@babel/types';
 
 const calculateRefillDate = (todo: TodoItem): Date => {
   let refillDate = new Date();
@@ -57,7 +59,7 @@ export const takeMedication = async (todo: TodoItem, time: Date) => {
     .doc(id)
     .set(takenMedication);
 
-  todo.supply = Math.min(todo.supply - todo.doses, 0);
+  todo.supply = Math.max(todo.supply - todo.doses, 0);
 
   firestore()
     .doc(`users/${auth().currentUser?.uid}/todos/${todo.id}`)
@@ -96,6 +98,47 @@ export const getIsTaking = async (medication: MedicationItem) => {
     .then(snapshot => {
       return snapshot.docs.length !== 0;
     });
+};
+
+export const getNextDose = (todo: TodoItem) => {
+  const today = new Date();
+  if (todo.days == null) {
+    // interval days
+    if (todo.intervalDays == null) {
+      //unreachable
+      return;
+    }
+    const interval = todo.intervalDays.interval;
+    const startDate = todo.intervalDays.startingDate.toDate();
+    const oneDay = 1000 * 60 * 60 * 24; // in ms
+    const daysInbetween =
+      Math.floor(startDate?.getTime() / oneDay) -
+      Math.floor(today.getTime() / oneDay);
+
+    const intervalElapsed = daysInbetween % interval;
+    if (intervalElapsed == 0 && compareByTime(todo.time.toDate(), today) > 0) {
+      // doing it today
+      return today;
+    } else {
+      today.setDate(today.getDate() + (interval - intervalElapsed));
+      return today;
+    }
+  } else {
+    // same days every week
+    const days = [...daysOfTheWeek];
+    if (
+      todo.days[days[today.getDay()]] &&
+      compareByTime(todo.time.toDate(), today) > 0
+    ) {
+      return today;
+    }
+    today.setDate(today.getDate() + 1);
+
+    while (!todo.days[days[today.getDay()]]) {
+      today.setDate(today.getDate() + 1);
+    }
+    return today;
+  }
 };
 
 export const isToday = (todo: TodoItem, date: Date) => {
@@ -195,6 +238,44 @@ export const getTodosMonth = async (month: DateData) => {
           loop = new Date(newDate);
         }
         return allDays;
+      })
+  );
+};
+
+export const getCurrentlyTakingTodos = () => {
+  return (
+    firestore()
+      .collection(`users/${auth().currentUser?.uid}/todos`)
+      // last day to take medication is after now
+      .where('date', '>=', firestore.Timestamp.fromDate(new Date()))
+      .get()
+      .then(snapshot => {
+        const docs = snapshot.docs;
+
+        const data = docs.map(doc => {
+          return {id: doc.id, ...doc.data()} as TodoItem;
+        });
+
+        return data;
+      })
+  );
+};
+
+export const getPreviouslyTakenTodos = () => {
+  return (
+    firestore()
+      .collection(`users/${auth().currentUser?.uid}/todos`)
+      // last day to take medication is before now
+      .where('date', '<=', firestore.Timestamp.fromDate(new Date()))
+      .get()
+      .then(snapshot => {
+        const docs = snapshot.docs;
+
+        const data = docs.map(doc => {
+          return {id: doc.id, ...doc.data()} as TodoItem;
+        });
+
+        return data;
       })
   );
 };
