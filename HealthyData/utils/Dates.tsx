@@ -10,3 +10,13 @@ export const compareByTime = (time1: Date, time2: Date): number => {
   }
   return time1.getMinutes() - time2.getMinutes();
 };
+
+export const compareByDate = (date1: Date, date2: Date): number => {
+  if (date1.getFullYear() != date2.getFullYear()) {
+    return date1.getFullYear() - date2.getFullYear();
+  } else if (date1.getMonth() != date2.getMonth()) {
+    return date1.getMonth() - date2.getMonth();
+  } else {
+    return date1.getDate() - date2.getDate();
+  }
+};

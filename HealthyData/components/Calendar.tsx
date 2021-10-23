@@ -17,7 +17,7 @@ const AgendaItem = ({item}) => {
       <Text style={styles.time}>{item.name}</Text>
     </View>
   ) : (
-    <RenderTodoItem item={item.todo} today={item.day} />
+    <RenderTodoItem item={item.todo} calendarDate={item.day} />
   );
   // <View style={styles.item}>
   //   <Text style={styles.info}>{displayTime(item.todo.time.toDate())}</Text>
@@ -26,18 +26,18 @@ const AgendaItem = ({item}) => {
   // </View>
 };
 
-const CalendarScreen = (): JSX.Element => {
-  const [items, setItems] = useState({
-    // '2021-10-23': [{name: 'item 1 - any js object', height:1, day:'a'}, {name: 'item 1 - any js object', height:1, day:'b'}, {name: 'item 1 - any js object', height:1, day:'c'}],
-    '2021-10-02': [{name: 'item 1 - any js object'}],
-  });
+const loadMonth = async (
+  month: DateData,
+  items: {},
+  setItems: {(value: React.SetStateAction<{}>): void; (arg0: any): void},
+) => {
+  const res = await getTodosMonth(month);
+  setItems({...items, ...res});
+  return month;
+};
 
-  const loadMonth = async (month: DateData) => {
-    const res = await getTodosMonth(month);
-    setItems({...items, ...res});
-    // setItems({'2021-10-03': [{name: 'item 1 - any js object'}]});
-    return month;
-  };
+const CalendarScreen = (): JSX.Element => {
+  const [items, setItems] = useState({});
 
   return (
     <Agenda
@@ -45,7 +45,7 @@ const CalendarScreen = (): JSX.Element => {
       renderItem={(item, firstItemInDay) => {
         return <AgendaItem item={item} />;
       }}
-      loadItemsForMonth={loadMonth}
+      loadItemsForMonth={month => loadMonth(month, items, setItems)}
     />
   );
 };
