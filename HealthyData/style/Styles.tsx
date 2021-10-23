@@ -5,6 +5,30 @@ import {DARK, LIGHT, RED, BLUE, BLACK, WHITE} from './Colours';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 export const styles = StyleSheet.create({
+  text: {
+    fontFamily: 'Roboto-Regular',
+  },
+  textBold: {
+    fontFamily: 'Roboto-Regular',
+    fontWeight: 'bold',
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  tileContainer: {
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
+    marginVertical: 2,
+    marginHorizontal: 5,
+    borderColor: '#bbb',
+  },
+  tileHeading: {
+    fontFamily: 'Roboto-Regular',
+    fontWeight: 'bold',
+    fontSize: 20,
+    paddingVertical: 5,
+  },
   center: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -148,14 +172,14 @@ export const styles = StyleSheet.create({
     color: DARK,
   },
   searchBar: {
-    borderRadius: 6,
-    borderWidth: 1,
+    borderRadius: 30,
+    borderWidth: 1.5,
     padding: 10,
     paddingLeft: 20,
     paddingRight: 20,
-    margin: 10,
+    margin: 5,
     fontFamily: 'Roboto-Regular',
-    borderColor: '#ddd',
+    borderColor: 'black',
     backgroundColor: WHITE,
   },
   infoContainer: {
@@ -358,8 +382,5 @@ export const styles = StyleSheet.create({
     backgroundColor: WHITE,
     borderBottomColor: '#ddd',
     borderBottomWidth: 1,
-  },
-  row: {
-    flexDirection: 'row',
   },
 });
