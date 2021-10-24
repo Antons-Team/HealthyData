@@ -17,6 +17,8 @@ const SignIn = (props: Props): JSX.Element => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const filled = email !== ""  && password !== ""
+
   return (
     <View style={styles.loginSignupContainer}>
       <Text
@@ -49,20 +51,21 @@ const SignIn = (props: Props): JSX.Element => {
       />
 
       <TouchableOpacity
+      disabled={!filled}
         onPress={() => signInEmail(email, password)}
         style={[
           styles.loginButtonContainer,
           {
-            borderColor: BLUE,
+            borderColor: filled ?BLUE: "#ddd",
           },
         ]}>
         <Ionicons
           style={{margin: 0, paddingRight: 10, alignSelf: 'center'}}
           name="mail-outline"
           size={40}
-          color={BLUE}
+          color={filled ? BLUE: "#ddd"}
         />
-        <Text style={[{color: BLUE, fontSize: 18}]}>Log in with Email</Text>
+        <Text style={[{color: filled ? BLUE : "#ddd", fontSize: 18}]}>Log in with Email</Text>
       </TouchableOpacity>
 
       <View style={styles.switchLoginSignupContainer}>
