@@ -6,11 +6,12 @@ import {
 } from '@react-navigation/stack';
 import React, {ReactElement, useState} from 'react';
 import {Button, Text, View} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useAuth} from '../../auth/provider';
 import {LocalAuthState} from '../../auth/reducer';
 import {SecuritySettingsStackParamsList} from '../../navigation/SecuritySettingsNavigator';
 import {saveLocalAuthSettings} from '../../services/auth';
-import {BLUE} from '../../style/Colours';
+import {BLUE, DARK} from '../../style/Colours';
 import {styles} from '../../style/Styles';
 import Header from '../Header';
 import PinLogin, {MAX_PIN_LENGTH} from './PinLogin';
@@ -31,17 +32,26 @@ const AskLocalAuth = ({
   } = useAuth();
   return (
     <View style={styles.loginSignupContainer}>
-      <Text style={styles.title}>Use PIN for login?</Text>
-      <Button
+      <Text style={styles.infoTitle}>Use PIN for login?</Text>
+      <Text
+        onPress={() => {
+          navigation.navigate('PinSetup');
+        }}
+        style={[
+          styles.loginButtonContainer,
+          {textAlign: 'center', color: BLUE, borderColor: BLUE, fontSize: 16},
+        ]}>
+        {' '}
+        YES{' '}
+      </Text>
+      {/* <Button
         color={BLUE}
         title="yes"
         onPress={() => {
           navigation.navigate('PinSetup');
         }}
-      />
-      <Button
-        color={BLUE}
-        title="no"
+      /> */}
+      <Text
         onPress={() => {
           saveLocalAuthSettings({
             ...localAuthSettings,
@@ -55,7 +65,13 @@ const AskLocalAuth = ({
           });
           setLocalAuthState(LocalAuthState.signedIn);
         }}
-      />
+        style={[
+          styles.loginButtonContainer,
+          {textAlign: 'center', color: DARK, borderColor: DARK, fontSize: 16},
+        ]}>
+        {' '}
+        NO{' '}
+      </Text>
     </View>
   );
 };
@@ -201,7 +217,7 @@ const ConfirmPinScreen = ({navigation, route, onSuccess}: ConfirmPinProps) => {
 
   const handleConfirm = () => {
     if (route.params.pin !== pin) {
-      setMessage('pins dont match');
+      setMessage('Pins do not match');
       setPin('');
     } else {
       setLoading(true);

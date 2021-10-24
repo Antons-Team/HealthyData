@@ -189,11 +189,13 @@ export const styles = StyleSheet.create({
     alignContent: 'center',
     alignSelf: 'center',
     padding: 10,
+    marginBottom: 40
   },
   switchButton: {
     color: BLUE,
     padding: 2,
     backfaceVisibility: 'hidden',
+    fontSize: 16
   },
   loginSignupTextInput: {
     height: 60,
@@ -232,17 +234,19 @@ export const styles = StyleSheet.create({
   },
   medicationTop: {
     fontFamily: 'Roboto-Bold',
-    fontSize: 16,
+    fontSize: 18,
     padding: 2,
     flex: 1,
     color: DARK,
+    maxWidth: SCREEN_WIDTH - 100,
   },
   medicationBottom: {
     fontFamily: 'Roboto-Regular',
     fontSize: 16,
     padding: 2,
     flex: 2,
-    color: DARK,
+    color: BLUE,
+    fontWeight: 'bold',
   },
   searchBar: {
     borderRadius: 30,
@@ -473,5 +477,16 @@ export const styles = StyleSheet.create({
     backgroundColor: WHITE,
     borderBottomColor: '#ddd',
     borderBottomWidth: 1,
+  },
+  loginButtonContainer: {
+    flexDirection: "row",
+    alignItems: 'center',
+    borderWidth: 2,
+    borderRadius: 30,
+    paddingHorizontal: 20,
+    paddingVertical: 7,
+    marginHorizontal: 15,
+    justifyContent: 'flex-start',
+    marginVertical: 3,
   },
 });

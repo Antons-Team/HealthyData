@@ -1,6 +1,7 @@
 import React, {ReactElement} from 'react';
 import {View, Text, TouchableOpacity, Dimensions} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { BLUE, DARK } from '../../style/Colours';
 import {styles} from '../../style/Styles';
 
 type KeyProps = {
@@ -27,7 +28,10 @@ const Key = ({value, handleKeyPress}: KeyProps) => {
             justifyContent: 'center',
           }}
           onPress={handleKeyPress}>
-          <Ionicons name={'backspace'} />
+          <Ionicons 
+          size={40}
+          color={DARK}
+          name={'backspace'} />
         </TouchableOpacity>
       );
     default:
@@ -39,7 +43,9 @@ const Key = ({value, handleKeyPress}: KeyProps) => {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          <Text>{value}</Text>
+          <Text 
+          style={{fontSize: 35, color: DARK}}
+          >{value}</Text>
         </TouchableOpacity>
       );
   }
@@ -67,7 +73,7 @@ const NumPad = ({handleKeyPress, handleDelete}: NumPadProps) => {
   ];
 
   return (
-    <View style={{flexDirection: 'row', flexWrap: 'wrap', flex: 1}}>
+    <View style={{flexDirection: 'row', flexWrap: 'wrap', flex: 1, alignSelf:"center"}}>
       {values.map(value => {
         return (
           <View
@@ -75,9 +81,9 @@ const NumPad = ({handleKeyPress, handleDelete}: NumPadProps) => {
             style={{
               width:
                 (Dimensions.get('window').width -
-                  styles.loginSignupContainer.padding * 2) /
+                  (styles.loginSignupContainer.padding) * 2) /
                 3,
-              height: Dimensions.get('window').height / 15,
+              height: Dimensions.get('window').height / 12,
             }}>
             <Key
               value={value}
@@ -119,13 +125,14 @@ const PinNumber = ({displayChar}: PinNumberProps) => {
   return (
     <View
       style={{
-        borderColor: 'black',
+        borderColor:BLUE,
         width: 50,
         height: 50,
-        borderWidth: 1,
+        borderWidth: 2,
+        borderRadius: 20,
         ...styles.center,
       }}>
-      <Text>{displayChar}</Text>
+      <Text style={[styles.textBold, {color: BLUE, fontSize: 40}]}>{displayChar}</Text>
     </View>
   );
 };

@@ -245,19 +245,21 @@ const getTodoData = async (
 const Divider = ({text}: {text: string}) => {
   return (
     <View style={{flexDirection: 'row', alignItems: 'center'}}>
-      <View style={{flex: 1, height: 1, backgroundColor: BLUE}} />
+      <View style={{flex: 1, height: 2, backgroundColor: BLUE}} />
       <View>
         <Text
           style={{
             width: 120,
             textAlign: 'center',
-            color: BLUE,
+            color: WHITE,
             fontWeight: 'bold',
+            backgroundColor: BLUE,
+            borderRadius:  10
           }}>
           {text}
         </Text>
       </View>
-      <View style={{flex: 1, height: 1, backgroundColor: BLUE}} />
+      <View style={{flex: 1, height: 2, backgroundColor: BLUE}} />
     </View>
   );
 };
@@ -271,10 +273,14 @@ const RefillDay = ({todos}: {todos: TodoItem[]}) => {
       <Text
         style={[
           {
-            color: isToday ? BLUE : '#636363',
-            fontWeight: isToday ? 'bold' : 'normal',
+            color: isToday ? WHITE : '#636363',
+            fontWeight: isToday ? 'bold' : 'bold',
             marginHorizontal: 10,
             letterSpacing: 2.5,
+            backgroundColor: isToday? BLUE : WHITE,
+            borderRadius: 30,
+            width:240,
+            paddingHorizontal: 5
           },
         ]}>
         {dateString + (isToday ? ' - Today' : '')}
@@ -367,11 +373,11 @@ const MedicationsList = ({todos}: {todos: TodoItem[]}) => {
             </Text>
           </View>
         ) : (
-          <View>
-            <Text
+          <View style={{marginTop: 20}}>
+           {/* <Text
               style={[styles.infoTitle, {fontSize: 16, paddingHorizontal: 0}]}>
               {new Date().toDateString()}
-            </Text>
+            </Text> */}
 
             {todos
               .filter(item => compareByTime(item.time.toDate(), new Date()) < 0)

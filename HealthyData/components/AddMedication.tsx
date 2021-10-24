@@ -32,7 +32,7 @@ const AddMedication = ({navigation, route}: Props): JSX.Element => {
       ? medication.sideEffects.map(sideEffect => sideEffect.name)
       : [];
 
-  const [isTaking, setIsTaking] = useState(false);
+  const [isTaking, setIsTaking] = useState(true);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
