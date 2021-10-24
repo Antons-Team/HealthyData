@@ -7,7 +7,6 @@ import AddMedication from '../components/AddMedication';
 import Header from '../components/Header';
 import {styles} from '../style/Styles';
 import {MedicationsStackParamList} from '../@types/MedicationsStackParamList';
-import AddMedicationInfo from '../components/AddMedicationInfo';
 import MedicationsTaking from '../components/MedicationsTaking';
 
 const Stack = createStackNavigator<MedicationsStackParamList>();
@@ -27,7 +26,7 @@ const MedicationsNavigator = (): JSX.Element => {
         options={{animationEnabled: false}}
       />
       <Stack.Screen name="AddMedication" component={AddMedication} />
-      <Stack.Screen name="AddMedicationInfo" component={AddMedicationInfo} />
+      {/* <Stack.Screen name="AddMedicationInfo" component={AddMedicationInfo} /> */}
       <Stack.Screen name="MedicationsTaking" component={MedicationsTaking} />
     </Stack.Navigator>
   );

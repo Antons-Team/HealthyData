@@ -17,6 +17,7 @@ import {BLACK, BLUE, DARK, DARK_GRAY, ORANGE, WHITE} from '../style/Colours';
 import {renderName} from '../utils/Display';
 import {Icon} from 'react-native-vector-icons/Icon';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {TabBar} from 'react-native-tab-view';
 
 type MedicationsNavigationProps = StackNavigationProp<
   MedicationsStackParamList,
@@ -73,9 +74,12 @@ const TakingItem = ({todo}: {todo: TodoItem}) => {
           },
         ]}>
         <Text
-          style={[{
-            backgroundColor: todo.supply > 10 ? 'grey' : ORANGE,
-          }, styles.circleTextHighlight]}>
+          style={[
+            {
+              backgroundColor: todo.supply > 10 ? 'grey' : ORANGE,
+            },
+            styles.circleTextHighlight,
+          ]}>
           {todo.supply} doses left
         </Text>
         <Text>
@@ -154,24 +158,24 @@ const MedicationsTaking = (props: Props) => {
           onPressIn={() => {
             props.navigation.navigate('Medications');
           }}>
-          <View style={[styles.row, {alignItems: "center"}]}>
-            <Ionicons style={{margin:0, padding:0}} name="search" size={20} color={DARK_GRAY} />
+          <View style={[styles.row, {alignItems: 'center'}]}>
+            <Ionicons
+              style={{margin: 0, padding: 0}}
+              name="search"
+              size={20}
+              color={DARK_GRAY}
+            />
             <Text style={{color: DARK_GRAY, padding: 4}}>Add medication</Text>
           </View>
         </TouchableOpacity>
       </View>
       <Tab.Navigator
         screenOptions={{
-          tabBarStyle: {elevation: 0, marginHorizontal: 10},
-          tabBarIndicatorStyle: {
-            backgroundColor: BLUE,
-            height: 40,
-            marginBottom: 5,
-            borderRadius: 20,
-          },
+          tabBarStyle: styles.tabBarStyle,
+          tabBarIndicatorStyle: styles.tabBarIndicatorStyle,
           tabBarInactiveTintColor: 'grey',
           tabBarActiveTintColor: 'white',
-          tabBarLabelStyle: [styles.textBold, {fontSize: 15}],
+          tabBarLabelStyle: styles.tabBarLabelStyle,
           tabBarPressColor: WHITE,
         }}>
         <Tab.Screen name="Currently Taking" component={CurrentlyTaking} />

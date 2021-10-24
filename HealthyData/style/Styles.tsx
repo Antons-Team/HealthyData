@@ -4,6 +4,7 @@ import {DARK, LIGHT, RED, BLUE, BLACK, WHITE, DARK_GRAY} from './Colours';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
+const MODAL_COVER = 160;
 export const styles = StyleSheet.create({
   text: {
     fontFamily: 'Roboto-Regular',
@@ -12,6 +13,16 @@ export const styles = StyleSheet.create({
   textBold: {
     fontFamily: 'Roboto-Regular',
     fontWeight: 'bold',
+  },
+  buttonWhiteText: {
+    color: WHITE,
+    fontFamily: 'Roboto-Regular',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  textAlignCenter: {
+    textAlign: 'center',
+    textAlignVertical: 'center',
   },
   row: {
     flexDirection: 'row',
@@ -23,6 +34,57 @@ export const styles = StyleSheet.create({
     textAlignVertical: 'center',
     height: 30,
     borderRadius: 15,
+  },
+
+  modalConainer: {
+    height: SCREEN_HEIGHT - MODAL_COVER,
+    backgroundColor: WHITE,
+    borderTopLeftRadius: 45,
+    borderTopRightRadius: 45,
+    paddingTop: 20,
+    paddingHorizontal: 0,
+  },
+  formContainer: {
+    flexDirection: 'column',
+    height: SCREEN_HEIGHT - MODAL_COVER - 100,
+    justifyContent: 'space-between',
+  },
+  tabBarStyle: {
+    elevation: 0,
+    marginHorizontal: 10,
+  },
+  tabBarIndicatorStyle: {
+    backgroundColor: BLUE,
+    height: 40,
+    marginBottom: 5,
+    borderRadius: 20,
+  },
+  tabBarLabelStyle: {
+    fontFamily: 'Roboto-Bold',
+    fontSize: 15,
+  },
+  halfButton: {
+    width: SCREEN_WIDTH / 2 - 20,
+    height: 35,
+    borderRadius: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  blueButton: {
+    backgroundColor: BLUE,
+    borderRadius: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
+  textInputBlue: {
+    borderColor: BLUE,
+    borderWidth: 2,
+    borderRadius: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 3,
+    color: BLUE,
+    fontSize: 16,
+    fontFamily: 'Roboto-Bold',
   },
 
   tileContainer: {
@@ -227,7 +289,7 @@ export const styles = StyleSheet.create({
     fontFamily: 'Roboto-Bold',
     color: DARK_GRAY,
     fontSize: 24,
-    backgroundColor: WHITE,
+    // backgroundColor: WHITE,
     paddingHorizontal: 15,
     paddingBottom: 10,
   },
@@ -346,6 +408,14 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     padding: 10,
   },
+  questionContainer: {
+    paddingVertical: 20,
+    borderRadius: 30,
+    borderColor: '#eee',
+    borderWidth: 2,
+    marginVertical: 5,
+  },
+
   radioButtonsContainer: {
     //flex: 1,
     padding: 10,
@@ -356,8 +426,8 @@ export const styles = StyleSheet.create({
     borderRadius: 50,
     flex: 0,
     height: 40,
-    marginLeft: 5,
-    marginRight: 5,
+    marginLeft: 3,
+    marginRight: 3,
     width: 40,
     textAlignVertical: 'center',
     textAlign: 'center',
