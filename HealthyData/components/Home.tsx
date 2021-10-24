@@ -172,7 +172,7 @@ export const RenderTodoItem = ({
   );
 };
 
-const RenderRefill = ({item}: {item: TodoItem}) => (
+export const RenderRefill = ({item}: {item: TodoItem}) => (
   <View
     style={[
       styles.tileContainer,
@@ -306,7 +306,7 @@ const RefillList = ({todos}: {todos: TodoItem[]}) => {
       <SafeAreaView
         style={[
           styles.container,
-          {flexDirection: 'column', marginTop: 0, paddingTop: 0},
+          {flexDirection: 'column', marginTop: 0, paddingTop: 20},
         ]}>
         {todos.length == 0 ? (
           <View style={{paddingVertical: 100}}>

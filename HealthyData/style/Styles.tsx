@@ -127,7 +127,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     borderWidth: 2,
     borderRadius: 6,
-    padding: 5,
+    // padding: 5,
     marginTop: 10,
     borderColor: LIGHT,
   },

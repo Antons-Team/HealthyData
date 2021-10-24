@@ -212,6 +212,7 @@ export const getTodosMonth = async (month: DateData) => {
           const dateString = loop.toISOString().split('T')[0];
 
           const todaysTodos: {todo: TodoItem; name: string}[] = [];
+          const todaysRefills: TodoItem[] = [];
           data.forEach(todo => {
             if (isToday(todo, loop)) {
               todaysTodos.push({
@@ -224,12 +225,13 @@ export const getTodosMonth = async (month: DateData) => {
             if (
               todo.refillDate.toDate().toDateString() === loop.toDateString()
             ) {
-              todaysTodos.push({
-                todo,
-                name: todo.medication.genericName,
-                type: 'refill',
-                day: new Date(dateString),
-              });
+              todaysRefills.push(todo);
+              // todaysTodos.push({
+              //   todo,
+              //   name: todo.medication.genericName,
+              //   type: 'refill',
+              //   day: new Date(dateString),
+              // });
             }
           });
 
@@ -237,7 +239,18 @@ export const getTodosMonth = async (month: DateData) => {
             compareByTime(item1.todo.time.toDate(), item2.todo.time.toDate()),
           );
 
-          allDays[dateString] = todaysTodos;
+          const todosAndRefill = todaysRefills.length > 0 ? [
+
+            {
+              type: 'refill',
+              todos: todaysRefills,
+              day: new Date(dateString),
+              name: 'refill',
+            },
+            ...todaysTodos,
+          ] : todaysTodos
+
+          allDays[dateString] = todosAndRefill;
 
           const newDate = loop.setDate(loop.getDate() + 1);
           loop = new Date(newDate);
