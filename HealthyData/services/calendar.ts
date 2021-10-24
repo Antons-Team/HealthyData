@@ -3,7 +3,12 @@ import auth, {firebase} from '@react-native-firebase/auth';
 import {MedicationItem, MedicationsTakenItem, TodoItem} from '../@types/Schema';
 import {DateData} from 'react-native-calendars/src/types';
 import {useScrollToTop} from '@react-navigation/native';
-import {addDays, compareByTime, daysOfTheWeek} from '../utils/Dates';
+import {
+  addDays,
+  compareByDate,
+  compareByTime,
+  daysOfTheWeek,
+} from '../utils/Dates';
 import Medications from '../components/Medications';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {decorator} from '@babel/types';
@@ -142,7 +147,7 @@ export const getNextDose = (todo: TodoItem) => {
 };
 
 export const isToday = (todo: TodoItem, date: Date) => {
-  if (todo.date.toDate() < date) {
+  if (compareByDate(todo.date.toDate(), date) < 0) {
     return false;
   }
 

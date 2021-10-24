@@ -132,7 +132,7 @@ const SelectDays = ({
   );
 };
 
-export type FormParamsList = {
+type FormParamsList = {
   DaysForm: {medication: MedicationItem};
   DateForm: {
     medication: MedicationItem;

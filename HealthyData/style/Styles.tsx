@@ -289,7 +289,6 @@ export const styles = StyleSheet.create({
     fontFamily: 'Roboto-Bold',
     color: DARK_GRAY,
     fontSize: 24,
-    // backgroundColor: WHITE,
     paddingHorizontal: 15,
     paddingBottom: 10,
   },

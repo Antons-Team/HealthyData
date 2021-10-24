@@ -98,7 +98,7 @@ const AddMedication = ({navigation, route}: Props): JSX.Element => {
           stickyHeaderIndices={[0]}
           contentContainerStyle={{paddingBottom: 60, flexGrow: 1}}>
           <View>
-            <Text style={[styles.infoTitle]}>Side Effects</Text>
+            <Text style={[styles.infoTitle, {backgroundColor: WHITE}]}>Side Effects</Text>
           </View>
           {sideEffectNames.length == 0 ? (
             <View style={{padding: 30}}>
