@@ -35,21 +35,20 @@ type MedicationSearchItem = {
 };
 
 const SearchEmpty = () => {
-  return <View style={{paddingTop: 50}}>
-
-
-              <Ionicons
-                style={{margin: 0, paddingBottom: 10, alignSelf: 'center'}}
-                name="search-outline"
-                size={70}
-                color={DARK_GRAY}
-              />
-              <Text
-                style={{color: DARK_GRAY, textAlign: 'center', fontSize: 16}}>
-                Search for medications by name
-              </Text>
-  </View>
-}
+  return (
+    <View style={{paddingTop: 50}}>
+      <Ionicons
+        style={{margin: 0, paddingBottom: 10, alignSelf: 'center'}}
+        name="search-outline"
+        size={70}
+        color={DARK_GRAY}
+      />
+      <Text style={{color: DARK_GRAY, textAlign: 'center', fontSize: 16}}>
+        Search for medications by name
+      </Text>
+    </View>
+  );
+};
 
 const Medications = (props: Props): JSX.Element => {
   const [filter, setFilter] = useState<string>('');
@@ -89,15 +88,25 @@ const Medications = (props: Props): JSX.Element => {
   const renderItem: ListRenderItem<MedicationSearchItem> = ({item}) => {
     return (
       <TouchableOpacity
-        style={[styles.row, styles.tileContainer, {justifyContent: "space-between"}]}
+        style={[
+          styles.row,
+          {
+            justifyContent: 'space-between',
+            borderBottomWidth: 1,
+            borderBottomColor: '#bbb',
+
+            padding: 10,
+            marginVertical: 2,
+            marginHorizontal: 5,
+          },
+        ]}
         onPress={() => {
           props.navigation.navigate('AddMedication', {
             medication: item.drug,
           });
         }}>
         <View style={{}}>
-          <Text
-          ellipsizeMode="tail" style={styles.medicationTop}>
+          <Text ellipsizeMode="tail" style={styles.medicationTop}>
             {renderName(item.matchingName || '')}
           </Text>
           <Text style={styles.medicationBottom}>
