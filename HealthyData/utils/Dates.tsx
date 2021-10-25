@@ -11,6 +11,16 @@ export const compareByTime = (time1: Date, time2: Date): number => {
   return time1.getMinutes() - time2.getMinutes();
 };
 
+export const daysOfTheWeek = [
+      'sunday',
+      'monday',
+      'tuesday',
+      'wednesday',
+      'thursday',
+      'friday',
+      'saturday',
+    ];
+
 export const compareByDate = (date1: Date, date2: Date): number => {
   if (date1.getFullYear() != date2.getFullYear()) {
     return date1.getFullYear() - date2.getFullYear();

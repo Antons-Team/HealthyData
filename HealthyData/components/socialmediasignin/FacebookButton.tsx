@@ -1,8 +1,11 @@
 import auth from '@react-native-firebase/auth';
 import React, {ReactElement} from 'react';
-import {Button} from 'react-native';
+import {Button, Text} from 'react-native';
 import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
-import {FABCEBOOK_BLUE} from '../../style/Colours';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {DARK_GRAY, FABCEBOOK_BLUE} from '../../style/Colours';
+import {styles} from '../../style/Styles';
 
 const FacebookButton = (): ReactElement => {
   const signInFacebook = async () => {
@@ -40,7 +43,26 @@ const FacebookButton = (): ReactElement => {
   };
 
   return (
-    <Button title="facebook" onPress={signInFacebook} color={FABCEBOOK_BLUE} />
+    <TouchableOpacity
+      onPress={signInFacebook}
+      style={[
+        styles.loginButtonContainer,
+        {
+          borderColor: FABCEBOOK_BLUE,
+        },
+      ]}>
+      <Ionicons
+        style={{margin: 0, paddingRight: 10, alignSelf: 'center'}}
+        name="logo-facebook"
+        size={40}
+        color={FABCEBOOK_BLUE}
+      />
+      <Text style={[{color: FABCEBOOK_BLUE, fontSize: 18}]}>
+        Continue with Facebook
+      </Text>
+    </TouchableOpacity>
+
+    // <Button title="facebook" onPress={signInFacebook} color={FABCEBOOK_BLUE} />
   );
 };
 

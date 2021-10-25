@@ -15,7 +15,8 @@ import auth from '@react-native-firebase/auth';
 
 import {Dataset, ChartData} from 'react-native-chart-kit/dist/HelperTypes';
 import {AbstractChartConfig} from 'react-native-chart-kit/dist/AbstractChart';
-import { convertCompilerOptionsFromJson } from 'typescript';
+import {convertCompilerOptionsFromJson} from 'typescript';
+import {BLUE, RED, WHITE} from '../style/Colours';
 
 const getChartData = async (
   value: string | null,
@@ -67,6 +68,59 @@ const getChartData = async (
     });
 };
 
+// const getDosageData = (todo: TodoItem) => {
+
+//       const result = [0, 0, 0, 0, 0, 0, 0];
+
+//       if ( todo.days !== null)  {
+//         if (todo.days?.sunday) {
+//           result[0] += todo.doses;
+//         }
+//         if (todo.days?.monday) {
+//           result[1] += todo.doses;
+//         }
+//         if (todo.days?.tuesday) {
+//           result[2] += todo.doses;
+//         }
+//         if (todo.days?.wednesday) {
+//           result[3] += todo.doses;
+//         }
+//         if (todo.days?.thursday) {
+//           result[4] += todo.doses;
+//         }
+//         if (todo.days?.friday) {
+//           result[5] += todo.doses;
+//         }
+//         if (todo.days?.saturday) {
+//           result[6] += todo.doses;
+//         }
+//       }
+// }
+
+// type TodoData = {
+//   name: string;
+//   todo: TodoItem;
+//   dosageData: number[];
+// };
+
+// const getAllChartData = () => {
+//   firestore()
+//     .collection(`users/${auth().currentUser?.uid}/todos`)
+//     .get()
+//     .then(snapshot => {
+//       const docs = snapshot.docs;
+
+//       const data = docs.map(doc => {
+//         return doc.data() as TodoItem;
+//       });
+
+//       data.forEach(todo => {
+//         const dosageData =  getDosageData(todo)
+
+//       })
+//     });
+// };
+
 const getDropdownOptions = async (
   medications: Array<string>,
   setMedications: React.Dispatch<React.SetStateAction<string[]>>,
@@ -83,19 +137,20 @@ const getDropdownOptions = async (
         return doc.data() as TodoItem;
       });
 
-
-      let medications : Array<string> = [];
-      let items : Array<any> = [];
+      let medications: Array<string> = [];
+      let items: Array<any> = [];
 
       data.map(todo => {
         if (!medications.includes(todo.medication?.genericName)) {
+          medications = [...medications, todo.medication.genericName];
 
-          medications = [... medications, todo.medication.genericName];
-
-          items = [... items, {
-            label: renderName(todo.medication.genericName),
-            value: todo.medication.genericName,
-          }];
+          items = [
+            ...items,
+            {
+              label: renderName(todo.medication.genericName),
+              value: todo.medication.genericName,
+            },
+          ];
         }
       });
 
@@ -158,7 +213,6 @@ const Data = (): JSX.Element => {
     useShadowColorFromDataset: false,
   };
 
-
   return (
     <View
       style={{
@@ -167,6 +221,7 @@ const Data = (): JSX.Element => {
         justifyContent: 'flex-start',
         margin: 8,
       }}>
+      <Text style={[styles.infoTitle, {fontSize: 30, paddingBottom: 29}]}>Weekly Summary</Text>
       <DropDownPicker
         itemKey={'label'}
         open={open}
@@ -176,6 +231,8 @@ const Data = (): JSX.Element => {
         setValue={setValue}
         setItems={setItems}
         style={styles.dropDown}
+        labelStyle={[styles.textBold, {fontSize: 18}]}
+        textStyle={{fontSize: 18, backgroundColor: WHITE, opacity: 1}}
       />
       <BarChart
         style={{
@@ -192,9 +249,17 @@ const Data = (): JSX.Element => {
         verticalLabelRotation={0}
         fromZero={true}
       />
+
       <View style={{alignContent: 'flex-start', margin: 4}}>
-        <Text style={styles.title}>Total Doses over Week: {total} </Text>
-        <Text style={styles.title}>Average per Day: {average.toFixed(2)}</Text>
+        <Text style={styles.title}>
+          Total Doses over Week:{' '}
+          <Text style={[styles.title, {color: BLUE}]}> {total} </Text>
+        </Text>
+        <Text style={styles.title}>
+          Average doses per day:{' '}
+          <Text style={[styles.title, {color: BLUE}]}> {average.toFixed(2)} </Text>
+        </Text>
+        {/* <Text style={styles.title}>Average per Day: {average.toFixed(2)}</Text> */}
       </View>
     </View>
   );

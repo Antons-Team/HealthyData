@@ -67,7 +67,7 @@ const AppNavigator = (): JSX.Element => {
       <Tab.Screen
         name="MedicationsNavigator"
         component={MedicationsNavigator}
-        options={{headerShown: false}}
+        options={{headerShown: false, unmountOnBlur: true}}
       />
       <Tab.Screen name="Data" component={Data} />
       <Tab.Screen name="Calendar" component={CalendarScreen} />

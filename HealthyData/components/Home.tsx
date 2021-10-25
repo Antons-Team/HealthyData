@@ -5,6 +5,7 @@ import {
   View,
   SafeAreaView,
   TouchableOpacity,
+  StyleSheet,
 } from 'react-native';
 
 import {TodoItem} from '../@types/Schema';
@@ -16,7 +17,11 @@ import {renderName} from '../utils/Display';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
-import {useIsFocused} from '@react-navigation/native';
+import {
+  CurrentRenderContext,
+  RouteProp,
+  useIsFocused,
+} from '@react-navigation/native';
 
 import {displayDate} from '../utils/Display';
 import {addDays, compareByDate, compareByTime} from '../utils/Dates';
@@ -26,12 +31,22 @@ import {
   takeMedication,
   untakeMedication,
 } from '../services/calendar';
-import {LIGHT, RED, WHITE} from '../style/Colours';
-import {ScrollView} from 'react-native-gesture-handler';
+import {
+  BLUE,
+  DARK,
+  DARK_GRAY,
+  GREEN,
+  LIGHT,
+  ORANGE,
+  RED,
+  WHITE,
+} from '../style/Colours';
+import {ScrollView, TextInput} from 'react-native-gesture-handler';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 
 const hasMissed = (calendarDate: Date, medicationTime: Date) => {
   const today = new Date();
-  console.log(calendarDate, today);
 
   if (compareByDate(calendarDate, today) < 0) {
     return true;
@@ -50,7 +65,7 @@ export const RenderTodoItem = ({
   item: TodoItem;
   calendarDate: Date;
 }) => {
-  const [taken, setTaken] = useState(false);
+  const [taken, setTaken] = useState(true);
 
   const time = item.time.toDate();
   time.setFullYear(
@@ -61,64 +76,121 @@ export const RenderTodoItem = ({
   time.setSeconds(0, 0);
 
   useEffect(() => {
+    let isMounted = true;
     getHasTaken(item.medication, time).then(res => {
-      setTaken(res);
+      if (isMounted) {
+        setTaken(res);
+      }
     });
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  return (
-    <TouchableOpacity
-      onPress={() => {
-        if (!taken) {
-          takeMedication(item, time);
-          setTaken(true);
-        } else {
-          untakeMedication(item, time);
-          setTaken(false);
-        }
-      }}>
-      <View
-        style={{
-          flexDirection: 'column',
-          backgroundColor: WHITE,
-          borderWidth: 2,
-          borderRadius: 6,
-          padding: 0,
-          marginTop: 10,
-          borderColor: taken
-            ? 'gray'
-            : hasMissed(calendarDate, item.time.toDate())
-            ? RED
-            : LIGHT,
-        }}>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Text style={styles.time}>{displayTime(item.time.toDate())}</Text>
-          <Text style={styles.time}>
-            {taken
-              ? 'Taken'
-              : hasMissed(calendarDate, item.time.toDate())
-              ? 'Not Taken'
-              : 'Upcoming'}
-          </Text>
-        </View>
+  const takenString = taken
+    ? 'taken'
+    : hasMissed(calendarDate, item.time.toDate())
+    ? 'missed'
+    : 'upcoming';
+  const icons = {
+    taken: 'checkbox-outline',
+    missed: 'square-outline',
+    upcoming: 'time-outline',
+  };
 
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <TouchableOpacity>
-            <Text style={[styles.info]}>
-              {renderName(item.medication.genericName)}
+  const colors = {
+    upcoming: ['#F0F8FF', '#A5BFD6'],
+    missed: ['#FFE8E8', ORANGE, '#F29D9D'],
+    taken: ['#eee', '#aaa'],
+  };
+
+  return (
+    <View style={{marginBottom: 8}}>
+      <Text
+        style={[{color: '#636363', marginHorizontal: 10, letterSpacing: 2.5}]}>
+        {displayTime(item.time.toDate())}
+      </Text>
+      <TouchableOpacity
+        style={[
+          styles.tileContainer,
+          {
+            paddingRight: 0,
+            paddingTop: 0,
+            overflow: 'hidden',
+            backgroundColor: WHITE,
+            borderWidth: 1.5,
+            borderColor: colors[takenString][1],
+          },
+        ]}
+        onPress={() => {
+          if (!taken) {
+            takeMedication(item, time);
+            setTaken(true);
+          } else {
+            untakeMedication(item, time);
+            setTaken(false);
+          }
+        }}>
+        <View
+          style={[
+            styles.row,
+            {
+              justifyContent: 'space-between',
+            },
+          ]}>
+          <Text style={[styles.tileHeading, {paddingVertical: 10}]}>
+            {renderName(item.medication.genericName)}
+          </Text>
+          <View
+            style={[
+              {
+                backgroundColor: colors[takenString][1],
+                overflow: 'hidden',
+                borderBottomLeftRadius: 10,
+                paddingHorizontal: 10,
+                height: 19,
+              },
+              styles.row,
+            ]}>
+            <Text style={[styles.buttonWhiteText, {fontSize: 13}]}>
+              {takenString.toUpperCase()}
             </Text>
-          </TouchableOpacity>
-          <Text style={styles.info}>{item.doses} doses</Text>
+            <Ionicons
+              style={{margin: 0, paddingLeft: 10, alignSelf: 'center'}}
+              name={icons[takenString]}
+              size={18}
+              color={WHITE}
+            />
+          </View>
         </View>
-      </View>
-    </TouchableOpacity>
+        <Text style={[styles.text, {fontSize: 16}]}>
+          <Text style={{fontWeight: 'bold'}}>{item.doses} </Text>
+          {item.doses == 1 ? 'dose' : 'doses'}
+        </Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
-const RenderRefill = ({item}: {item: TodoItem}) => (
-  <View style={styles.item}>
-    <Text style={styles.time}>{displayDate(item.refillDate.toDate())}</Text>
-    <Text style={styles.info}>{renderName(item.medication.genericName)}</Text>
+export const RenderRefill = ({item}: {item: TodoItem}) => (
+  <View
+    style={[
+      styles.tileContainer,
+      styles.row,
+      {justifyContent: 'space-between', alignItems: 'center'},
+    ]}>
+    <Text style={styles.tileHeading}>
+      {renderName(item.medication.genericName)}
+    </Text>
+    <Text
+      style={[
+        {
+          backgroundColor: ORANGE,
+        },
+        styles.circleTextHighlight,
+      ]}>
+      {item.supply} doses left
+    </Text>
   </View>
 );
 
@@ -145,7 +217,10 @@ const getTodoData = async (
 
       const todos = data.filter(todo => {
         const today = new Date();
-        return today < todo.date.toDate() && isToday(todo, new Date());
+        return (
+          compareByDate(today, todo.date.toDate()) <= 0 &&
+          isToday(todo, new Date())
+        );
       });
 
       setTodos(
@@ -167,41 +242,213 @@ const getTodoData = async (
     });
 };
 
+const Divider = ({text}: {text: string}) => {
+  return (
+    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <View style={{flex: 1, height: 2, backgroundColor: BLUE}} />
+      <View>
+        <Text
+          style={{
+            width: 120,
+            textAlign: 'center',
+            color: WHITE,
+            fontWeight: 'bold',
+            backgroundColor: BLUE,
+            borderRadius:  10
+          }}>
+          {text}
+        </Text>
+      </View>
+      <View style={{flex: 1, height: 2, backgroundColor: BLUE}} />
+    </View>
+  );
+};
+
+const RefillDay = ({todos}: {todos: TodoItem[]}) => {
+  const dateString = todos[0].refillDate.toDate().toDateString();
+  const isToday = dateString === new Date().toDateString();
+
+  return (
+    <View style={{marginBottom: 10}}>
+      <Text
+        style={[
+          {
+            color: isToday ? WHITE : '#636363',
+            fontWeight: isToday ? 'bold' : 'bold',
+            marginHorizontal: 10,
+            letterSpacing: 2.5,
+            backgroundColor: isToday? BLUE : WHITE,
+            borderRadius: 30,
+            width:240,
+            paddingHorizontal: 5
+          },
+        ]}>
+        {dateString + (isToday ? ' - Today' : '')}
+      </Text>
+      {todos.map(todo => {
+        return <RenderRefill key={todo.id} item={todo} />;
+      })}
+    </View>
+  );
+};
+
+const RefillList = ({todos}: {todos: TodoItem[]}) => {
+  const refillsByDate: any = {};
+
+  todos.forEach(todo => {
+    const dateString = todo.refillDate.toDate().toDateString();
+    if (!(dateString in refillsByDate)) {
+      refillsByDate[dateString] = [];
+    }
+    refillsByDate[dateString] = [...refillsByDate[dateString], todo];
+  });
+
+  const sortedDateStrings = [...Object.keys(refillsByDate)].sort((s1, s2) =>
+    compareByDate(new Date(s1), new Date(s2)),
+  );
+
+  return (
+    <ScrollView>
+      <SafeAreaView
+        style={[
+          styles.container,
+          {flexDirection: 'column', marginTop: 0, paddingTop: 20},
+        ]}>
+        {todos.length == 0 ? (
+          <View style={{paddingVertical: 100}}>
+            <Ionicons
+              style={{margin: 0, paddingRight: 10, alignSelf: 'center'}}
+              name="checkmark-circle-outline"
+              size={100}
+              color={BLUE}
+            />
+            <Text
+              style={[
+                styles.infoTitle,
+                styles.textAlignCenter,
+                {color: DARK_GRAY},
+              ]}>
+              Nothing to do!
+            </Text>
+          </View>
+        ) : (
+          <View>
+            {sortedDateStrings.map(dateString => (
+              <RefillDay key={dateString} todos={refillsByDate[dateString]} />
+            ))}
+
+            {/* {todos.map(item => (
+              <RenderRefill key={item.id} item={item} />
+            ))} */}
+          </View>
+        )}
+      </SafeAreaView>
+    </ScrollView>
+  );
+};
+
+const MedicationsList = ({todos}: {todos: TodoItem[]}) => {
+  return (
+    <ScrollView>
+      <SafeAreaView
+        style={[
+          styles.container,
+          {flexDirection: 'column', marginTop: 0, paddingTop: 0},
+        ]}>
+        {todos.length == 0 ? (
+          <View style={{paddingVertical: 100}}>
+            <Ionicons
+              style={{margin: 0, paddingRight: 10, alignSelf: 'center'}}
+              name="checkmark-circle-outline"
+              size={100}
+              color={BLUE}
+            />
+            <Text
+              style={[
+                styles.infoTitle,
+                styles.textAlignCenter,
+                {color: DARK_GRAY},
+              ]}>
+              Nothing to do!
+            </Text>
+          </View>
+        ) : (
+          <View style={{marginTop: 20}}>
+           {/* <Text
+              style={[styles.infoTitle, {fontSize: 16, paddingHorizontal: 0}]}>
+              {new Date().toDateString()}
+            </Text> */}
+
+            {todos
+              .filter(item => compareByTime(item.time.toDate(), new Date()) < 0)
+              .map(item => (
+                <RenderTodoItem
+                  key={item.id}
+                  item={item}
+                  calendarDate={new Date()}
+                />
+              ))}
+            <Divider text={'Now: ' + displayTime(new Date())} />
+            {todos
+              .filter(
+                item => compareByTime(item.time.toDate(), new Date()) >= 0,
+              )
+              .map(item => (
+                <RenderTodoItem
+                  key={item.id}
+                  item={item}
+                  calendarDate={new Date()}
+                />
+              ))}
+          </View>
+        )}
+      </SafeAreaView>
+    </ScrollView>
+  );
+};
+
 const Home = (): JSX.Element => {
   const [todos, setTodos] = useState<Array<TodoItem>>([]);
   const [refills, setRefills] = useState<Array<TodoItem>>([]);
 
-  const isFocused = useIsFocused();
+  // const isFocused = useIsFocused();
 
   useEffect(() => {
-    if (isFocused) {
-      getTodoData(setRefills, setTodos);
-    }
-  }, [isFocused]);
+    // if (isFocused) {
+    getTodoData(setRefills, setTodos);
+    // }
+  }, []);
 
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    {key: 'medications', title: 'MEDICATIONS'},
+    {key: 'refills', title: 'REFILLS'},
+  ]);
   return (
-    <View style={styles.homeContainer}>
-      <ScrollView>
-        <Text style={styles.title}>Today&apos;s Medication</Text>
-
-        <SafeAreaView style={[styles.container, {flexDirection: 'column'}]}>
-          <Text>{todos.length == 0 ? 'Nothing to do!' : ''}</Text>
-          {todos.map(item => (
-            <RenderTodoItem
-              key={item.id}
-              item={item}
-              calendarDate={new Date()}
-            />
-          ))}
-        </SafeAreaView>
-        <Text style={styles.title}>Upcoming Refills</Text>
-        <SafeAreaView style={[styles.container, {flexDirection: 'column'}]}>
-          <Text>{refills.length == 0 ? 'Nothing to do!' : ''}</Text>
-          {refills.map(item => (
-            <RenderRefill key={item.id} item={item} />
-          ))}
-        </SafeAreaView>
-      </ScrollView>
+    <View style={{flexDirection: 'column', flex: 1}}>
+      <Text style={[styles.infoTitle, {fontSize: 37}]}>Today's Reminders</Text>
+      <TabView
+        navigationState={{index, routes}}
+        renderScene={SceneMap({
+          medications: () => <MedicationsList todos={todos} />,
+          refills: () => <RefillList todos={refills} />,
+        })}
+        onIndexChange={setIndex}
+        renderTabBar={props => (
+          <TabBar
+            style={[styles.tabBarStyle, {backgroundColor: WHITE}]}
+            labelStyle={[styles.tabBarLabelStyle]}
+            indicatorStyle={[
+              styles.tabBarIndicatorStyle,
+              {backgroundColor: DARK},
+            ]}
+            inactiveColor={'grey'}
+            activeColor={WHITE}
+            pressColor={WHITE}
+            {...props}
+          />
+        )}
+      />
     </View>
   );
 };

@@ -10,7 +10,7 @@ import {
 import {MedicationItem} from '../@types/Schema';
 
 import {styles} from '../style/Styles';
-import {RED} from '../style/Colours';
+import {DARK_GRAY, RED} from '../style/Colours';
 
 import {renderName} from '../utils/Display';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -32,6 +32,22 @@ type Props = {
 type MedicationSearchItem = {
   matchingName: string;
   drug: MedicationItem;
+};
+
+const SearchEmpty = () => {
+  return (
+    <View style={{paddingTop: 50}}>
+      <Ionicons
+        style={{margin: 0, paddingBottom: 10, alignSelf: 'center'}}
+        name="search-outline"
+        size={70}
+        color={DARK_GRAY}
+      />
+      <Text style={{color: DARK_GRAY, textAlign: 'center', fontSize: 16}}>
+        Search for medications by name
+      </Text>
+    </View>
+  );
 };
 
 const Medications = (props: Props): JSX.Element => {
@@ -72,14 +88,25 @@ const Medications = (props: Props): JSX.Element => {
   const renderItem: ListRenderItem<MedicationSearchItem> = ({item}) => {
     return (
       <TouchableOpacity
-        style={styles.medicationItem}
+        style={[
+          styles.row,
+          {
+            justifyContent: 'space-between',
+            borderBottomWidth: 1,
+            borderBottomColor: '#bbb',
+
+            padding: 10,
+            marginVertical: 2,
+            marginHorizontal: 5,
+          },
+        ]}
         onPress={() => {
           props.navigation.navigate('AddMedication', {
             medication: item.drug,
           });
         }}>
-        <View style={styles.medicationText}>
-          <Text style={styles.medicationTop}>
+        <View style={{}}>
+          <Text ellipsizeMode="tail" style={styles.medicationTop}>
             {renderName(item.matchingName || '')}
           </Text>
           <Text style={styles.medicationBottom}>
@@ -100,12 +127,14 @@ const Medications = (props: Props): JSX.Element => {
         value={filter}
         onChangeText={setFilter}
         style={styles.searchBar}
+        autoFocus={true}
       />
       <SafeAreaView style={styles.container}>
         <FlatList
           data={drugs}
           renderItem={renderItem}
           keyExtractor={(item, i) => item.matchingName + i}
+          ListEmptyComponent={SearchEmpty}
         />
       </SafeAreaView>
     </View>

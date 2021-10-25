@@ -1,4 +1,6 @@
 export type Days = {
+  [key: string]: boolean;
+
   monday: boolean;
   tuesday: boolean;
   wednesday: boolean;

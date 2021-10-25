@@ -10,10 +10,11 @@ import {
   SignedInState,
 } from '../auth/reducer';
 import Loading from '../components/Loading';
-import {NavigationContainer} from '@react-navigation/native';
+import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import LocalAuth from './LocalAuth';
 import TouchID from 'react-native-touch-id';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import { WHITE } from '../style/Colours';
 
 const RootNavigator = (): ReactElement => {
   const {
@@ -83,7 +84,14 @@ const RootNavigator = (): ReactElement => {
   }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      theme={{
+        ...DefaultTheme,
+        colors: {
+          ...DefaultTheme.colors,
+          background: WHITE,
+        },
+      }}>
       {authState.isSignedIn === SignedInState.signedOut ? (
         <AuthNavigator />
       ) : (

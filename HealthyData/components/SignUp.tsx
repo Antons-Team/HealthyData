@@ -1,7 +1,7 @@
 import React, {ReactElement} from 'react';
 import {useState} from 'react';
-import {View, TextInput, Button, Text} from 'react-native';
-import {signUpEmail} from '../services/auth';
+import {View, TextInput, Button, Text, TouchableOpacity} from 'react-native';
+import {signInEmail, signUpEmail} from '../services/auth';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AuthStackParamsList} from '../@types/AuthStackParams';
 import {AccessToken, LoginManager} from 'react-native-fbsdk-next';
@@ -12,6 +12,7 @@ import {DARK, BLUE, FABCEBOOK_BLUE} from '../style/Colours';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import FacebookButton from './socialmediasignin/FacebookButton';
 import GoogleButton from './socialmediasignin/GoogleButton';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // export const GoogleButton = () : ReactElement => {
 
@@ -81,8 +82,22 @@ const SignUp = (props: Props): JSX.Element => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const filled = email !== ""  && password !== ""
+  
   return (
     <View style={styles.loginSignupContainer}>
+      <Text
+        style={[
+          styles.infoTitle,
+          {
+            fontSize: 30,
+            paddingHorizontal: 0,
+            paddingBottom: 3,
+            paddingTop: 10,
+          },
+        ]}>
+        Sign Up to PillX
+      </Text>
       <TextInput
         style={styles.loginSignupTextInput}
         underlineColorAndroid={DARK}
@@ -99,17 +114,26 @@ const SignUp = (props: Props): JSX.Element => {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Button
-        title="Sign up now"
-        color={BLUE}
-        onPress={() => {
-          signUpEmail(email, password);
-        }}
-      />
-      <FacebookButton />
-      <GoogleButton />
+      <TouchableOpacity
+      disabled={!filled}
+        onPress={() => signInEmail(email, password)}
+        style={[
+          styles.loginButtonContainer,
+          {
+            borderColor: filled ? BLUE: "#ddd",
+          },
+        ]}>
+        <Ionicons
+          style={{margin: 0, paddingRight: 10, alignSelf: 'center'}}
+          name="mail-outline"
+          size={40}
+          color={filled ? BLUE: "#ddd"}
+        />
+        <Text style={[{color: filled? BLUE: '#ddd', fontSize: 18}]}>Sign Up with Email</Text>
+      </TouchableOpacity>
+
       <View style={styles.switchLoginSignupContainer}>
-        <Text style={{padding: 2}}>I&apos;m already a member,</Text>
+        <Text style={{padding: 2, fontSize: 16}}>I&apos;m already a member,</Text>
         <Text
           style={styles.switchButton}
           onPress={() => {
@@ -118,6 +142,8 @@ const SignUp = (props: Props): JSX.Element => {
           Log In
         </Text>
       </View>
+      <FacebookButton />
+      <GoogleButton />
     </View>
   );
 };

@@ -1,7 +1,10 @@
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import React, {ReactElement} from 'react';
 import auth from '@react-native-firebase/auth';
-import {Button} from 'react-native';
+import {Button, Text, TouchableOpacity} from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {BLACK, FABCEBOOK_BLUE} from '../../style/Colours';
+import {styles} from '../../style/Styles';
 
 const GoogleButton = (): ReactElement => {
   const signInGoogle = async () => {
@@ -13,7 +16,27 @@ const GoogleButton = (): ReactElement => {
     return auth().signInWithCredential(googleCredential);
   };
 
-  return <Button title="Google Sign-In" onPress={() => signInGoogle()} />;
+  return (
+    <TouchableOpacity
+      onPress={signInGoogle}
+      style={[
+        styles.loginButtonContainer,
+        {
+          borderColor: BLACK,
+        },
+      ]}>
+      <Ionicons
+        style={{margin: 0, paddingRight: 10, alignSelf: 'center'}}
+        name="logo-google"
+        size={40}
+        color={BLACK}
+      />
+      <Text style={[{color: BLACK, fontSize: 18}]}>
+        Continue with Google
+      </Text>
+    </TouchableOpacity>
+  );
+  // return <Button title="Google Sign-In" onPress={() => signInGoogle()} />;
 };
 
 export default GoogleButton;
