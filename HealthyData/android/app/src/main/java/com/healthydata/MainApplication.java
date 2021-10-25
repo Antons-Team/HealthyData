@@ -13,6 +13,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 // import co.apptailor.googlesignin.RNGoogleSigninPackage;
+import com.calendarevents.RNCalendarEventsPackage;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
