@@ -95,7 +95,6 @@ const loadMonth = async (
 
 const addTodosToCalendar = () => {
   getCurrentTodos().then(todos => {
-    console.log('got todos');
 
     todos.forEach(todo => {
       const dateString = todo.refillDate.toDate().toISOString();
@@ -122,7 +121,6 @@ const addTodosToCalendar = () => {
               event.endDate === todo.refillDate.toDate().toISOString(),
           );
 
-          console.log('fetched events');
           if (!refillAlreadyAdded) {
             RNCalendarEvents.saveEvent(
               `Refill ${todo.medication.genericName}`,
@@ -224,14 +222,7 @@ const CalendarScreen = (): JSX.Element => {
           },
         ]}
         onPressItem={() => {
-          try {
             addTodosToCalendar();
-          } catch (e) {
-            console.log(e);
-          }
-          // console.log("req")
-          // RNCalendarEvents.requestPermissions(false);
-          // RNCalendarEvents.checkPermissions(false).then(res => console.log(res));
         }}
       />
     </View>

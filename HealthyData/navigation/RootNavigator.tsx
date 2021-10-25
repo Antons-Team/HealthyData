@@ -15,7 +15,6 @@ import LocalAuth from './LocalAuth';
 import TouchID from 'react-native-touch-id';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {WHITE} from '../style/Colours';
-import {checkPermission} from '../services/notifications';
 import firebase from 'react-native-firebase';
 
 const RootNavigator = (): ReactElement => {
@@ -28,12 +27,7 @@ const RootNavigator = (): ReactElement => {
     setFingerprintEnabled,
   } = useAuth();
 
-  // checkPermission().then(() => {
-  //   console.log('done');
-  // });
-
   useEffect(() => {
-    console.log('did');
     const channel = new firebase.notifications.Android.Channel(
       'pillx',
       'pillx channel name',
@@ -43,7 +37,6 @@ const RootNavigator = (): ReactElement => {
 
     // This listener triggered when notification has been received in foreground
     firebase.notifications().onNotification(notification => {
-      const {title, body} = notification;
       notification.android.setChannelId('pillx');
       notification.android.setPriority(
         firebase.notifications.Android.Priority.High,
@@ -52,22 +45,8 @@ const RootNavigator = (): ReactElement => {
     });
 
     firebase.notifications().onNotificationOpened(notificationOpen => {
-      const {title, body} = notificationOpen.notification;
       firebase.notifications().removeAllDeliveredNotifications();
     });
-
-    // const date = new Date();
-    // date.setSeconds(date.getSeconds() + 20);
-    // console.log(date.toTimeString());
-
-    // const notification = new firebase.notifications.Notification();
-    // notification.setTitle('hello');
-    // notification.setSubtitle('shit');
-    // notification.android.setChannelId('pillx');
-
-    // firebase.notifications().scheduleNotification(notification, {
-    //   fireDate: date.getTime(),
-    // });
 
     GoogleSignin.configure({
       webClientId:
