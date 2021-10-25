@@ -13,6 +13,22 @@ import Medications from '../components/Medications';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {decorator} from '@babel/types';
 
+export const getCurrentTodos = () => {
+  return firestore()
+    .collection(`users/${auth().currentUser?.uid}/todos`)
+    .where('date', '>=', firestore.Timestamp.fromDate(new Date()))
+    .get()
+    .then(snapshot => {
+      const docs = snapshot.docs;
+
+      const data = docs.map(doc => {
+        return {id: doc.id, ...doc.data()} as TodoItem;
+      });
+
+      return data;
+    });
+};
+
 const calculateRefillDate = (todo: TodoItem): Date => {
   let refillDate = new Date();
 
@@ -239,16 +255,18 @@ export const getTodosMonth = async (month: DateData) => {
             compareByTime(item1.todo.time.toDate(), item2.todo.time.toDate()),
           );
 
-          const todosAndRefill = todaysRefills.length > 0 ? [
-
-            {
-              type: 'refill',
-              todos: todaysRefills,
-              day: new Date(dateString),
-              name: 'refill',
-            },
-            ...todaysTodos,
-          ] : todaysTodos
+          const todosAndRefill =
+            todaysRefills.length > 0
+              ? [
+                  {
+                    type: 'refill',
+                    todos: todaysRefills,
+                    day: new Date(dateString),
+                    name: 'refill',
+                  },
+                  ...todaysTodos,
+                ]
+              : todaysTodos;
 
           allDays[dateString] = todosAndRefill;
 
