@@ -25,6 +25,7 @@ import {displayTime, renderName} from '../utils/Display';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import {NavigationActions} from 'react-navigation';
+import {scheduleNotifications} from '../services/notifications';
 
 type RadioProps = {
   text: string;
@@ -801,7 +802,18 @@ const addTodo = async ({
     .collection('users')
     .doc(auth().currentUser?.uid)
     .collection('todos')
-    .add(todo);
+    .doc(todo.medication.genericName)
+    .set(todo)
+    .then(() => {
+      firestore()
+        .doc(`users/${auth().currentUser?.uid}/todos/${medication.genericName}`)
+        .get()
+        .then(doc => {
+          const added = {...doc.data(), id: doc.id} as TodoItem;
+
+          scheduleNotifications(added);
+        });
+    });
 };
 
 export const AddMedicationModal = ({

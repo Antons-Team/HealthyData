@@ -28,29 +28,47 @@ const RootNavigator = (): ReactElement => {
     setFingerprintEnabled,
   } = useAuth();
 
-  checkPermission().then(() => {
-    console.log('done');
-  });
-
-  const channel = new firebase.notifications.Android.Channel(
-    'channelId',
-    'Channel Name',
-    firebase.notifications.Android.Importance.Max,
-  ).setDescription('A natural description of the channel');
-  firebase.notifications().android.createChannel(channel);
-
-  // This listener triggered when notification has been received in foreground
-  firebase.notifications().onNotification(notification => {
-    const {title, body} = notification;
-    console.log('notification', notification.data.channelId);
-    notification.android.setChannelId('channelId');
-    // notification.android.setPriority(
-    //   firebase.notifications.Android.Priority.High,
-    // );
-    firebase.notifications().displayNotification(notification);
-  });
+  // checkPermission().then(() => {
+  //   console.log('done');
+  // });
 
   useEffect(() => {
+    console.log('did');
+    const channel = new firebase.notifications.Android.Channel(
+      'pillx',
+      'pillx channel name',
+      firebase.notifications.Android.Importance.Max,
+    ).setDescription('');
+    firebase.notifications().android.createChannel(channel);
+
+    // This listener triggered when notification has been received in foreground
+    firebase.notifications().onNotification(notification => {
+      const {title, body} = notification;
+      notification.android.setChannelId('pillx');
+      notification.android.setPriority(
+        firebase.notifications.Android.Priority.High,
+      );
+      firebase.notifications().displayNotification(notification);
+    });
+
+    firebase.notifications().onNotificationOpened(notificationOpen => {
+      const {title, body} = notificationOpen.notification;
+      firebase.notifications().removeAllDeliveredNotifications();
+    });
+
+    // const date = new Date();
+    // date.setSeconds(date.getSeconds() + 20);
+    // console.log(date.toTimeString());
+
+    // const notification = new firebase.notifications.Notification();
+    // notification.setTitle('hello');
+    // notification.setSubtitle('shit');
+    // notification.android.setChannelId('pillx');
+
+    // firebase.notifications().scheduleNotification(notification, {
+    //   fireDate: date.getTime(),
+    // });
+
     GoogleSignin.configure({
       webClientId:
         '517643624241-iv7hii7n7nju0mokp420eng8lbvkv6f8.apps.googleusercontent.com',
