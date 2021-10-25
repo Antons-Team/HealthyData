@@ -149,7 +149,7 @@ export const styles = StyleSheet.create({
     padding: 10,
     color: BLACK,
     paddingBottom: 2,
-    fontSize: 18,
+    fontSize: 20,
   },
   navigationBar: {
     backgroundColor: WHITE,
@@ -221,7 +221,8 @@ export const styles = StyleSheet.create({
     padding: 10,
     display: 'flex',
     alignSelf: 'center',
-    borderColor: LIGHT,
+    borderColor: BLUE,
+    opacity: 1
   },
   medicationText: {
     flexDirection: 'column',
