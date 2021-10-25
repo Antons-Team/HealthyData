@@ -21,6 +21,8 @@ target 'HealthyData' do
   pod 'react-native-fbsdk-next', :path => '../node_modules/react-native-fbsdk-next'
 
 
+  pod 'RNFirebase', :path => '../node_modules/react-native-firebase'
+
   target 'HealthyDataTests' do
     inherit! :complete
     # Pods for testing

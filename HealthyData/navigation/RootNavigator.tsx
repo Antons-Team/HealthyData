@@ -14,7 +14,9 @@ import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import LocalAuth from './LocalAuth';
 import TouchID from 'react-native-touch-id';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import { WHITE } from '../style/Colours';
+import {WHITE} from '../style/Colours';
+import {checkPermission} from '../services/notifications';
+import firebase from 'react-native-firebase';
 
 const RootNavigator = (): ReactElement => {
   const {
@@ -25,6 +27,28 @@ const RootNavigator = (): ReactElement => {
     setLocalAuthState,
     setFingerprintEnabled,
   } = useAuth();
+
+  checkPermission().then(() => {
+    console.log('done');
+  });
+
+  const channel = new firebase.notifications.Android.Channel(
+    'channelId',
+    'Channel Name',
+    firebase.notifications.Android.Importance.Max,
+  ).setDescription('A natural description of the channel');
+  firebase.notifications().android.createChannel(channel);
+
+  // This listener triggered when notification has been received in foreground
+  firebase.notifications().onNotification(notification => {
+    const {title, body} = notification;
+    console.log('notification', notification.data.channelId);
+    notification.android.setChannelId('channelId');
+    // notification.android.setPriority(
+    //   firebase.notifications.Android.Priority.High,
+    // );
+    firebase.notifications().displayNotification(notification);
+  });
 
   useEffect(() => {
     GoogleSignin.configure({
