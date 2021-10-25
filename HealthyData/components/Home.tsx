@@ -17,6 +17,7 @@ import {renderName} from '../utils/Display';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
+import Modal from 'react-native-modal';
 import {
   CurrentRenderContext,
   RouteProp,
@@ -30,6 +31,7 @@ import {
   isToday,
   takeMedication,
   untakeMedication,
+  updateSupply,
 } from '../services/calendar';
 import {
   BLUE,
@@ -172,7 +174,98 @@ export const RenderTodoItem = ({
   );
 };
 
-export const RenderRefill = ({item}: {item: TodoItem}) => (
+export const DosesButton = ({
+  todo,
+  onUpdateSupply,
+}: {
+  todo: TodoItem;
+  onUpdateSupply: () => void;
+}) => {
+  const [show, setShow] = useState(false);
+  const [supply, setSupply] = useState(todo.supply.toString());
+
+  const oneDay = 1000 * 60 * 60 * 24; // in ms
+  return (
+    <View>
+      <Text
+        onPress={() => setShow(true)}
+        style={[
+          {
+            backgroundColor:
+              (todo.refillDate.toDate().getTime() - new Date().getTime()) /
+                oneDay <
+              10
+                ? ORANGE
+                : 'grey',
+          },
+          styles.circleTextHighlight,
+        ]}>
+        {todo.supply} doses left
+      </Text>
+
+      <Modal isVisible={show}>
+        <View style={{backgroundColor: WHITE, borderRadius: 50, padding: 20}}>
+          <Text style={[styles.infoTitle, {marginBottom: 20}]}>
+            Update supply of {renderName(todo.medication.genericName)}
+          </Text>
+          <Text style={[styles.textBold, {fontSize: 18, paddingBottom: 20}]}>
+            Current supply:
+            <Text style={[styles.textBold, {fontSize: 18, color: BLUE}]}>
+              {' '}
+              {todo.supply}{' '}
+            </Text>
+            doses
+          </Text>
+
+          <Text style={[styles.textBold, {fontSize: 18}]}>New supply:</Text>
+
+          <View
+            style={[
+              styles.row,
+              {alignSelf: 'center', paddingVertical: 10, alignItems: 'center'},
+            ]}>
+            <TextInput
+              style={styles.textInputBlue}
+              value={supply}
+              onChangeText={setSupply}
+              keyboardType="numeric"
+            />
+            <Text
+              style={[
+                styles.addMedicationTitle,
+                {textAlignVertical: 'center'},
+              ]}>
+              doses
+            </Text>
+          </View>
+          <Text
+            style={[
+              styles.blueButton,
+              styles.textBold,
+              styles.textAlignCenter,
+              {color: WHITE, marginTop: 20},
+            ]}
+            onPress={() => {
+              setShow(false);
+              updateSupply(todo, parseInt(supply)).then(() => {
+                onUpdateSupply();
+              });
+            }}>
+            DONE
+          </Text>
+        </View>
+      </Modal>
+    </View>
+  );
+};
+
+export const RenderRefill = ({
+  item,
+  onUpdateSupply,
+}: {
+  item: TodoItem;
+  onUpdateSupply: () => void;
+}) => (
   <View
     style={[
       styles.tileContainer,
@@ -182,7 +275,8 @@ export const RenderRefill = ({item}: {item: TodoItem}) => (
     <Text style={styles.tileHeading}>
       {renderName(item.medication.genericName)}
     </Text>
-    <Text
+    <DosesButton todo={item} onUpdateSupply={onUpdateSupply} />
+    {/* <Text
       style={[
         {
           backgroundColor: ORANGE,
@@ -190,7 +284,7 @@ export const RenderRefill = ({item}: {item: TodoItem}) => (
         styles.circleTextHighlight,
       ]}>
       {item.supply} doses left
-    </Text>
+    </Text> */}
   </View>
 );
 
@@ -254,7 +348,7 @@ const Divider = ({text}: {text: string}) => {
             color: WHITE,
             fontWeight: 'bold',
             backgroundColor: BLUE,
-            borderRadius:  10
+            borderRadius: 10,
           }}>
           {text}
         </Text>
@@ -264,7 +358,13 @@ const Divider = ({text}: {text: string}) => {
   );
 };
 
-const RefillDay = ({todos}: {todos: TodoItem[]}) => {
+const RefillDay = ({
+  todos,
+  onUpdateSupply,
+}: {
+  todos: TodoItem[];
+  onUpdateSupply: () => void;
+}) => {
   const dateString = todos[0].refillDate.toDate().toDateString();
   const isToday = dateString === new Date().toDateString();
 
@@ -277,22 +377,34 @@ const RefillDay = ({todos}: {todos: TodoItem[]}) => {
             fontWeight: isToday ? 'bold' : 'bold',
             marginHorizontal: 10,
             letterSpacing: 2.5,
-            backgroundColor: isToday? BLUE : WHITE,
+            backgroundColor: isToday ? BLUE : WHITE,
             borderRadius: 30,
-            width:240,
-            paddingHorizontal: 5
+            width: 240,
+            paddingHorizontal: 5,
           },
         ]}>
         {dateString + (isToday ? ' - Today' : '')}
       </Text>
       {todos.map(todo => {
-        return <RenderRefill key={todo.id} item={todo} />;
+        return (
+          <RenderRefill
+            key={todo.id}
+            item={todo}
+            onUpdateSupply={onUpdateSupply}
+          />
+        );
       })}
     </View>
   );
 };
 
-const RefillList = ({todos}: {todos: TodoItem[]}) => {
+const RefillList = ({
+  todos,
+  onUpdateSupply,
+}: {
+  todos: TodoItem[];
+  onUpdateSupply: () => void;
+}) => {
   const refillsByDate: any = {};
 
   todos.forEach(todo => {
@@ -334,7 +446,11 @@ const RefillList = ({todos}: {todos: TodoItem[]}) => {
         ) : (
           <View>
             {sortedDateStrings.map(dateString => (
-              <RefillDay key={dateString} todos={refillsByDate[dateString]} />
+              <RefillDay
+                onUpdateSupply={onUpdateSupply}
+                key={dateString}
+                todos={refillsByDate[dateString]}
+              />
             ))}
 
             {/* {todos.map(item => (
@@ -374,7 +490,7 @@ const MedicationsList = ({todos}: {todos: TodoItem[]}) => {
           </View>
         ) : (
           <View style={{marginTop: 20}}>
-           {/* <Text
+            {/* <Text
               style={[styles.infoTitle, {fontSize: 16, paddingHorizontal: 0}]}>
               {new Date().toDateString()}
             </Text> */}
@@ -431,7 +547,12 @@ const Home = (): JSX.Element => {
         navigationState={{index, routes}}
         renderScene={SceneMap({
           medications: () => <MedicationsList todos={todos} />,
-          refills: () => <RefillList todos={refills} />,
+          refills: () => (
+            <RefillList
+              onUpdateSupply={() => getTodoData(setRefills, setTodos)}
+              todos={refills}
+            />
+          ),
         })}
         onIndexChange={setIndex}
         renderTabBar={props => (

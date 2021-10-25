@@ -13,6 +13,15 @@ import Medications from '../components/Medications';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {decorator} from '@babel/types';
 
+export const updateSupply = (todo: TodoItem, supply: number) => {
+  return firestore()
+    .doc(`users/${auth().currentUser?.uid}/todos/${todo.id}`)
+    .update({
+      supply,
+      refillDate: firestore.Timestamp.fromDate(calculateRefillDate(todo)),
+    });
+};
+
 export const getCurrentTodos = () => {
   return firestore()
     .collection(`users/${auth().currentUser?.uid}/todos`)

@@ -185,10 +185,6 @@ const addTodosToCalendar = () => {
           }
         })
         .catch(e => console.error(e));
-
-      // RNCalendarEvents.saveEvent(`Take ${todo.medication.genericName}`, {
-
-      // })
     });
   });
 };
@@ -209,15 +205,20 @@ const CalendarScreen = (): JSX.Element => {
         }}
       />
       <FloatingAction
+        position="left"
+        distanceToEdge={5}
+        color={BLUE}
         actions={[
           {
-            text: 'Export to Google Calendar',
+            text: 'Export to Calendar',
             name: 'export',
+            color: BLUE,
             icon: (
               <Ionicons
-                style={{margin: 0, paddingBottom: 10, alignSelf: 'center'}}
-                name="clipboard-outline"
-                size={40}
+                style={{margin: 0, alignSelf: 'center'}}
+                name="calendar-outline"
+                size={20}
+                color={WHITE}
               />
             ),
           },

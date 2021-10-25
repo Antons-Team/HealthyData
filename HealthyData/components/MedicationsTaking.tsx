@@ -18,6 +18,7 @@ import {renderName} from '../utils/Display';
 import {Icon} from 'react-native-vector-icons/Icon';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {TabBar} from 'react-native-tab-view';
+import {DosesButton} from './Home';
 
 type MedicationsNavigationProps = StackNavigationProp<
   MedicationsStackParamList,
@@ -45,7 +46,13 @@ const DaysOfTheWeekRow = ({days}: {days: Days}) => {
   );
 };
 
-const TakingItem = ({todo}: {todo: TodoItem}) => {
+const TakingItem = ({
+  todo,
+  onUpdateSupply,
+}: {
+  todo: TodoItem;
+  onUpdateSupply: () => void;
+}) => {
   return (
     <View style={styles.tileContainer}>
       <Text style={styles.tileHeading}>
@@ -73,7 +80,8 @@ const TakingItem = ({todo}: {todo: TodoItem}) => {
             paddingVertical: 5,
           },
         ]}>
-        <Text
+        <DosesButton todo={todo} onUpdateSupply={onUpdateSupply} />
+        {/* <Text
           style={[
             {
               backgroundColor: todo.supply > 10 ? 'grey' : ORANGE,
@@ -81,7 +89,7 @@ const TakingItem = ({todo}: {todo: TodoItem}) => {
             styles.circleTextHighlight,
           ]}>
           {todo.supply} doses left
-        </Text>
+        </Text> */}
         <Text>
           Next dose:{' '}
           <Text style={styles.textBold}>
@@ -103,7 +111,11 @@ const CurrentlyTaking = () => {
     <View>
       <ScrollView>
         {todos.map(todo => (
-          <TakingItem key={todo.id} todo={todo} />
+          <TakingItem
+            key={todo.id}
+            todo={todo}
+            onUpdateSupply={() => getCurrentlyTakingTodos().then(setTodos)}
+          />
         ))}
       </ScrollView>
     </View>

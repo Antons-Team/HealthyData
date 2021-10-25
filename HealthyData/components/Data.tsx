@@ -16,7 +16,7 @@ import auth from '@react-native-firebase/auth';
 import {Dataset, ChartData} from 'react-native-chart-kit/dist/HelperTypes';
 import {AbstractChartConfig} from 'react-native-chart-kit/dist/AbstractChart';
 import {convertCompilerOptionsFromJson} from 'typescript';
-import {BLUE, RED, WHITE} from '../style/Colours';
+import {BLUE, DARK, RED, WHITE} from '../style/Colours';
 
 const getChartData = async (
   value: string | null,
@@ -207,10 +207,11 @@ const Data = (): JSX.Element => {
   const chartConfig: AbstractChartConfig = {
     backgroundGradientFromOpacity: 0,
     backgroundGradientToOpacity: 0,
-    color: (opacity = 1) => `rgba(66, 135, 245, ${opacity})`,
+    color: (opacity = 1) => BLUE,
     strokeWidth: 2,
     barPercentage: 1,
     useShadowColorFromDataset: false,
+    fillShadowGradientOpacity: 1
   };
 
   return (
@@ -248,6 +249,7 @@ const Data = (): JSX.Element => {
         chartConfig={chartConfig}
         verticalLabelRotation={0}
         fromZero={true}
+
       />
 
       <View style={{alignContent: 'flex-start', margin: 4}}>
