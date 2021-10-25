@@ -251,17 +251,21 @@ const AskFingerprint = () => {
 
   return (
     <View style={styles.loginSignupContainer}>
-      <Text>Use fingerprint for login?</Text>
-      <Button
-        color={BLUE}
-        title="yes"
-        onPress={() => handleFingerprintButton(true)}
-      />
-      <Button
-        color={BLUE}
-        title="no"
-        onPress={() => handleFingerprintButton(false)}
-      />
+      <Text style={styles.tileHeading}>Use fingerprint for login?</Text>
+      <View style={{padding: 10}}>
+        <Button
+          color={BLUE}
+          title="yes"
+          onPress={() => handleFingerprintButton(true)}
+        />
+      </View>
+      <View style={{padding: 10}}>
+        <Button
+          color={BLUE}
+          title="no"
+          onPress={() => handleFingerprintButton(false)}
+        />
+      </View>
     </View>
   );
 };

@@ -55,8 +55,8 @@ const SecuritySettingsScreen = ({
         <SettingsButton name="Remove PIN" onPress={() => handleRemovePin()} />
       )}
       {localAuthSettings.fingerprintEnabled && localAuthSettings.pin && (
-        <View>
-          <Text> Enable fingerprint</Text>
+        <View style={[styles.row, {justifyContent: "space-between"}]}>
+          <Text style={styles.tileHeading}> Enable fingerprint</Text>
           <Switch
             value={localAuthSettings.fingerprint}
             enabled={loading}
