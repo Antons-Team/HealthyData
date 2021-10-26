@@ -19,6 +19,8 @@ import {Icon} from 'react-native-vector-icons/Icon';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {TabBar} from 'react-native-tab-view';
 import {DosesButton} from './Home';
+import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
+import AddMedication from './AddMedication';
 
 type MedicationsNavigationProps = StackNavigationProp<
   MedicationsStackParamList,
@@ -49,15 +51,28 @@ const DaysOfTheWeekRow = ({days}: {days: Days}) => {
 const TakingItem = ({
   todo,
   onUpdateSupply,
+  onInfoPress,
 }: {
   todo: TodoItem;
   onUpdateSupply: () => void;
+  onInfoPress: () => void;
 }) => {
   return (
     <View style={styles.tileContainer}>
-      <Text style={styles.tileHeading}>
-        {renderName(todo.medication.genericName)}
-      </Text>
+      <View style={styles.rowSpaceBetween}>
+        <Text style={styles.tileHeading}>
+          {renderName(todo.medication.genericName)}
+        </Text>
+        <Ionicons
+          style={{margin: 0, alignSelf: 'center'}}
+          name="information-circle-outline"
+          size={30}
+          color={DARK_GRAY}
+          onPress={() => {
+            onInfoPress();
+          }}
+        />
+      </View>
       <View style={{paddingVertical: 10}}>
         {todo.days == null ? (
           <Text style={[styles.textBold, {color: BLACK}]}>
@@ -101,7 +116,24 @@ const TakingItem = ({
   );
 };
 
-const CurrentlyTaking = () => {
+type MedicationsTabNavigationProps = BottomTabNavigationProp<
+  MedicationsTabParamList,
+  'CurrentlyTaking'
+>;
+
+type MedicationsTabParamList = {
+  CurrentlyTaking: undefined;
+  PreviouslyTaken: undefined;
+};
+
+type CurrentlyTakingProps = {
+  navigation: MedicationsNavigationProps;
+};
+type PreviouslyTakenProps = {
+  navigation: MedicationsNavigationProps;
+};
+
+const CurrentlyTaking = (props: CurrentlyTakingProps) => {
   const [todos, setTodos] = useState<TodoItem[]>([]);
   useEffect(() => {
     getCurrentlyTakingTodos().then(setTodos);
@@ -114,6 +146,12 @@ const CurrentlyTaking = () => {
           <TakingItem
             key={todo.id}
             todo={todo}
+            onInfoPress={() => {
+              // console.log(props.navigation.getParent().);
+              props.navigation.navigate('AddMedication', {
+                medication: todo.medication,
+              });
+            }}
             onUpdateSupply={() => getCurrentlyTakingTodos().then(setTodos)}
           />
         ))}
@@ -122,12 +160,26 @@ const CurrentlyTaking = () => {
   );
 };
 
-const TakenItem = ({todo}: {todo: TodoItem}) => {
+const TakenItem = ({todo, onInfoPress}: {todo: TodoItem, onInfoPress: () => void}) => {
   return (
     <View style={styles.tileContainer}>
-      <Text style={styles.tileHeading}>
+      <View style={styles.rowSpaceBetween}>
+        <Text style={styles.tileHeading}>
+          {renderName(todo.medication.genericName)}
+        </Text>
+        <Ionicons
+          style={{margin: 0, alignSelf: 'center'}}
+          name="information-circle-outline"
+          size={30}
+          color={DARK_GRAY}
+          onPress={() => {
+            onInfoPress();
+          }}
+        />
+      </View>
+      {/* <Text style={styles.tileHeading}>
         {renderName(todo.medication.genericName)}
-      </Text>
+      </Text> */}
       <Text style={[styles.textBold, {paddingVertical: 10, color: DARK_GRAY}]}>
         Taken from
         <Text style={[styles.textBold, {color: BLUE}]}>
@@ -144,7 +196,7 @@ const TakenItem = ({todo}: {todo: TodoItem}) => {
   );
 };
 
-const PreviouslyTaken = () => {
+const PreviouslyTaken = (props: PreviouslyTakenProps) => {
   const [todos, setTodos] = useState<TodoItem[]>([]);
   useEffect(() => {
     getPreviouslyTakenTodos().then(setTodos);
@@ -153,7 +205,15 @@ const PreviouslyTaken = () => {
     <View>
       <ScrollView>
         {todos.map(todo => (
-          <TakenItem key={todo.id} todo={todo} />
+          <TakenItem
+            onInfoPress={() => {
+              props.navigation.navigate('AddMedication', {
+                medication: todo.medication,
+              });
+            }}
+            key={todo.id}
+            todo={todo}
+          />
         ))}
       </ScrollView>
     </View>

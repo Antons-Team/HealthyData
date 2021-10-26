@@ -27,6 +27,10 @@ export const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
   },
+  rowSpaceBetween: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   circleTextHighlight: {
     color: WHITE,
     paddingHorizontal: 20,
@@ -189,13 +193,13 @@ export const styles = StyleSheet.create({
     alignContent: 'center',
     alignSelf: 'center',
     padding: 10,
-    marginBottom: 40
+    marginBottom: 40,
   },
   switchButton: {
     color: BLUE,
     padding: 2,
     backfaceVisibility: 'hidden',
-    fontSize: 16
+    fontSize: 16,
   },
   loginSignupTextInput: {
     height: 60,
@@ -222,7 +226,7 @@ export const styles = StyleSheet.create({
     display: 'flex',
     alignSelf: 'center',
     borderColor: BLUE,
-    opacity: 1
+    opacity: 1,
   },
   medicationText: {
     flexDirection: 'column',
@@ -480,7 +484,7 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   loginButtonContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 2,
     borderRadius: 30,

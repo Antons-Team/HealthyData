@@ -13,7 +13,7 @@ import {getIsTaking} from '../services/calendar';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Modal from 'react-native-modal';
-import { AddMedicationModal } from './AddMedicationModal';
+import {AddMedicationModal} from './AddMedicationModal';
 
 type MedicationsNavigationProps = StackNavigationProp<
   MedicationsStackParamList,
@@ -83,9 +83,30 @@ const AddMedication = ({navigation, route}: Props): JSX.Element => {
         style={{
           marginVertical: 20,
         }}>
-        <Text style={[styles.infoParagraph, {paddingHorizontal: 15, color: showModal ? RED : WHITE}]}>
+        <Text
+          style={[
+            styles.infoParagraph,
+            {paddingHorizontal: 15, color: showModal ? RED : WHITE},
+          ]}>
           {medication.description[0]}
         </Text>
+        {isTaking && (
+          <Text
+            style={[
+              styles.infoParagraph,
+              styles.buttonWhiteText,
+              {
+                paddingHorizontal: 15,
+                margin: 15,
+                marginTop: 30,
+                borderRadius: 20,
+                color: RED,
+                backgroundColor: showModal ? RED : WHITE,
+              },
+            ]}>
+            You are already taking this medication
+          </Text>
+        )}
       </View>
 
       <View
@@ -98,7 +119,9 @@ const AddMedication = ({navigation, route}: Props): JSX.Element => {
           stickyHeaderIndices={[0]}
           contentContainerStyle={{paddingBottom: 60, flexGrow: 1}}>
           <View>
-            <Text style={[styles.infoTitle, {backgroundColor: WHITE}]}>Side Effects</Text>
+            <Text style={[styles.infoTitle, {backgroundColor: WHITE}]}>
+              Side Effects
+            </Text>
           </View>
           {sideEffectNames.length == 0 ? (
             <View style={{padding: 30}}>
@@ -142,48 +165,46 @@ const AddMedication = ({navigation, route}: Props): JSX.Element => {
           )}
         </ScrollView>
       </View>
-      {!isTaking && (
-        <TouchableOpacity
-          style={[
-            {
-              backgroundColor: RED,
-              alignSelf: 'center',
-              width: 200,
-              position: 'absolute',
-              bottom: 5,
-              paddingHorizontal: 20,
-              borderRadius: 100,
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            },
-            styles.row,
-          ]}
-          onPress={() => {
-            // navigation.navigate('AddMedicationInfo', {
-            //   medication: route.params.medication,
-            // });
-            setShowModal(true);
-          }}>
-          <Ionicons
-            style={{margin: 0, padding: 0}}
-            name="add"
-            size={30}
-            color={WHITE}
-          />
-          <Text style={{color: WHITE, fontSize: 17, paddingVertical: 18}}>
-            Add Medication
-          </Text>
-        </TouchableOpacity>
-      )}
+
+      <TouchableOpacity
+        style={[
+          {
+            backgroundColor: RED,
+            alignSelf: 'center',
+            width: 200,
+            position: 'absolute',
+            bottom: 5,
+            paddingHorizontal: 20,
+            borderRadius: 100,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          },
+          styles.row,
+        ]}
+        onPress={() => {
+          // navigation.navigate('AddMedicationInfo', {
+          //   medication: route.params.medication,
+          // });
+          setShowModal(true);
+        }}>
+        <Ionicons
+          style={{margin: 0, padding: 0}}
+          name={isTaking ? "create-outline" : "add"}
+          size={30}
+          color={WHITE}
+        />
+        <Text style={{color: WHITE, fontSize: 17, paddingVertical: 18}}>
+          { isTaking ? "Edit Medication" : "Add Medication"}
+        </Text>
+      </TouchableOpacity>
+
       <Modal
         isVisible={showModal}
         onBackButtonPress={() => setShowModal(false)}
         backdropOpacity={0}
-        onBackdropPress={() => setShowModal(false)} 
-        style={{justifyContent: 'flex-end', margin:0}}
-
-        >
-          <AddMedicationModal medication={medication}/>
+        onBackdropPress={() => setShowModal(false)}
+        style={{justifyContent: 'flex-end', margin: 0}}>
+        <AddMedicationModal medication={medication} />
       </Modal>
     </View>
   );
