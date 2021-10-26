@@ -105,6 +105,15 @@ export const untakeMedication = async (todo: TodoItem, time: Date) => {
   firestore()
     .doc(`users/${auth().currentUser?.uid}/medicationsTaken/${id}`)
     .delete();
+
+  todo.supply = Math.max(todo.supply + todo.doses, 0);
+
+  firestore()
+    .doc(`users/${auth().currentUser?.uid}/todos/${todo.id}`)
+    .update({
+      supply: todo.supply,
+      refillDate: firestore.Timestamp.fromDate(calculateRefillDate(todo)),
+    });
 };
 
 export const getHasTaken = async (medication: MedicationItem, time: Date) => {
@@ -126,7 +135,15 @@ export const getIsTaking = async (medication: MedicationItem) => {
     .where('medicationId', '==', medication.id)
     .get()
     .then(snapshot => {
-      return snapshot.docs.length !== 0;
+      if (snapshot.docs.length === 0) {
+        return false;
+      }
+
+      return snapshot.docs.some(doc => {
+        const todo = {...doc.data(), id: doc.id} as TodoItem;
+
+        return todo.date.toDate() > new Date();
+      });
     });
 };
 

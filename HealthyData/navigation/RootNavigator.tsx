@@ -14,7 +14,8 @@ import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import LocalAuth from './LocalAuth';
 import TouchID from 'react-native-touch-id';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import { WHITE } from '../style/Colours';
+import {WHITE} from '../style/Colours';
+import firebase from 'react-native-firebase';
 
 const RootNavigator = (): ReactElement => {
   const {
@@ -27,6 +28,26 @@ const RootNavigator = (): ReactElement => {
   } = useAuth();
 
   useEffect(() => {
+    const channel = new firebase.notifications.Android.Channel(
+      'pillx',
+      'pillx channel name',
+      firebase.notifications.Android.Importance.Max,
+    ).setDescription('');
+    firebase.notifications().android.createChannel(channel);
+
+    // This listener triggered when notification has been received in foreground
+    firebase.notifications().onNotification(notification => {
+      notification.android.setChannelId('pillx');
+      notification.android.setPriority(
+        firebase.notifications.Android.Priority.High,
+      );
+      firebase.notifications().displayNotification(notification);
+    });
+
+    firebase.notifications().onNotificationOpened(notificationOpen => {
+      firebase.notifications().removeAllDeliveredNotifications();
+    });
+
     GoogleSignin.configure({
       webClientId:
         '517643624241-iv7hii7n7nju0mokp420eng8lbvkv6f8.apps.googleusercontent.com',

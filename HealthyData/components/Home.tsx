@@ -527,13 +527,13 @@ const Home = (): JSX.Element => {
   const [todos, setTodos] = useState<Array<TodoItem>>([]);
   const [refills, setRefills] = useState<Array<TodoItem>>([]);
 
-  // const isFocused = useIsFocused();
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    // if (isFocused) {
+    if (isFocused) {
     getTodoData(setRefills, setTodos);
-    // }
-  }, []);
+    }
+  }, [isFocused]);
 
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([

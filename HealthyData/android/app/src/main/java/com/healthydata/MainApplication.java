@@ -4,6 +4,9 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.rnfingerprint.FingerprintAuthPackage;
 import com.emeraldsanto.encryptedstorage.RNEncryptedStoragePackage;
@@ -30,6 +33,8 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
+          packages.add(new RNFirebaseMessagingPackage()); 
+          packages.add(new RNFirebaseNotificationsPackage()); 
          // packages.add(new RNGoogleSigninPackage());
           // packages.add(new FBSDKPackage());
           // Packages that cannot be autolinked yet can be added manually here, for example:
