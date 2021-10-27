@@ -1,23 +1,10 @@
-import {
-  numberTypeAnnotation,
-  PROPERTY_TYPES,
-  stringLiteral,
-} from '@babel/types';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {RouteProp} from '@react-navigation/native';
 import React, {useState} from 'react';
-import {
-  Button,
-  StyleProp,
-  Text,
-  TextStyle,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleProp, Text, TextStyle, TouchableOpacity, View} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
-import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {MedicationItem, TodoItem} from '../@types/Schema';
 import {Days} from '../@types/Types';
@@ -28,7 +15,6 @@ import {displayTime, numberOnlyPinPad, renderName} from '../utils/Display';
 
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import {NavigationActions} from 'react-navigation';
 import {scheduleNotifications} from '../services/notifications';
 
 type RadioProps = {
@@ -38,6 +24,10 @@ type RadioProps = {
   selectedStyle?: StyleProp<TextStyle>;
   unselectedStyle?: StyleProp<TextStyle>;
 };
+
+/**
+ * @returns component for selecting interval of days
+ */
 
 const SelectInterval = ({
   medication,
@@ -87,6 +77,9 @@ const SelectInterval = ({
   );
 };
 
+/**
+ * @returns radio button component for selecting a single day of the week
+ */
 const RadioButton = ({
   selectedStyle = [styles.radioButtonDay, styles.buttonSelectedColor],
   unselectedStyle = [styles.radioButtonDay, styles.buttonUnselectedColor],
@@ -108,6 +101,9 @@ const RadioButton = ({
   );
 };
 
+/**
+ * @returns component for selecting the number of days for taking a new medication
+ */
 const SelectDays = ({
   medication,
   days,
@@ -185,6 +181,9 @@ type FormParamsList = {
   };
 };
 
+/**
+ * @returns form to enter the number of days to take a medication
+ */
 const DaysForm = ({
   navigation,
   route,
@@ -192,8 +191,11 @@ const DaysForm = ({
   navigation: BottomTabNavigationProp<FormParamsList, 'DaysForm'>;
   route: RouteProp<{params: {medication: MedicationItem}}, 'params'>;
 }) => {
+  // medication to be taken
   const medication = route.params.medication;
 
+  // days of the week to be selected
+  // (if the medication is being taken on the same days each week)
   const [days, setDays] = useState<Days>({
     monday: false,
     tuesday: false,
@@ -203,9 +205,13 @@ const DaysForm = ({
     saturday: false,
     sunday: false,
   });
+  // true iff the medication is not being taken on the same day each week
   const [isInterval, setIsInterval] = useState(false);
+  // number of days between each time the medicaition is taken
+  // (if the medication is not taken on the same days each week)
   const [intervalDays, setIntervalDays] = useState('1');
 
+  // true iff the next button has been pressed with invalid
   const [attempted, setAttempted] = useState(false);
 
   const correct = isInterval
@@ -293,6 +299,9 @@ const DaysForm = ({
   );
 };
 
+/**
+ * @returns Component to select a date
+ */
 const DatePicker = ({
   value,
   setValue,
@@ -361,6 +370,9 @@ const DatePicker = ({
   );
 };
 
+/**
+ * @returns Form to select the start date and end date that the medication is taken
+ */
 const DateForm = ({
   navigation,
   route,
@@ -380,8 +392,11 @@ const DateForm = ({
 }) => {
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  // true iff a start date has been selected
   const [startDateSet, setStartDateSet] = useState(false);
+  // true iff an end date has been selected
   const [endDateSet, setEndDateSet] = useState(false);
+  // true iff the form has been sumbitted with incorrect values
   const [attempted, setAttempted] = useState(false);
   const medication = route.params.medication;
 
@@ -448,6 +463,9 @@ const DateForm = ({
   );
 };
 
+/**
+ * @returns Form component to enter the time the medication is taken
+ */
 const TimeForm = ({
   navigation,
   route,
@@ -557,6 +575,9 @@ const TimeForm = ({
   );
 };
 
+/**
+ * @returns Form to enter the number of doses and supply
+ */
 const SupplyForm = ({
   navigation,
   route,
@@ -670,6 +691,9 @@ const SupplyForm = ({
   );
 };
 
+/**
+ * @returns component to show if a medication has been taken
+ */
 const DoneScreen = ({
   navigation,
   route,
@@ -793,6 +817,9 @@ const NavigationButtons = ({
   );
 };
 
+/**
+ * @returns adds a new medicaiton to a users schedule
+ */
 const addTodo = async ({
   medication,
   isInterval,
@@ -804,6 +831,7 @@ const addTodo = async ({
   doses,
   supply,
 }: {
+  // medication to be added
   medication: MedicationItem;
   isInterval: boolean;
   intervalDays: number;
@@ -833,11 +861,6 @@ const addTodo = async ({
       }
     }
     refillDate = addDays(dayOfWeek, refillDate);
-
-    // switch (supply % daysPerWeek) {
-    //   case 0:
-    //     return;
-    // }
   } else {
     const startDate1 = new Date(intervalStartDate);
     startDate1.setHours(
@@ -855,7 +878,6 @@ const addTodo = async ({
   refillDate?.setSeconds(0, 0);
 
   const todo = {
-    // id: `${date.toString()}${timeOfDay.toString()}${parseInt(doses)*3}${parseInt(supply)*5}${genericName}`,//create a unique hashcode
     today: today,
     days: isInterval ? null : days,
     intervalDays: isInterval
@@ -892,6 +914,9 @@ const addTodo = async ({
     });
 };
 
+/**
+ * @returns form navigator for adding a medication
+ */
 export const AddMedicationModal = ({
   medication,
 }: {

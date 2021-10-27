@@ -7,7 +7,7 @@ import {styles} from '../style/Styles';
 
 import {renderName} from '../utils/Display';
 
-import {BarChart, LineChart} from 'react-native-chart-kit';
+import {BarChart} from 'react-native-chart-kit';
 
 import {Dimensions} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
@@ -15,11 +15,15 @@ import auth from '@react-native-firebase/auth';
 
 import {Dataset, ChartData} from 'react-native-chart-kit/dist/HelperTypes';
 import {AbstractChartConfig} from 'react-native-chart-kit/dist/AbstractChart';
-import {convertCompilerOptionsFromJson} from 'typescript';
-import {BLUE, DARK, RED, WHITE} from '../style/Colours';
+import {BLUE, WHITE} from '../style/Colours';
 
+/**
+ * fetches weekly medication data for a user that is to be displayed on the chart
+ * @param medication medication to get the data for
+ * @param setData callback after data has been fetched
+ */
 const getChartData = async (
-  value: string | null,
+  medication: string | null,
   setData: React.Dispatch<React.SetStateAction<number[]>>,
 ) => {
   firestore()
@@ -35,7 +39,7 @@ const getChartData = async (
       const result = [0, 0, 0, 0, 0, 0, 0];
 
       data.map(todo => {
-        if (value != null && todo.medication.genericName != value) {
+        if (medication != null && todo.medication.genericName != medication) {
           return;
         }
 
@@ -68,6 +72,9 @@ const getChartData = async (
     });
 };
 
+/**
+ * Gets all medications that the user can select from
+ */
 const getDropdownOptions = async (
   medications: Array<string>,
   setMedications: React.Dispatch<React.SetStateAction<string[]>>,
@@ -109,15 +116,23 @@ const getDropdownOptions = async (
     });
 };
 
+/**
+ * @returns Screen component for displaying data visualizations
+ */
 const Data = (): JSX.Element => {
-  // TODO filter by medication
+  // names of medications the user is taking
   const [medications, setMedications] = useState<Array<string>>([]);
+  // true iff the dropdown menu is open
   const [open, setOpen] = useState<boolean>(false);
-  const [value, setValue] = useState<string | null>(null);
+  // name of the currenly selected medciation
+  const [selected, setSelected] = useState<string | null>(null);
+  // medications the user is taking
   const [items, setItems] = useState<Array<Object>>([{}]);
   // Bar chart data retreived from firestore
   const [data, setData] = useState<Array<number>>([0, 0, 0, 0, 0, 0, 0]);
+  // average number of doeses the user takes in a week for a given medication
   const [average, setAverage] = useState<number>(0);
+  // total number of doeses the user takes in a week for a given medication
   const [total, setTotal] = useState<number>(0);
 
   const screenWidth = Dimensions.get('window').width;
@@ -130,13 +145,13 @@ const Data = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    getChartData(value, setData);
+    getChartData(selected, setData);
     barChartData.data = data;
-  }, [value]);
+  }, [selected]);
 
   useEffect(() => {
     computeStatistics();
-  }, [data, value]);
+  }, [data, selected]);
 
   const computeStatistics = async () => {
     const total = data.reduce((a, b) => a + b, 0);
@@ -175,10 +190,10 @@ const Data = (): JSX.Element => {
       <DropDownPicker
         itemKey={'label'}
         open={open}
-        value={value}
+        value={selected}
         items={items}
         setOpen={setOpen}
-        setValue={setValue}
+        setValue={setSelected}
         setItems={setItems}
         style={styles.dropDown}
         labelStyle={[styles.textBold, {fontSize: 18}]}

@@ -1,21 +1,22 @@
 import React, {useState} from 'react';
 import {Text, View} from 'react-native';
-import {displayTime, displayDate, renderName} from '../utils/Display';
+import {renderName} from '../utils/Display';
 
 import {Agenda} from 'react-native-calendars';
 import {DateData} from 'react-native-calendars/src/types';
 import {getCurrentTodos, getTodosMonth} from '../services/calendar';
 import {styles} from '../style/Styles';
-import {BLUE, LIGHT, ORANGE, RED, WHITE} from '../style/Colours';
-import {RenderRefill, RenderTodoItem} from './Home';
-import {isTemplateMiddle} from 'typescript';
+import {BLUE, ORANGE, WHITE} from '../style/Colours';
+import {RenderTodoItem} from './Home';
 import {TodoItem} from '../@types/Schema';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {FloatingAction} from 'react-native-floating-action';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RNCalendarEvents from 'react-native-calendar-events';
 import {compareByDate, daysOfTheWeek} from '../utils/Dates';
 
+/**
+ * @returns Component for a single calendar todo item
+ */
 const AgendaItem = ({item, firstItemInDay}) => {
   return (
     <View
@@ -85,6 +86,9 @@ const AgendaItem = ({item, firstItemInDay}) => {
   );
 };
 
+/**
+ * @returns all calendar events for the user in a single month
+ */
 const loadMonth = async (
   month: DateData,
   items: {},
@@ -95,16 +99,22 @@ const loadMonth = async (
   return month;
 };
 
+/**
+ * exports the users medication reminders device calendar
+ */
 const addTodosToCalendar = () => {
+  // get all current reminders for the user
   getCurrentTodos().then(todos => {
     todos.forEach(todo => {
       const dateString = todo.refillDate.toDate().toISOString();
 
+      // get all events that have already been added to the calendar
       RNCalendarEvents.fetchAllEvents(
         todo.today.toDate().toISOString(),
         todo.date.toDate().toISOString(),
       )
         .then(events => {
+          // true iff the reminders to take a medication have already been added
           const todoAlreadyAdded = events.some(
             event =>
               event.title
@@ -113,6 +123,7 @@ const addTodosToCalendar = () => {
               event.title.toLowerCase().startsWith('take'),
           );
 
+          // true iff the reminders to refill the medication have already been added
           const refillAlreadyAdded = events.some(
             event =>
               event.title
@@ -123,6 +134,7 @@ const addTodosToCalendar = () => {
           );
 
           if (!refillAlreadyAdded) {
+            // add a refill reminder to the calendar if it has not already been added
             RNCalendarEvents.saveEvent(
               `Refill ${todo.medication.genericName}`,
               {
@@ -133,8 +145,9 @@ const addTodosToCalendar = () => {
           }
 
           if (!todoAlreadyAdded) {
+            // add all reminders for a medication if it has not already been added
             if (todo.days === null && todo.intervalDays !== null) {
-              // interval days
+              // medication is taken on an interval
               const date = todo.intervalDays.startingDate.toDate();
               date.setHours(
                 todo.time.toDate().getHours(),
@@ -153,6 +166,7 @@ const addTodosToCalendar = () => {
                 date.setDate(date.getDate() + 7);
               }
             } else if (todo.days !== null) {
+              // medication is taken on the same day each week
               const daysArray = daysOfTheWeek.map(day => todo.days[day]);
 
               const startDay = todo.today.toDate().getDay();
@@ -188,6 +202,9 @@ const addTodosToCalendar = () => {
   });
 };
 
+/**
+ * @returns Screen component containing the calendar
+ */
 const CalendarScreen = (): JSX.Element => {
   const [items, setItems] = useState({});
 

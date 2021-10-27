@@ -9,6 +9,9 @@ import {saveLocalAuthSettings} from '../services/auth';
 import {styles} from '../style/Styles';
 import {SettingsButton} from './Settings';
 
+/**
+ * @returns screen ofr user to update security settings
+ */
 const SecuritySettingsScreen = ({
   navigation,
 }: StackScreenProps<

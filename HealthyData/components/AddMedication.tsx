@@ -25,6 +25,39 @@ type Props = {
   route: RouteProp<{params: {medication: MedicationItem}}, 'params'>;
 };
 
+/**
+ * @returns Text showing frequency of a medication
+ */
+const Frequency = ({freq}: any) => {
+  let name = 'Frequent';
+  let color = ORANGE;
+
+  if (freq < 0.1) {
+    name = 'Rare';
+    color = GREEN;
+  } else if (freq < 0.5) {
+    name = 'Infrequent';
+    color = YELLOW;
+  }
+  return (
+    <Text
+      style={[
+        styles.circleTextHighlight,
+        {
+          backgroundColor: color,
+          borderRadius: 16,
+          fontFamily: 'Roboto-Regular',
+          padding: 5,
+        },
+      ]}>
+      {name}
+    </Text>
+  );
+};
+
+/**
+  return (* @returns Information screen for adding medication
+ */
 const AddMedication = ({navigation, route}: Props): JSX.Element => {
   const medication = route.params.medication;
   const sideEffectNames =
@@ -41,34 +74,6 @@ const AddMedication = ({navigation, route}: Props): JSX.Element => {
     });
   }, []);
 
-  const Frequency = ({freq}: any) => {
-    let name = 'Frequent';
-    let color = ORANGE;
-
-    if (freq < 0.1) {
-      name = 'Rare';
-      color = GREEN;
-    } else if (freq < 0.5) {
-      name = 'Infrequent';
-      color = YELLOW;
-    }
-    return (
-      <Text
-        style={[
-          styles.circleTextHighlight,
-          {
-            backgroundColor: color,
-            borderRadius: 16,
-            fontFamily: 'Roboto-Regular',
-            padding: 5,
-          },
-        ]}>
-        {name}
-      </Text>
-    );
-  };
-
-  // TODO present in a better way
   return (
     <View style={[styles.infoContainer]}>
       <View style={styles.infoHeader}>
@@ -154,7 +159,6 @@ const AddMedication = ({navigation, route}: Props): JSX.Element => {
                     style={{
                       fontFamily: 'Roboto-Regular',
                       fontSize: 16,
-                      // fontWeight: 'bold',
                     }}>
                     {sideEffect.name}
                   </Text>
@@ -182,19 +186,16 @@ const AddMedication = ({navigation, route}: Props): JSX.Element => {
           styles.row,
         ]}
         onPress={() => {
-          // navigation.navigate('AddMedicationInfo', {
-          //   medication: route.params.medication,
-          // });
           setShowModal(true);
         }}>
         <Ionicons
           style={{margin: 0, padding: 0}}
-          name={isTaking ? "create-outline" : "add"}
+          name={isTaking ? 'create-outline' : 'add'}
           size={30}
           color={WHITE}
         />
         <Text style={{color: WHITE, fontSize: 17, paddingVertical: 18}}>
-          { isTaking ? "Edit Medication" : "Add Medication"}
+          {isTaking ? 'Edit Medication' : 'Add Medication'}
         </Text>
       </TouchableOpacity>
 

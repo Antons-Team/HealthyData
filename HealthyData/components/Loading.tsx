@@ -4,6 +4,9 @@ import {Text, View, ActivityIndicator} from 'react-native';
 import {styles} from '../style/Styles';
 import {LIGHT} from '../style/Colours';
 
+/**
+ * @returns splash screen
+ */
 const Loading = (): JSX.Element => {
   return (
     <View style={styles.splashContainer}>

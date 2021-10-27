@@ -1,12 +1,6 @@
 import React from 'react';
 import {useState, useEffect} from 'react';
-import {
-  Text,
-  View,
-  SafeAreaView,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import {Text, View, SafeAreaView, TouchableOpacity} from 'react-native';
 
 import {TodoItem} from '../@types/Schema';
 import {styles} from '../style/Styles';
@@ -18,13 +12,8 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
 import Modal from 'react-native-modal';
-import {
-  CurrentRenderContext,
-  RouteProp,
-  useIsFocused,
-} from '@react-navigation/native';
+import {useIsFocused} from '@react-navigation/native';
 
-import {displayDate} from '../utils/Display';
 import {addDays, compareByDate, compareByTime} from '../utils/Dates';
 import {
   getHasTaken,
@@ -33,20 +22,17 @@ import {
   untakeMedication,
   updateSupply,
 } from '../services/calendar';
-import {
-  BLUE,
-  DARK,
-  DARK_GRAY,
-  GREEN,
-  LIGHT,
-  ORANGE,
-  RED,
-  WHITE,
-} from '../style/Colours';
+import {BLUE, DARK, DARK_GRAY, ORANGE, WHITE} from '../style/Colours';
 import {ScrollView, TextInput} from 'react-native-gesture-handler';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 
+/**
+ * determines if the user has missed taking a medication
+ * @param calendarDate the current date
+ * @param medicationTime time that the medication is to be taken
+ * @returns true iff the user has missed taking the medication
+ */
 const hasMissed = (calendarDate: Date, medicationTime: Date) => {
   const today = new Date();
 
@@ -60,6 +46,9 @@ const hasMissed = (calendarDate: Date, medicationTime: Date) => {
   return false;
 };
 
+/**
+ * @returns  component for a single todo reminder
+ */
 export const RenderTodoItem = ({
   item,
   calendarDate,
@@ -67,6 +56,7 @@ export const RenderTodoItem = ({
   item: TodoItem;
   calendarDate: Date;
 }) => {
+  //  true iff the medication has already been taken
   const [taken, setTaken] = useState(true);
 
   const time = item.time.toDate();
@@ -79,6 +69,7 @@ export const RenderTodoItem = ({
 
   useEffect(() => {
     let isMounted = true;
+    // determine if the medication has been taken
     getHasTaken(item.medication, time).then(res => {
       if (isMounted) {
         setTaken(res);
@@ -180,6 +171,9 @@ export const RenderTodoItem = ({
   );
 };
 
+/**
+ * @returns  Button to update the number of doses
+ */
 export const DosesButton = ({
   todo,
   onUpdateSupply,
@@ -187,7 +181,9 @@ export const DosesButton = ({
   todo: TodoItem;
   onUpdateSupply: () => void;
 }) => {
+  // true iff the update dosage modal is to be shown
   const [show, setShow] = useState(false);
+  // the updated supply of medicaitons to be entered by the user
   const [supply, setSupply] = useState(todo.supply.toString());
 
   const oneDay = 1000 * 60 * 60 * 24; // in ms
@@ -265,35 +261,9 @@ export const DosesButton = ({
   );
 };
 
-export const RenderRefill = ({
-  item,
-  onUpdateSupply,
-}: {
-  item: TodoItem;
-  onUpdateSupply: () => void;
-}) => (
-  <View
-    style={[
-      styles.tileContainer,
-      styles.row,
-      {justifyContent: 'space-between', alignItems: 'center'},
-    ]}>
-    <Text style={styles.tileHeading}>
-      {renderName(item.medication.genericName)}
-    </Text>
-    <DosesButton todo={item} onUpdateSupply={onUpdateSupply} />
-    {/* <Text
-      style={[
-        {
-          backgroundColor: ORANGE,
-        },
-        styles.circleTextHighlight,
-      ]}>
-      {item.supply} doses left
-    </Text> */}
-  </View>
-);
-
+/**
+ * gets all reminders for the current date
+ */
 const getTodoData = async (
   setRefills: {
     (value: React.SetStateAction<TodoItem[]>): void;
@@ -350,6 +320,9 @@ const getTodoData = async (
     });
 };
 
+/**
+ * @returns divider component to show between items in a list
+ */
 const Divider = ({text}: {text: string}) => {
   return (
     <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -372,6 +345,32 @@ const Divider = ({text}: {text: string}) => {
   );
 };
 
+/**
+ * @returns  Component for a refill reminder
+ */
+export const RenderRefill = ({
+  item,
+  onUpdateSupply,
+}: {
+  item: TodoItem;
+  onUpdateSupply: () => void;
+}) => (
+  <View
+    style={[
+      styles.tileContainer,
+      styles.row,
+      {justifyContent: 'space-between', alignItems: 'center'},
+    ]}>
+    <Text style={styles.tileHeading}>
+      {renderName(item.medication.genericName)}
+    </Text>
+    <DosesButton todo={item} onUpdateSupply={onUpdateSupply} />
+  </View>
+);
+
+/**
+ * @returns Refill item component with time displayed on top
+ */
 const RefillDay = ({
   todos,
   onUpdateSupply,
@@ -412,6 +411,9 @@ const RefillDay = ({
   );
 };
 
+/**
+ * @returns list component of all refill reminders
+ */
 const RefillList = ({
   todos,
   onUpdateSupply,
@@ -466,10 +468,6 @@ const RefillList = ({
                 todos={refillsByDate[dateString]}
               />
             ))}
-
-            {/* {todos.map(item => (
-              <RenderRefill key={item.id} item={item} />
-            ))} */}
           </View>
         )}
       </SafeAreaView>
@@ -477,6 +475,9 @@ const RefillList = ({
   );
 };
 
+/**
+ * @returns list component of all medication reminders
+ */
 const MedicationsList = ({todos}: {todos: TodoItem[]}) => {
   return (
     <ScrollView>
@@ -504,11 +505,6 @@ const MedicationsList = ({todos}: {todos: TodoItem[]}) => {
           </View>
         ) : (
           <View style={{marginTop: 20}}>
-            {/* <Text
-              style={[styles.infoTitle, {fontSize: 16, paddingHorizontal: 0}]}>
-              {new Date().toDateString()}
-            </Text> */}
-
             {todos
               .filter(item => compareByTime(item.time.toDate(), new Date()) < 0)
               .map(item => (
@@ -537,6 +533,9 @@ const MedicationsList = ({todos}: {todos: TodoItem[]}) => {
   );
 };
 
+/**
+ * @returns Screen for daily reminders
+ */
 const Home = (): JSX.Element => {
   const [todos, setTodos] = useState<Array<TodoItem>>([]);
   const [refills, setRefills] = useState<Array<TodoItem>>([]);

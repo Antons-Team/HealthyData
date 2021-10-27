@@ -6,6 +6,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {BLACK, FABCEBOOK_BLUE} from '../../style/Colours';
 import {styles} from '../../style/Styles';
 
+/**
+ * @returns component for google login
+ */
 const GoogleButton = (): ReactElement => {
   const signInGoogle = async () => {
     await GoogleSignin.hasPlayServices();
@@ -31,12 +34,9 @@ const GoogleButton = (): ReactElement => {
         size={40}
         color={BLACK}
       />
-      <Text style={[{color: BLACK, fontSize: 18}]}>
-        Continue with Google
-      </Text>
+      <Text style={[{color: BLACK, fontSize: 18}]}>Continue with Google</Text>
     </TouchableOpacity>
   );
-  // return <Button title="Google Sign-In" onPress={() => signInGoogle()} />;
 };
 
 export default GoogleButton;

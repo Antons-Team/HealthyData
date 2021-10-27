@@ -34,6 +34,9 @@ type MedicationSearchItem = {
   drug: MedicationItem;
 };
 
+/**
+ * @returns component for empty search results
+ */
 const SearchEmpty = () => {
   return (
     <View style={{paddingTop: 50}}>
@@ -50,9 +53,14 @@ const SearchEmpty = () => {
   );
 };
 
+/**
+ * @returns list component of all search results
+ */
 const Medications = (props: Props): JSX.Element => {
+  // search input entered by the user
   const [filter, setFilter] = useState<string>('');
 
+  // medication results
   const [drugs, setDrugs] = useState<Array<MedicationSearchItem>>([]);
 
   const matchingLowercase = (name: string) => {

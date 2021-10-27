@@ -7,6 +7,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {DARK_GRAY, FABCEBOOK_BLUE} from '../../style/Colours';
 import {styles} from '../../style/Styles';
 
+/**
+ * @returns Button for facebook login
+ */
 const FacebookButton = (): ReactElement => {
   const signInFacebook = async () => {
     try {

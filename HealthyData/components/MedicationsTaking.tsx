@@ -13,14 +13,11 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {TodoItem} from '../@types/Schema';
 import {Days} from '../@types/Types';
 import {daysOfTheWeek} from '../utils/Dates';
-import {BLACK, BLUE, DARK, DARK_GRAY, ORANGE, WHITE} from '../style/Colours';
+import {BLACK, BLUE, DARK_GRAY, WHITE} from '../style/Colours';
 import {renderName} from '../utils/Display';
-import {Icon} from 'react-native-vector-icons/Icon';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {TabBar} from 'react-native-tab-view';
 import {DosesButton} from './Home';
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
-import AddMedication from './AddMedication';
 
 type MedicationsNavigationProps = StackNavigationProp<
   MedicationsStackParamList,
@@ -31,6 +28,9 @@ type Props = {
   navigation: MedicationsNavigationProps;
 };
 
+/**
+ * @returns Component dipslaying the days of the week in a row with selected days highlighted
+ */
 const DaysOfTheWeekRow = ({days}: {days: Days}) => {
   return (
     <View style={[styles.row]}>
@@ -48,6 +48,9 @@ const DaysOfTheWeekRow = ({days}: {days: Days}) => {
   );
 };
 
+/**
+ * @returns component showing a medication item that is currently being taken
+ */
 const TakingItem = ({
   todo,
   onUpdateSupply,
@@ -96,15 +99,6 @@ const TakingItem = ({
           },
         ]}>
         <DosesButton todo={todo} onUpdateSupply={onUpdateSupply} />
-        {/* <Text
-          style={[
-            {
-              backgroundColor: todo.supply > 10 ? 'grey' : ORANGE,
-            },
-            styles.circleTextHighlight,
-          ]}>
-          {todo.supply} doses left
-        </Text> */}
         <Text>
           Next dose:{' '}
           <Text style={styles.textBold}>
@@ -116,16 +110,6 @@ const TakingItem = ({
   );
 };
 
-type MedicationsTabNavigationProps = BottomTabNavigationProp<
-  MedicationsTabParamList,
-  'CurrentlyTaking'
->;
-
-type MedicationsTabParamList = {
-  CurrentlyTaking: undefined;
-  PreviouslyTaken: undefined;
-};
-
 type CurrentlyTakingProps = {
   navigation: MedicationsNavigationProps;
 };
@@ -133,6 +117,9 @@ type PreviouslyTakenProps = {
   navigation: MedicationsNavigationProps;
 };
 
+/**
+ * @returns list component of all medications currenlty taken
+ */
 const CurrentlyTaking = (props: CurrentlyTakingProps) => {
   const [todos, setTodos] = useState<TodoItem[]>([]);
   useEffect(() => {
@@ -159,7 +146,16 @@ const CurrentlyTaking = (props: CurrentlyTakingProps) => {
   );
 };
 
-const TakenItem = ({todo, onInfoPress}: {todo: TodoItem, onInfoPress: () => void}) => {
+/**
+ * @returns component showing a medication that has previously been taken
+ */
+const TakenItem = ({
+  todo,
+  onInfoPress,
+}: {
+  todo: TodoItem;
+  onInfoPress: () => void;
+}) => {
   return (
     <View style={styles.tileContainer}>
       <View style={styles.rowSpaceBetween}>
@@ -176,9 +172,6 @@ const TakenItem = ({todo, onInfoPress}: {todo: TodoItem, onInfoPress: () => void
           }}
         />
       </View>
-      {/* <Text style={styles.tileHeading}>
-        {renderName(todo.medication.genericName)}
-      </Text> */}
       <Text style={[styles.textBold, {paddingVertical: 10, color: DARK_GRAY}]}>
         Taken from
         <Text style={[styles.textBold, {color: BLUE}]}>
@@ -195,6 +188,9 @@ const TakenItem = ({todo, onInfoPress}: {todo: TodoItem, onInfoPress: () => void
   );
 };
 
+/**
+ * @returns list component of all medications previously taken
+ */
 const PreviouslyTaken = (props: PreviouslyTakenProps) => {
   const [todos, setTodos] = useState<TodoItem[]>([]);
   useEffect(() => {
@@ -219,6 +215,10 @@ const PreviouslyTaken = (props: PreviouslyTakenProps) => {
   );
 };
 
+/**
+ * @returns Screen containing search bar and tab bar to switch between
+ * currently and previously taken medications
+ */
 const MedicationsTaking = (props: Props) => {
   const Tab = createMaterialTopTabNavigator();
   return (

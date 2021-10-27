@@ -18,6 +18,9 @@ type Props = {
   navigation: SettingsNavigationProps;
 };
 
+/**
+ * @returns Settings screen
+ */
 const Settings = (props: Props): JSX.Element => {
   return (
     <View style={styles.settingsContainer}>
@@ -55,6 +58,9 @@ type SettingsButtonProps = {
   onPress: (event: GestureResponderEvent) => void;
 };
 
+/**
+ * @returns Button for an option in the setting screen
+ */
 export const SettingsButton = (props: SettingsButtonProps): JSX.Element => {
   return (
     <TouchableOpacity onPress={props.onPress}>

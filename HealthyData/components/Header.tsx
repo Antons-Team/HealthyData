@@ -3,8 +3,9 @@ import {View, Text} from 'react-native';
 
 import {styles} from '../style/Styles';
 
-// todo, make this a search bar component for the home screen
-// and the PillX name everywhere else
+/**
+ * @returns header component that is displayed at the top of every screeen
+ */
 const Header = (): JSX.Element => {
   return (
     <View style={styles.headerBar}>

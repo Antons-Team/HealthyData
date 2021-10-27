@@ -21,12 +21,13 @@ type Props = {
   navigation: SettingsNavigationProps;
 };
 
+/**
+ * @returns Screen for user to update their profile details
+ */
 const ProfileDetails = (props: Props): JSX.Element => {
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
-  // country
-  // state
 
   const updateDetails = () => {
     firestore().collection('users').doc(auth().currentUser?.uid).update({
@@ -37,6 +38,7 @@ const ProfileDetails = (props: Props): JSX.Element => {
   };
 
   useEffect(() => {
+    // gets all saved user data
     firestore()
       .collection('users')
       .doc(auth().currentUser?.uid)
@@ -99,6 +101,9 @@ type EntryProps = {
   setInfo: React.Dispatch<React.SetStateAction<string>>;
 };
 
+/**
+ * @returns Text entry component
+ */
 const DetailsEntry = (props: EntryProps): JSX.Element => {
   return (
     <View>

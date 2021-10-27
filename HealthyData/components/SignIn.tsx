@@ -13,11 +13,14 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 type Props = StackScreenProps<AuthStackParamsList, 'SignIn'>;
 
+/**
+ * @returns sign in screen
+ */
 const SignIn = (props: Props): JSX.Element => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const filled = email !== ""  && password !== ""
+  const filled = email !== '' && password !== '';
 
   return (
     <View style={styles.loginSignupContainer}>
@@ -51,25 +54,27 @@ const SignIn = (props: Props): JSX.Element => {
       />
 
       <TouchableOpacity
-      disabled={!filled}
+        disabled={!filled}
         onPress={() => signInEmail(email, password)}
         style={[
           styles.loginButtonContainer,
           {
-            borderColor: filled ?BLUE: "#ddd",
+            borderColor: filled ? BLUE : '#ddd',
           },
         ]}>
         <Ionicons
           style={{margin: 0, paddingRight: 10, alignSelf: 'center'}}
           name="mail-outline"
           size={40}
-          color={filled ? BLUE: "#ddd"}
+          color={filled ? BLUE : '#ddd'}
         />
-        <Text style={[{color: filled ? BLUE : "#ddd", fontSize: 18}]}>Log in with Email</Text>
+        <Text style={[{color: filled ? BLUE : '#ddd', fontSize: 18}]}>
+          Log in with Email
+        </Text>
       </TouchableOpacity>
 
       <View style={styles.switchLoginSignupContainer}>
-        <Text style={{padding: 2 , fontSize: 16}}>I&apos;m a new member,</Text>
+        <Text style={{padding: 2, fontSize: 16}}>I&apos;m a new member,</Text>
         <Text
           style={styles.switchButton}
           onPress={() => {
@@ -81,13 +86,6 @@ const SignIn = (props: Props): JSX.Element => {
 
       <FacebookButton />
       <GoogleButton />
-      {/* <Button
-        color={BLUE}
-        title="log in anonymous"
-        onPress={() => {
-          signInAnonymous();
-        }}
-      /> */}
     </View>
   );
 };
