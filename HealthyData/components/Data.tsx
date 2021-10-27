@@ -68,59 +68,6 @@ const getChartData = async (
     });
 };
 
-// const getDosageData = (todo: TodoItem) => {
-
-//       const result = [0, 0, 0, 0, 0, 0, 0];
-
-//       if ( todo.days !== null)  {
-//         if (todo.days?.sunday) {
-//           result[0] += todo.doses;
-//         }
-//         if (todo.days?.monday) {
-//           result[1] += todo.doses;
-//         }
-//         if (todo.days?.tuesday) {
-//           result[2] += todo.doses;
-//         }
-//         if (todo.days?.wednesday) {
-//           result[3] += todo.doses;
-//         }
-//         if (todo.days?.thursday) {
-//           result[4] += todo.doses;
-//         }
-//         if (todo.days?.friday) {
-//           result[5] += todo.doses;
-//         }
-//         if (todo.days?.saturday) {
-//           result[6] += todo.doses;
-//         }
-//       }
-// }
-
-// type TodoData = {
-//   name: string;
-//   todo: TodoItem;
-//   dosageData: number[];
-// };
-
-// const getAllChartData = () => {
-//   firestore()
-//     .collection(`users/${auth().currentUser?.uid}/todos`)
-//     .get()
-//     .then(snapshot => {
-//       const docs = snapshot.docs;
-
-//       const data = docs.map(doc => {
-//         return doc.data() as TodoItem;
-//       });
-
-//       data.forEach(todo => {
-//         const dosageData =  getDosageData(todo)
-
-//       })
-//     });
-// };
-
 const getDropdownOptions = async (
   medications: Array<string>,
   setMedications: React.Dispatch<React.SetStateAction<string[]>>,
@@ -211,7 +158,7 @@ const Data = (): JSX.Element => {
     strokeWidth: 2,
     barPercentage: 1,
     useShadowColorFromDataset: false,
-    fillShadowGradientOpacity: 1
+    fillShadowGradientOpacity: 1,
   };
 
   return (
@@ -222,7 +169,9 @@ const Data = (): JSX.Element => {
         justifyContent: 'flex-start',
         margin: 8,
       }}>
-      <Text style={[styles.infoTitle, {fontSize: 30, paddingBottom: 29}]}>Weekly Summary</Text>
+      <Text style={[styles.infoTitle, {fontSize: 30, paddingBottom: 29}]}>
+        Weekly Summary
+      </Text>
       <DropDownPicker
         itemKey={'label'}
         open={open}
@@ -249,7 +198,6 @@ const Data = (): JSX.Element => {
         chartConfig={chartConfig}
         verticalLabelRotation={0}
         fromZero={true}
-
       />
 
       <View style={{alignContent: 'flex-start', margin: 4}}>
@@ -259,9 +207,11 @@ const Data = (): JSX.Element => {
         </Text>
         <Text style={styles.title}>
           Average doses per day:{' '}
-          <Text style={[styles.title, {color: BLUE}]}> {average.toFixed(2)} </Text>
+          <Text style={[styles.title, {color: BLUE}]}>
+            {' '}
+            {average.toFixed(2)}{' '}
+          </Text>
         </Text>
-        {/* <Text style={styles.title}>Average per Day: {average.toFixed(2)}</Text> */}
       </View>
     </View>
   );

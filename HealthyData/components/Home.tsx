@@ -103,7 +103,7 @@ export const RenderTodoItem = ({
   const colors = {
     upcoming: [DARK_GRAY, '#A5BFD6'],
     missed: [DARK_GRAY, ORANGE, '#F29D9D'],
-    taken: ["#aaa", '#aaa'],
+    taken: ['#aaa', '#aaa'],
   };
 
   return (
@@ -113,6 +113,7 @@ export const RenderTodoItem = ({
         {displayTime(item.time.toDate())}
       </Text>
       <TouchableOpacity
+        activeOpacity={1}
         style={[
           styles.tileContainer,
           {
@@ -169,7 +170,8 @@ export const RenderTodoItem = ({
             />
           </View>
         </View>
-        <Text style={[styles.text, {fontSize: 16, color: colors[takenString][0]}]}>
+        <Text
+          style={[styles.text, {fontSize: 16, color: colors[takenString][0]}]}>
           <Text style={styles.textBold}>{item.doses} </Text>
           {item.doses == 1 ? 'dose' : 'doses'}
         </Text>
@@ -332,14 +334,6 @@ const getTodoData = async (
         let date = new Date();
         date = addDays(30, date);
 
-        if (todo.id === 'zbWflrYdHoMth1gqCwUn') {
-          console.log(
-            'datee',
-            todo.date.toDate().toDateString(),
-            new Date().toDateString(),
-            compareByDate(todo.date.toDate(), new Date()),
-          );
-        }
         return (
           // next refill is within 30 days
           todo.refillDate.toDate() < date &&

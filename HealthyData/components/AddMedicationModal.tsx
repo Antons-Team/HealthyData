@@ -1,4 +1,8 @@
-import {PROPERTY_TYPES, stringLiteral} from '@babel/types';
+import {
+  numberTypeAnnotation,
+  PROPERTY_TYPES,
+  stringLiteral,
+} from '@babel/types';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
@@ -20,7 +24,7 @@ import {Days} from '../@types/Types';
 import {BLUE, RED, WHITE} from '../style/Colours';
 import {styles} from '../style/Styles';
 import {addDays, daysOfTheWeek} from '../utils/Dates';
-import {displayTime, renderName} from '../utils/Display';
+import {displayTime, numberOnlyPinPad, renderName} from '../utils/Display';
 
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -39,13 +43,21 @@ const SelectInterval = ({
   medication,
   intervalDays,
   setIntervalDays,
+  attempted,
+  setAttempted,
 }: {
   medication: MedicationItem;
   intervalDays: string;
   setIntervalDays: React.Dispatch<React.SetStateAction<string>>;
+  attempted: boolean;
+  setAttempted: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   return (
-    <View style={styles.questionContainer}>
+    <View
+      style={[
+        styles.questionContainer,
+        attempted && intervalDays == '' ? {borderColor: 'red'} : {},
+      ]}>
       <Text style={styles.addMedicationTitle}>
         How often do you take {renderName(medication.genericName)}?
       </Text>
@@ -55,18 +67,15 @@ const SelectInterval = ({
           Once every{' '}
         </Text>
         <TextInput
-          style={{
-            borderColor: BLUE,
-            borderWidth: 2,
-            borderRadius: 20,
-            paddingHorizontal: 20,
-            paddingVertical: 3,
-            color: BLUE,
-            fontSize: 16,
-            fontFamily: 'Roboto-Bold',
-          }}
+          style={styles.textInputBlue}
+          keyboardType="number-pad"
           value={intervalDays}
-          onChangeText={setIntervalDays}
+          onChangeText={text => {
+            if (attempted) {
+              setAttempted(false);
+            }
+            return setIntervalDays(numberOnlyPinPad(text));
+          }}
         />
         <Text
           style={[styles.addMedicationTitle, {textAlignVertical: 'center'}]}>
@@ -103,13 +112,23 @@ const SelectDays = ({
   medication,
   days,
   setDays,
+  attempted,
+  setAttempted,
 }: {
   medication: MedicationItem;
   days: Days;
   setDays: React.Dispatch<React.SetStateAction<Days>>;
+  attempted: boolean;
+  setAttempted: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   return (
-    <View style={styles.questionContainer}>
+    <View
+      style={[
+        styles.questionContainer,
+        attempted && !Object.values(days).includes(true)
+          ? {borderColor: 'red'}
+          : {},
+      ]}>
       <Text style={styles.addMedicationTitle}>
         On which days are you to take {renderName(medication.genericName)}?
       </Text>
@@ -121,6 +140,9 @@ const SelectDays = ({
               text={day[0].toUpperCase()}
               selected={days[day]}
               onPress={() => {
+                if (attempted) {
+                  setAttempted(false);
+                }
                 const newDays = {...days};
                 newDays[day] = !days[day];
                 setDays(newDays);
@@ -184,6 +206,12 @@ const DaysForm = ({
   const [isInterval, setIsInterval] = useState(false);
   const [intervalDays, setIntervalDays] = useState('1');
 
+  const [attempted, setAttempted] = useState(false);
+
+  const correct = isInterval
+    ? intervalDays !== ''
+    : Object.values(days).includes(true);
+
   return (
     <View style={styles.formContainer}>
       <View style={{padding: 10}}>
@@ -229,21 +257,34 @@ const DaysForm = ({
             </TouchableOpacity>
           </View>
         </View>
-
         {isInterval ? (
-          <SelectInterval {...{medication, intervalDays, setIntervalDays}} />
+          <SelectInterval
+            {...{
+              medication,
+              intervalDays,
+              setIntervalDays,
+              attempted,
+              setAttempted,
+            }}
+          />
         ) : (
-          <SelectDays {...{medication, days, setDays}} />
+          <SelectDays
+            {...{medication, days, setDays, attempted, setAttempted}}
+          />
         )}
       </View>
       <NavigationButtons
         onNext={() => {
-          navigation.navigate('DateForm', {
-            medication,
-            isInterval,
-            intervalDays: Number.parseInt(intervalDays),
-            days,
-          });
+          if (correct) {
+            navigation.navigate('DateForm', {
+              medication,
+              isInterval,
+              intervalDays: Number.parseInt(intervalDays),
+              days,
+            });
+          } else {
+            setAttempted(true);
+          }
         }}
         onPrev={() => {}}
         showPrev={false}
@@ -341,12 +382,17 @@ const DateForm = ({
   const [endDate, setEndDate] = useState(new Date());
   const [startDateSet, setStartDateSet] = useState(false);
   const [endDateSet, setEndDateSet] = useState(false);
+  const [attempted, setAttempted] = useState(false);
   const medication = route.params.medication;
 
   return (
     <View style={styles.formContainer}>
       <View style={{padding: 10}}>
-        <View style={styles.questionContainer}>
+        <View
+          style={[
+            styles.questionContainer,
+            attempted && !startDateSet ? {borderColor: 'red'} : {},
+          ]}>
           <Text style={styles.addMedicationTitle}>
             On which day will you start taking{' '}
             {renderName(medication.genericName)}?
@@ -360,7 +406,12 @@ const DateForm = ({
             setIsSet={setStartDateSet}
           />
         </View>
-        <View style={styles.questionContainer}>
+        <View
+          style={[
+            styles.questionContainer,
+            styles.questionContainer,
+            attempted && !endDateSet ? {borderColor: 'red'} : {},
+          ]}>
           <Text style={styles.addMedicationTitle}>
             On which day will you stop taking{' '}
             {renderName(medication.genericName)}?
@@ -378,11 +429,15 @@ const DateForm = ({
 
       <NavigationButtons
         onNext={() => {
-          navigation.navigate('TimeForm', {
-            ...route.params,
-            startDate: startDate.getTime(),
-            endDate: endDate.getTime(),
-          });
+          if (startDateSet && endDateSet) {
+            navigation.navigate('TimeForm', {
+              ...route.params,
+              startDate: startDate.getTime(),
+              endDate: endDate.getTime(),
+            });
+          } else {
+            setAttempted(true);
+          }
         }}
         onPrev={() => {
           navigation.navigate('DaysForm', {...route.params});
@@ -416,11 +471,17 @@ const TimeForm = ({
   const [showTime, setShowTime] = useState(false);
   const [time, setTime] = useState(new Date());
   const [timeSet, setTimeSet] = useState(false);
+  const [attempted, setAttempted] = useState(false);
 
   return (
     <View style={styles.formContainer}>
       <View style={{padding: 10}}>
-        <View style={[styles.questionContainer, {marginTop: 30}]}>
+        <View
+          style={[
+            styles.questionContainer,
+            {marginTop: 30},
+            attempted && !timeSet ? {borderColor: 'red'} : {},
+          ]}>
           <Text style={[styles.addMedicationTitle]}>
             What time of day are you to take{' '}
             {renderName(medication.genericName)}?
@@ -478,10 +539,14 @@ const TimeForm = ({
 
       <NavigationButtons
         onNext={() => {
-          navigation.navigate('SupplyForm', {
-            ...route.params,
-            time: time.getTime(),
-          });
+          if (timeSet) {
+            navigation.navigate('SupplyForm', {
+              ...route.params,
+              time: time.getTime(),
+            });
+          } else {
+            setAttempted(true);
+          }
         }}
         onPrev={() => {
           navigation.navigate('DateForm', {...route.params});
@@ -516,10 +581,16 @@ const SupplyForm = ({
 
   const [doses, setDoses] = useState('1');
   const [supply, setSupply] = useState('1');
+
+  const [attempted, setAttempted] = useState(false);
   return (
     <View style={styles.formContainer}>
       <View style={{padding: 10}}>
-        <View style={styles.questionContainer}>
+        <View
+          style={[
+            styles.questionContainer,
+            attempted && doses === '' ? {borderColor: 'red'} : {},
+          ]}>
           <Text style={[styles.addMedicationTitle]}>
             How many doses of {renderName(medication.genericName)} will you
             take?
@@ -528,18 +599,12 @@ const SupplyForm = ({
           <View style={{alignSelf: 'center'}}>
             <View style={[styles.row, {alignItems: 'center'}]}>
               <TextInput
-                style={{
-                  borderColor: BLUE,
-                  borderWidth: 2,
-                  borderRadius: 20,
-                  paddingHorizontal: 20,
-                  paddingVertical: 3,
-                  color: BLUE,
-                  fontSize: 16,
-                  fontFamily: 'Roboto-Bold',
-                }}
+                style={styles.textInputBlue}
                 value={doses}
-                onChangeText={setDoses}
+                onChangeText={text => {
+                  setDoses(numberOnlyPinPad(text));
+                }}
+                keyboardType="number-pad"
               />
               <Text
                 style={[
@@ -551,7 +616,11 @@ const SupplyForm = ({
             </View>
           </View>
         </View>
-        <View style={styles.questionContainer}>
+        <View
+          style={[
+            styles.questionContainer,
+            attempted && supply === '' ? {borderColor: 'red'} : {},
+          ]}>
           <Text style={[styles.addMedicationTitle]}>
             What is your current supply of {renderName(medication.genericName)}?
           </Text>
@@ -560,7 +629,10 @@ const SupplyForm = ({
               <TextInput
                 style={styles.textInputBlue}
                 value={supply}
-                onChangeText={setSupply}
+                onChangeText={text => {
+                  setSupply(numberOnlyPinPad(text));
+                }}
+                keyboardType="number-pad"
               />
               <Text
                 style={[
@@ -575,15 +647,19 @@ const SupplyForm = ({
       </View>
       <NavigationButtons
         onNext={() => {
-          addTodo({
-            ...route.params,
-            doses: parseInt(doses),
-            supply: parseInt(supply),
-          })
-            .then(() => {
-              navigation.navigate('DoneScreen', {medication});
+          if (doses !== '' && supply !== '') {
+            addTodo({
+              ...route.params,
+              doses: parseInt(doses),
+              supply: parseInt(supply),
             })
-            .catch(console.error);
+              .then(() => {
+                navigation.navigate('DoneScreen', {medication});
+              })
+              .catch(console.error);
+          } else {
+            setAttempted(true);
+          }
         }}
         onPrev={() => {
           navigation.navigate('TimeForm', {...route.params});

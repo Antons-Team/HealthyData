@@ -4,6 +4,14 @@ export const renderName: (name: string) => string = function (
   return name.charAt(0).toUpperCase() + name.slice(1);
 };
 
+export const numberOnlyPinPad = (text: string) => {
+  return text
+    .replace(' ', '')
+    .replace(',', '')
+    .replace('.', '')
+    .replace('-', '');    
+};
+
 export const displayTime = (date: Date): string => {
   let hours = date.getHours();
   const minutes = date.getMinutes();

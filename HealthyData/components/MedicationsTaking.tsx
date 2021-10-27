@@ -147,7 +147,6 @@ const CurrentlyTaking = (props: CurrentlyTakingProps) => {
             key={todo.id}
             todo={todo}
             onInfoPress={() => {
-              // console.log(props.navigation.getParent().);
               props.navigation.navigate('AddMedication', {
                 medication: todo.medication,
               });

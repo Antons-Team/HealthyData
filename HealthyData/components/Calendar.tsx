@@ -16,71 +16,73 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import RNCalendarEvents from 'react-native-calendar-events';
 import {compareByDate, daysOfTheWeek} from '../utils/Dates';
 
-const AgendaItem = ({item}) => {
-  return item.type === 'refill' ? (
+const AgendaItem = ({item, firstItemInDay}) => {
+  return (
     <View
-      style={[
-        styles.item,
-        {
-          borderColor: BLUE,
-          flexDirection: 'column',
-          marginRight: 2,
-          paddingBottom: 10,
-        },
-      ]}>
-      <Text
-        style={[
-          {
-            backgroundColor: BLUE,
-            color: WHITE,
-            height: 18,
-            borderBottomRightRadius: 6,
-            fontWeight: 'bold',
-            paddingHorizontal: 5,
-            fontSize: 13,
-            width: 60,
-          },
-        ]}>
-        REFILLS
-      </Text>
-      {item.todos.map((todo: TodoItem) => {
-        return (
-          <View
-            key={todo.id}
+      style={{
+        marginTop: firstItemInDay ? 30 : 0,
+      }}>
+      {item.type === 'refill' ? (
+        <View
+          style={[
+            styles.item,
+            {
+              borderColor: BLUE,
+              flexDirection: 'column',
+              marginRight: 2,
+              paddingBottom: 10,
+            },
+          ]}>
+          <Text
             style={[
-              styles.tileContainer,
-              styles.row,
               {
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                borderWidth: 0.5,
+                backgroundColor: BLUE,
+                color: WHITE,
+                height: 18,
+                borderBottomRightRadius: 6,
+                fontWeight: 'bold',
+                paddingHorizontal: 5,
+                fontSize: 13,
+                width: 60,
               },
             ]}>
-            <Text style={styles.tileHeading}>
-              {renderName(todo.medication.genericName)}
-            </Text>
-            <Text
-              style={[
-                {
-                  backgroundColor: ORANGE,
-                  padding: 0,
-                },
-                styles.circleTextHighlight,
-              ]}>
-              {todo.supply} doses
-            </Text>
-          </View>
-        );
-      })}
+            REFILLS
+          </Text>
+          {item.todos.map((todo: TodoItem) => {
+            return (
+              <View
+                key={todo.id}
+                style={[
+                  styles.tileContainer,
+                  styles.row,
+                  {
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    borderWidth: 0.5,
+                  },
+                ]}>
+                <Text style={styles.tileHeading}>
+                  {renderName(todo.medication.genericName)}
+                </Text>
+                <Text
+                  style={[
+                    {
+                      backgroundColor: ORANGE,
+                      padding: 0,
+                    },
+                    styles.circleTextHighlight,
+                  ]}>
+                  {todo.supply} doses
+                </Text>
+              </View>
+            );
+          })}
+        </View>
+      ) : (
+        <RenderTodoItem item={item.todo} calendarDate={item.day} />
+      )}
     </View>
-  ) : (
-    <RenderTodoItem item={item.todo} calendarDate={item.day} />
   );
-  // <View style={styles.item}>
-  //   <Text style={styles.info}>{displayTime(item.todo.time.toDate())}</Text>
-  //   <Text style={styles.time}>{item.name}</Text>
-  //   <Text style={styles.info}>{item.todo.doses} doses</Text>
-  // </View>
 };
 
 const loadMonth = async (
@@ -95,7 +97,6 @@ const loadMonth = async (
 
 const addTodosToCalendar = () => {
   getCurrentTodos().then(todos => {
-
     todos.forEach(todo => {
       const dateString = todo.refillDate.toDate().toISOString();
 
@@ -195,7 +196,7 @@ const CalendarScreen = (): JSX.Element => {
       <Agenda
         items={items}
         renderItem={(item, firstItemInDay) => {
-          return <AgendaItem item={item} />;
+          return <AgendaItem {...{item, firstItemInDay}} />;
         }}
         loadItemsForMonth={month => loadMonth(month, items, setItems)}
         theme={{
@@ -206,6 +207,14 @@ const CalendarScreen = (): JSX.Element => {
         position="left"
         distanceToEdge={5}
         color={BLUE}
+        floatingIcon={
+          <Ionicons
+            style={{margin: 0, alignSelf: 'center'}}
+            name="ellipsis-vertical-outline"
+            size={20}
+            color={WHITE}
+          />
+        }
         actions={[
           {
             text: 'Export to Calendar',
@@ -222,7 +231,7 @@ const CalendarScreen = (): JSX.Element => {
           },
         ]}
         onPressItem={() => {
-            addTodosToCalendar();
+          addTodosToCalendar();
         }}
       />
     </View>
