@@ -445,7 +445,7 @@ const RefillList = ({
         {todos.length == 0 ? (
           <View style={{paddingVertical: 100}}>
             <Ionicons
-              style={{margin: 0, paddingRight: 10, alignSelf: 'center'}}
+              style={styles.leftIcon}
               name="checkmark-circle-outline"
               size={100}
               color={BLUE}
@@ -489,7 +489,7 @@ const MedicationsList = ({todos}: {todos: TodoItem[]}) => {
         {todos.length == 0 ? (
           <View style={{paddingVertical: 100}}>
             <Ionicons
-              style={{margin: 0, paddingRight: 10, alignSelf: 'center'}}
+              style={styles.leftIcon}
               name="checkmark-circle-outline"
               size={100}
               color={BLUE}

@@ -13,7 +13,7 @@ import {getIsTaking} from '../services/calendar';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Modal from 'react-native-modal';
-import {AddMedicationModal} from './AddMedicationModal';
+import {AddMedicationModal} from './addmedication/AddMedicationModal';
 
 type MedicationsNavigationProps = StackNavigationProp<
   MedicationsStackParamList,

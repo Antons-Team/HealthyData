@@ -494,4 +494,17 @@ export const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     marginVertical: 3,
   },
+  signUpHeader: {
+    fontFamily: 'Roboto-Bold',
+    color: DARK_GRAY,
+    fontSize: 30,
+    paddingHorizontal: 0,
+    paddingBottom: 3,
+    paddingTop: 10,
+  },
+  leftIcon: {
+    margin: 0,
+    paddingRight: 10,
+    alignSelf: 'center',
+  },
 });

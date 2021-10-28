@@ -55,7 +55,7 @@ const FacebookButton = (): ReactElement => {
         },
       ]}>
       <Ionicons
-        style={{margin: 0, paddingRight: 10, alignSelf: 'center'}}
+        style={styles.leftIcon}
         name="logo-facebook"
         size={40}
         color={FABCEBOOK_BLUE}
@@ -64,8 +64,6 @@ const FacebookButton = (): ReactElement => {
         Continue with Facebook
       </Text>
     </TouchableOpacity>
-
-    // <Button title="facebook" onPress={signInFacebook} color={FABCEBOOK_BLUE} />
   );
 };
 

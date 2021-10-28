@@ -29,7 +29,7 @@ const GoogleButton = (): ReactElement => {
         },
       ]}>
       <Ionicons
-        style={{margin: 0, paddingRight: 10, alignSelf: 'center'}}
+        style={styles.leftIcon}
         name="logo-google"
         size={40}
         color={BLACK}

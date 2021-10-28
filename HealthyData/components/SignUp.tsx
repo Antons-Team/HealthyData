@@ -24,18 +24,7 @@ const SignUp = (props: Props): JSX.Element => {
 
   return (
     <View style={styles.loginSignupContainer}>
-      <Text
-        style={[
-          styles.infoTitle,
-          {
-            fontSize: 30,
-            paddingHorizontal: 0,
-            paddingBottom: 3,
-            paddingTop: 10,
-          },
-        ]}>
-        Sign Up to PillX
-      </Text>
+      <Text style={[styles.signUpHeader]}>Sign Up to PillX</Text>
       <TextInput
         style={styles.loginSignupTextInput}
         underlineColorAndroid={DARK}
@@ -62,7 +51,7 @@ const SignUp = (props: Props): JSX.Element => {
           },
         ]}>
         <Ionicons
-          style={{margin: 0, paddingRight: 10, alignSelf: 'center'}}
+          style={styles.leftIcon}
           name="mail-outline"
           size={40}
           color={filled ? BLUE : '#ddd'}
