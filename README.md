@@ -3,8 +3,6 @@
 PillX is a medication tracking app using visualisations to help you monitor your medicine intake.
 Made for DECO3801 course.
 
-...images here
-
 ## Running the app
 
 1. Follow the instructions at [https://reactnative.dev/docs/environment-setup](https://reactnative.dev/docs/environment-setup) to setup a development environment for React Native.
